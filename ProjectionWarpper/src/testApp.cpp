@@ -40,10 +40,15 @@ void testApp::setup(){
     bAlignRight = false;
 	warpper.setup();
 	showDraw = true;
+	wall.loadModel("models/wall.dae");
+	wall.setScale(0.5, 0.5, 0.5);
+	
 }
 #define NUM_BYTE 512
 //--------------------------------------------------------------
 void testApp::update(){
+	
+	
     warpper.update();
 	
 	
@@ -70,6 +75,10 @@ void testApp::update(){
     
 	ofPopMatrix();
 	img.draw(0,0,WIDTH,HEIGHT);
+	ofPushMatrix();
+	ofTranslate(WIDTH*0.5,HEIGHT*0.5);
+	wall.drawFaces();
+	ofPopMatrix();
     warpper.end();
     
 	

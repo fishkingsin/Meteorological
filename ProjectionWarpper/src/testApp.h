@@ -15,6 +15,7 @@
 #include "ofxOsc.h"
 #include "ofxSimpleGuiToo.h"
 #include "WarpGlobal.h"
+#include "ofxAssimpModelLoader.h"
 class testApp : public ofBaseApp {
     
 public:
@@ -45,6 +46,7 @@ public:
     ofTrueTypeFont font;
     float helpX,helpY;
     bool showHelp,showDraw;
+	ofxAssimpModelLoader wall;
 };
 
 #endif

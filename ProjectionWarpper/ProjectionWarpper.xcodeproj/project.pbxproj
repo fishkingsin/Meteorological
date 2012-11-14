@@ -43,7 +43,7 @@
 		1B482EE716525E7C0062037D /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B482EE116525E7C0062037D /* assimp.a */; };
 		1B482EE816525E7C0062037D /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B482EE516525E7C0062037D /* ofxAssimpModelLoader.cpp */; };
 		1BCF431F16533938006B33AF /* ofTextureAdv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCF431B16533938006B33AF /* ofTextureAdv.cpp */; };
-		1BCF432016533938006B33AF /* renderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCF431D16533938006B33AF /* renderManager.cpp */; };
+		1BCF432016533938006B33AF /* ofxRenderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCF431D16533938006B33AF /* ofxRenderManager.cpp */; };
 		1BCF435216533F05006B33AF /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCF433D16533F05006B33AF /* Syphon.framework */; };
 		1BCF435316533F05006B33AF /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BCF434016533F05006B33AF /* SyphonNameboundClient.m */; };
 		1BCF435416533F05006B33AF /* ofxSyphonClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BCF434516533F05006B33AF /* ofxSyphonClient.mm */; };
@@ -236,8 +236,8 @@
 		1B91891B15E353460031EAA8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		1BCF431B16533938006B33AF /* ofTextureAdv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofTextureAdv.cpp; sourceTree = "<group>"; };
 		1BCF431C16533938006B33AF /* ofTextureAdv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofTextureAdv.h; sourceTree = "<group>"; };
-		1BCF431D16533938006B33AF /* renderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = renderManager.cpp; sourceTree = "<group>"; };
-		1BCF431E16533938006B33AF /* renderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderManager.h; sourceTree = "<group>"; };
+		1BCF431D16533938006B33AF /* ofxRenderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRenderManager.cpp; sourceTree = "<group>"; };
+		1BCF431E16533938006B33AF /* ofxRenderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxRenderManager.h; sourceTree = "<group>"; };
 		1BCF432316533A0A006B33AF /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		1BCF432516533A0A006B33AF /* ofxDraggable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDraggable.h; sourceTree = "<group>"; };
 		1BCF433D16533F05006B33AF /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
@@ -650,8 +650,8 @@
 			children = (
 				1BCF431B16533938006B33AF /* ofTextureAdv.cpp */,
 				1BCF431C16533938006B33AF /* ofTextureAdv.h */,
-				1BCF431D16533938006B33AF /* renderManager.cpp */,
-				1BCF431E16533938006B33AF /* renderManager.h */,
+				1BCF431D16533938006B33AF /* ofxRenderManager.cpp */,
+				1BCF431E16533938006B33AF /* ofxRenderManager.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -1012,7 +1012,7 @@
 				1B482EAF165259250062037D /* ofxOscSender.cpp in Sources */,
 				1B482EE816525E7C0062037D /* ofxAssimpModelLoader.cpp in Sources */,
 				1BCF431F16533938006B33AF /* ofTextureAdv.cpp in Sources */,
-				1BCF432016533938006B33AF /* renderManager.cpp in Sources */,
+				1BCF432016533938006B33AF /* ofxRenderManager.cpp in Sources */,
 				1BCF435316533F05006B33AF /* SyphonNameboundClient.m in Sources */,
 				1BCF435416533F05006B33AF /* ofxSyphonClient.mm in Sources */,
 				1BCF435516533F05006B33AF /* ofxSyphonServer.mm in Sources */,

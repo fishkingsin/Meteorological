@@ -83,11 +83,29 @@ void testApp::update(){
     
 	ofPopMatrix();
 	img.draw(0,0,WIDTH,HEIGHT);
+	
 	ofPushMatrix();
 	ofTranslate(WIDTH*0.5,HEIGHT*0.5);
 	wall.drawFaces();
 	ofPopMatrix();
 //    warpper.end();
+	if(showHelp)
+	{
+		//thick grid lines for blending
+		ofSetColor(255, 255, 255);
+		ofSetLineWidth(3);
+		
+		//vertical line
+		for(int i = 0; i <= WIDTH*N_SCREEN ;i+=40){
+			ofLine(i, 0, i, HEIGHT);
+		}
+		
+		//horizontal lines
+		for(int j = 0; j <=HEIGHT; j+=40){
+			ofLine(0, j, WIDTH*N_SCREEN, j);
+		}
+	}
+
 		rm.endOffscreenDraw();
     
 	
@@ -124,6 +142,15 @@ void testApp::keyPressed(int key){
 		case 'h':
             showHelp = !showHelp;
             //ofShowCursor();
+			if(showHelp)
+            {
+				//				   gui.hide();
+                ofHideCursor();
+            }
+            else {
+				//                gui.show();
+                ofShowCursor();
+            }
             break;
 		case 'f':
 			ofToggleFullscreen();

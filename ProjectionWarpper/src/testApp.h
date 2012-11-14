@@ -17,6 +17,7 @@
 #include "WarpGlobal.h"
 #include "renderManager.h"
 #include "ofxAssimpModelLoader.h"
+#include "ofxSyphon.h"
 class testApp : public ofBaseApp {
     
 public:
@@ -50,6 +51,8 @@ public:
     float helpX,helpY;
     bool showHelp,showDraw;
 	ofxAssimpModelLoader wall;
+	
+	ofxSyphonServer mainOutputSyphonServer;
 };
 
 #endif

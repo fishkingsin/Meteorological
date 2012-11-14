@@ -41,12 +41,14 @@ void testApp::setup(){
 //	warpper.setup();
 	rm.allocateForNScreens(N_SCREEN, ofGetWidth(),ofGetHeight());
 	rm.loadFromXml("fbo_settings.xml");
-	guiIn.set(10,10,400,300);
-	guiOut.set(420,10,400,300);;
+	guiIn.set(10,10,500,300);
+	guiOut.set(520,10,400,300);;
 	
 	showDraw = true;
 	wall.loadModel("models/wall.dae");
 	wall.setScale(0.5, 0.5, 0.5);
+	
+	mainOutputSyphonServer.setName("Projection Warpper");
 	
 }
 #define NUM_BYTE 512
@@ -98,6 +100,7 @@ void testApp::draw(){
     ofBackground(0);
     ofSetColor(255);
 	rm.drawScreens();
+	mainOutputSyphonServer.publishScreen();
     if(showHelp)
 	{
 		rm.drawInputDiagnostically(guiIn);
@@ -151,9 +154,9 @@ void testApp::keyPressed(int key){
 		case 'b': 			break;
 		case 's':rm.saveToXml();
  			break;
-		case 'l':rm.loadFromXml("fbo_settings.xml");
+		case 'l':rm.reloadFromXml();
  			break;
-		case 'd':rm.reloadFromXml();
+		case 'd':rm.resetCoordinates;
  			break;
 			
     }

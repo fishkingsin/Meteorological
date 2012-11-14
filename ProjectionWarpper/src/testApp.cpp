@@ -156,7 +156,7 @@ void testApp::keyPressed(int key){
  			break;
 		case 'l':rm.reloadFromXml();
  			break;
-		case 'd':rm.resetCoordinates;
+		case 'd':rm.resetCoordinates();
  			break;
 			
     }

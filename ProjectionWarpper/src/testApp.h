@@ -15,6 +15,7 @@
 #include "ofxOsc.h"
 #include "ofxSimpleGuiToo.h"
 #include "WarpGlobal.h"
+#include "renderManager.h"
 #include "ofxAssimpModelLoader.h"
 class testApp : public ofBaseApp {
     
@@ -37,8 +38,10 @@ public:
     
     ofxOscReceiver oscReceiver;
     
-    ofPoint warpPoints[4];
-    MyBizierWarp warpper;
+//    ofPoint warpPoints[4];
+	renderManager rm;
+	ofRectangle guiIn,guiOut;
+//    MyBizierWarp warpper;
     bool bAlignRight;
     
     ofxXmlSettings settings;

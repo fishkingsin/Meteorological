@@ -7,6 +7,6 @@
 //
 
 #define N_SCREEN 3
-#define WIDTH 640
-#define HEIGHT 480
-#include "MyBizierWarp.h"
+#define WIDTH 1024
+#define HEIGHT 768
+//#include "MyBizierWarp.h"

@@ -38,7 +38,12 @@ void testApp::setup(){
     
 	gui.setAutoSave(true);
     bAlignRight = false;
-	warpper.setup();
+//	warpper.setup();
+	rm.allocateForNScreens(N_SCREEN, ofGetWidth(),ofGetHeight());
+	rm.loadFromXml("fbo_settings.xml");
+	guiIn.set(10,10,400,300);
+	guiOut.set(420,10,400,300);;
+	
 	showDraw = true;
 	wall.loadModel("models/wall.dae");
 	wall.setScale(0.5, 0.5, 0.5);
@@ -48,8 +53,8 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 	
-	
-    warpper.update();
+
+//    warpper.update();
 	
 	
 	
@@ -62,7 +67,8 @@ void testApp::update(){
 	
 	
     
-    warpper.begin();
+//    warpper.begin();
+	rm.startOffscreenDraw();
 	ofSetColor(0);
 	ofRect(0,0,WIDTH*N_SCREEN,HEIGHT);
     
@@ -79,7 +85,8 @@ void testApp::update(){
 	ofTranslate(WIDTH*0.5,HEIGHT*0.5);
 	wall.drawFaces();
 	ofPopMatrix();
-    warpper.end();
+//    warpper.end();
+		rm.endOffscreenDraw();
     
 	
 }
@@ -90,8 +97,13 @@ void testApp::draw(){
     
     ofBackground(0);
     ofSetColor(255);
-    
-    if(showDraw)warpper.draw();
+	rm.drawScreens();
+    if(showHelp)
+	{
+		rm.drawInputDiagnostically(guiIn);
+		rm.drawOutputDiagnostically(guiOut);
+	}
+//    if(showDraw)warpper.draw();
     
 	ofPushStyle();
 
@@ -137,9 +149,16 @@ void testApp::keyPressed(int key){
             break;
 			
 		case 'b': 			break;
+		case 's':rm.saveToXml();
+ 			break;
+		case 'l':rm.loadFromXml("fbo_settings.xml");
+ 			break;
+		case 'd':rm.reloadFromXml();
+ 			break;
 			
     }
-    warpper.keyPressed(key);
+//    warpper.keyPressed(key);
+	
 	
 }
 
@@ -147,7 +166,7 @@ void testApp::keyPressed(int key){
 void testApp::keyReleased(int key){
 	
 	
-    warpper.keyReleased(key);
+//    warpper.keyReleased(key);
 	
 }
 
@@ -158,20 +177,27 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-    warpper.mouseDragged(x, y, button);
-
+//    warpper.mouseDragged(x, y, button);
+	if(!rm.mouseDragInputPoint(guiIn, ofVec2f(x,y)))
+	{
+		rm.mouseDragOutputPoint(guiOut, ofVec2f(x,y));
+	}
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
 	
-    warpper.mousePressed(x, y, button);
-	
+//    warpper.mousePressed(x, y, button);
+	if(!rm.mouseSelectInputPoint(guiIn, ofVec2f(x,y)))
+	{
+		rm.mouseSelectOutputPoint(guiOut, ofVec2f(x,y));
+	}
+
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-    warpper.mouseReleased(x, y, button);
+//    warpper.mouseReleased(x, y, button);
 }
 
 //--------------------------------------------------------------

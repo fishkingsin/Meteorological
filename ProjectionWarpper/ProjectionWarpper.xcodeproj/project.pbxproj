@@ -44,6 +44,8 @@
 		1B482EAF165259250062037D /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B482EA1165259250062037D /* ofxOscSender.cpp */; };
 		1B482EE716525E7C0062037D /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B482EE116525E7C0062037D /* assimp.a */; };
 		1B482EE816525E7C0062037D /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B482EE516525E7C0062037D /* ofxAssimpModelLoader.cpp */; };
+		1BCF431F16533938006B33AF /* ofTextureAdv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCF431B16533938006B33AF /* ofTextureAdv.cpp */; };
+		1BCF432016533938006B33AF /* renderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCF431D16533938006B33AF /* renderManager.cpp */; };
 		51AE771B15CE786700AFF27C /* ofxBezierWarp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 51AE764D15CE784A00AFF27C /* ofxBezierWarp.cpp */; };
 		51AE773F15CE7C2C00AFF27C /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 51AE773815CE7C2C00AFF27C /* tinyxml.cpp */; };
 		51AE774015CE7C2C00AFF27C /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 51AE773A15CE7C2C00AFF27C /* tinyxmlerror.cpp */; };
@@ -227,6 +229,12 @@
 		1B482EE516525E7C0062037D /* ofxAssimpModelLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpModelLoader.cpp; sourceTree = "<group>"; };
 		1B482EE616525E7C0062037D /* ofxAssimpModelLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpModelLoader.h; sourceTree = "<group>"; };
 		1B91891B15E353460031EAA8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		1BCF431B16533938006B33AF /* ofTextureAdv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofTextureAdv.cpp; sourceTree = "<group>"; };
+		1BCF431C16533938006B33AF /* ofTextureAdv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofTextureAdv.h; sourceTree = "<group>"; };
+		1BCF431D16533938006B33AF /* renderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = renderManager.cpp; sourceTree = "<group>"; };
+		1BCF431E16533938006B33AF /* renderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderManager.h; sourceTree = "<group>"; };
+		1BCF432316533A0A006B33AF /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		1BCF432516533A0A006B33AF /* ofxDraggable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDraggable.h; sourceTree = "<group>"; };
 		51AE764D15CE784A00AFF27C /* ofxBezierWarp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBezierWarp.cpp; sourceTree = "<group>"; };
 		51AE764E15CE784A00AFF27C /* ofxBezierWarp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBezierWarp.h; sourceTree = "<group>"; };
 		51AE773815CE7C2C00AFF27C /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
@@ -609,6 +617,44 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		1BCF431916533938006B33AF /* ofxRenderManager */ = {
+			isa = PBXGroup;
+			children = (
+				1BCF431A16533938006B33AF /* src */,
+			);
+			name = ofxRenderManager;
+			path = ../../../addons/ofxRenderManager;
+			sourceTree = "<group>";
+		};
+		1BCF431A16533938006B33AF /* src */ = {
+			isa = PBXGroup;
+			children = (
+				1BCF431B16533938006B33AF /* ofTextureAdv.cpp */,
+				1BCF431C16533938006B33AF /* ofTextureAdv.h */,
+				1BCF431D16533938006B33AF /* renderManager.cpp */,
+				1BCF431E16533938006B33AF /* renderManager.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		1BCF432216533A0A006B33AF /* ofxDraggable */ = {
+			isa = PBXGroup;
+			children = (
+				1BCF432316533A0A006B33AF /* .gitignore */,
+				1BCF432416533A0A006B33AF /* src */,
+			);
+			name = ofxDraggable;
+			path = ../../../addons/ofxDraggable;
+			sourceTree = "<group>";
+		};
+		1BCF432416533A0A006B33AF /* src */ = {
+			isa = PBXGroup;
+			children = (
+				1BCF432516533A0A006B33AF /* ofxDraggable.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		51AE75D415CE784900AFF27C /* ofxBezierWarp */ = {
 			isa = PBXGroup;
 			children = (
@@ -660,6 +706,8 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				1BCF432216533A0A006B33AF /* ofxDraggable */,
+				1BCF431916533938006B33AF /* ofxRenderManager */,
 				1B482EB516525E7C0062037D /* ofxAssimpModelLoader */,
 				1B482E79165259250062037D /* ofxOsc */,
 				1B482E2D1652584C0062037D /* ofxMSAInteractiveObject */,
@@ -877,6 +925,8 @@
 				1B482EAE165259250062037D /* ofxOscReceiver.cpp in Sources */,
 				1B482EAF165259250062037D /* ofxOscSender.cpp in Sources */,
 				1B482EE816525E7C0062037D /* ofxAssimpModelLoader.cpp in Sources */,
+				1BCF431F16533938006B33AF /* ofTextureAdv.cpp in Sources */,
+				1BCF432016533938006B33AF /* renderManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

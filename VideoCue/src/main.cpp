@@ -4,16 +4,11 @@
 
 //========================================================================
 int main( ){
-
     ofAppGlutWindow window;
-#ifdef TARGET_OSX
-    window.setGlutDisplayString( "rgb double depth alpha samples>=4");
-#endif
-	ofSetupOpenGL(&window, 1280,768, OF_WINDOW);			// <-------- setup the GL context
+	ofSetupOpenGL(&window, 800,600, OF_WINDOW);			// <-------- setup the GL context
 
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:
 	ofRunApp( new testApp());
-
 }

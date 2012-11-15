@@ -1,3 +1,7 @@
 # Build and Release Folders
 *.app
 *~.skp
+*.mp4
+*.mov
+*.m4v
+*.avi

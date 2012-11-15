@@ -2,22 +2,23 @@
 #define _TEST_APP
 
 /*
- *  ParallaxScroll
+ *  testApp
  *
  *  Created by James Kong Kingsin on 12-08-07.
- *	ParallaxScroll effect control by network message
+ *	
  *  
  *
  */
 #include "ofMain.h"
 
 
-#include "ofxOsc.h"
-#include "ofxSimpleGuiToo.h"
-#include "WarpGlobal.h"
 #include "ofxRenderManager.h"
-#include "ofxAssimpModelLoader.h"
 #include "ofxSyphon.h"
+#include "ofxDuration.h"
+#include "ofxTextInputField.h"
+#include "ofxAutoControlPanel.h"
+#include "InputPanel.h"
+#include "OutputPanel.h"
 class testApp : public ofBaseApp {
     
 public:
@@ -34,25 +35,37 @@ public:
     void mousePressed(int x, int y, int button);
     void mouseReleased(int x, int y, int button);
     void windowResized(int w, int h);
-	
+	//Test Copntent-----------------------------------------------------
     ofImage img;
-    
-    ofxOscReceiver oscReceiver;
-    
-//    ofPoint warpPoints[4];
+	
+	//video Mapping-----------------------------------------------------
 	ofxRenderManager rm;
-	ofRectangle guiIn,guiOut;
-//    MyBizierWarp warpper;
-    bool bAlignRight;
+//	ofRectangle guiIn,guiOut,durationRect;
+	
+	//Settings-----------------------------------------------------
     
     ofxXmlSettings settings;
-    string helpStr;
-    ofTrueTypeFont font;
-    float helpX,helpY;
-    bool showHelp,showDraw;
-	ofxAssimpModelLoader wall;
+
+	//syphon
+	ofxSyphonServer syphonServer;
+	ofxSyphonClient syphonClient;
+	ofTexture tex;
+	//gui
+	ofxAutoControlPanel gui;
+	simpleLogger logger;
+	void eventsIn(guiCallbackData & data);
+	InputPanel *inputPanel;
+	OutputPanel *outputPanel;
+	bool showGrid,bExtendScreen;
 	
-	ofxSyphonServer mainOutputSyphonServer;
+	//Duration-----------------------------------------------------
+	ofxDuration duration;
+	
+	void trackUpdated(ofxDurationEventArgs& args);
+	string ip;
+	int port;
+	int WIDTH,HEIGHT,N_SCREEN;
+	
 };
 
 #endif

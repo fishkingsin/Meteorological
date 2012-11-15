@@ -47,7 +47,7 @@ public:
 		return boundingRect.height;
 	}
 	
-
+	
 	
 	void draw(float x, float y, float w, float h) {
 		if(ptr!=NULL)ptr->drawOutputDiagnostically(boundingRect);
@@ -70,10 +70,12 @@ public:
 		ofRectangle temp = boundingRect;
 		temp.x = 0;
 		temp.y = 0;
-		if(!ptr->mouseDragOutputPoint(temp, ofVec2f(x,y)))
-		{
-			//ptr->mouseDragInputPoint(boundingRect, ofVec2f(x,y));
-			
+		if( isInsideRect(x, y, ofRectangle(0, 0, boundingRect.width, boundingRect.height) ) ){
+			if(!ptr->mouseDragOutputPoint(temp, ofVec2f(x,y)))
+			{
+				//ptr->mouseDragInputPoint(boundingRect, ofVec2f(x,y));
+				
+			}
 		}
 		
 	}

@@ -3,7 +3,7 @@
 
 
 #define USE_TRANSPARENCY false
-static bool reload = false;
+
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -28,30 +28,53 @@ void testApp::setup(){
 	img.loadImage(settings.getValue("IMAGE_FILE","game_of_thrones.jpg"));
 	
 	
-	duration.setup(settings.getValue("PORT",12345));
-	
-	duration.setupFont("GUI/NewMedia Fett.ttf", 12);
+//	duration.setup(settings.getValue("PORT",12345));
+//	
+//	duration.setupFont(settings.getValue("FONT","GUI/NewMedia Fett.ttf"), 12);
 	//ofxDuration is an OSC receiver, with special functions to listen for Duration specific messages
 	//optionally set up a font for debugging
-	ofAddListener(duration.events.trackUpdated, this, &testApp::trackUpdated);
+//	ofAddListener(duration.events.trackUpdated, this, &testApp::trackUpdated);
 	
 	
 	
-	gui.setup(ofGetWidth(),ofGetHeight());
+	gui.setup(settings.getValue("GUI_WIDTH",1280),settings.getValue("GUI_HEIGHT",768));
+	gui.loadFont(settings.getValue("FONT","MONACO.TTF"), 8);
 	gui.ofxControlPanel::addPanel("General", 1);
 	gui.setWhichPanel("General");
 	gui.addToggle("ExtendScreen", bExtendScreen) ;
 	gui.addToggle("Grid", showGrid) ;
+	gui.addToggle("showDemoPic", showDemoPic) ;
+	
+//	vector <string> list;
+//	list.push_back("ExtendScreen");
+//	list.push_back("Grid");
+//	gui.createEventGroup("BUTTON_EVENT_GROUP", list);
+//	ofAddListener(gui.getEventGroup("BUTTON_EVENT_GROUP"), this, &testApp::eventsIn);
+	gui.setWhichPanel(1);
+	gui.enableIgnoreLayoutFlag();
+	gui.addLogger("events logger", &logger, 410, 300);
+	gui.disableIgnoreLayoutFlag();
+	gui.setupEvents();
+	gui.enableEvents();
+	
 	
 	gui.ofxControlPanel::addPanel("SyphonPanel", 1);
 	gui.setWhichPanel("SyphonPanel");
-	gui.addTextInput("ServerName", "Syphon Server", 128);
-	gui.addTextInput("IncomingServerName", "Syphon Client", 128);
-	
+	outServName = gui.addTextInput("OutgoingServerName", "Syphon Server", 128);
+	gui.addToggle("SetOutServName", false) ;
+	inServName = gui.addTextInput("IncomingServerName", "VideoCue", 128);
+	gui.addToggle("SetInServName", false) ;
+	vector <string> list;
+	list.push_back("SetOutServName");
+	list.push_back("SetInServName");
+	gui.createEventGroup("SyphonEvent_GROUP", list);
+	ofAddListener(gui.getEventGroup("SyphonEvent_GROUP"), this, &testApp::SyphonEvent);
 	
 	gui.ofxControlPanel::addPanel("RenderManager", 1);
 	gui.setWhichPanel("RenderManager");
-	
+	gui.addSlider2D("Screen Position", "SCREEN_POSTION", 0,0,
+					0, ofGetScreenWidth(),
+					0, ofGetScreenHeight(),true);
 	gui.ofxControlPanel::addPanel("InputPanel", 1);
 	gui.setWhichPanel("InputPanel");
 	inputPanel = new InputPanel(&rm);
@@ -62,35 +85,67 @@ void testApp::setup(){
 	outputPanel = new OutputPanel(&rm);
 	gui.addCustomRect("Output Diagnosis", outputPanel, gui.getWidth()*0.8, gui.getHeight()*0.8);
 	
+	//  -- this gives you back an ofEvent for all events in this control panel object
+	ofAddListener(gui.guiEvent, this, &testApp::eventsIn);
+	gui.loadSettings("control_settings.xml");
+	
 	syphonServer.setName(settings.getValue("OUTGOING_SYPHON_SERVER","Syphon Server"));
 	syphonClient.setup();
 	
 	syphonClient.setApplicationName("");
 	syphonClient.setServerName(settings.getValue("INCOMING_SYPHON_SERVER","VideoCue"));
-	
+
 }
 //--------------------------------------------------------------
 //Or wait to receive messages, sent only when the track changed
-void testApp::trackUpdated(ofxDurationEventArgs& args){
-	ofLogVerbose("Duration Event") << "track type " << args.track->type << " updated with name " << args.track->name << " and value " << args.track->value << endl;
-	
-	if(args.track->name=="/FBOSetting")
-	{
-		ofLogVerbose("FBOSetting") << "track type " << args.track->type << " updated with name " <<
-		args.track->name << " and value " << args.track->flag.c_str() << endl;
-		
-		ofFile file(args.track->flag);
-		if(file.exists() && file.getExtension()=="xml")
-		{
-			
-			rm.loadFromXml(args.track->flag);
-		}
-	}
-}
+//void testApp::trackUpdated(ofxDurationEventArgs& args){
+//	ofLogVerbose("Duration Event") << "track type " << args.track->type << " updated with name " << args.track->name << " and value " << args.track->value << endl;
+//	
+//	if(args.track->name=="/FBOSetting")
+//	{
+//		ofLogVerbose("FBOSetting") << "track type " << args.track->type << " updated with name " <<
+//		args.track->name << " and value " << args.track->flag.c_str() << endl;
+//		
+//		ofFile file(args.track->flag);
+//		if(file.exists() && file.getExtension()=="xml")
+//		{
+//			
+//			rm.loadFromXml(args.track->flag);
+//		}
+//	}
+//}
 //this captures all our control panel events - unless its setup differently in testApp::setup
 //--------------------------------------------------------------
+void testApp::SyphonEvent(guiCallbackData & data){
+	printf("testApp::SyphonEvent - name is %s - \n", data.getXmlName().c_str());
+	if( data.isElement( "SetOutServName" ) && data.getInt(0) == 1 ){
+		syphonServer.setName( outServName->getValueText() );
+		gui.setValueB("SetOutServName", false);
+		logger.log(OF_LOG_NOTICE, "syphonServer.setName %s",outServName->getValueText().c_str() );
+	}
+	else if( data.isElement( "SetInServName" ) && data.getInt(0) == 1 ){
+		syphonClient.setServerName(inServName->getValueText());
+		gui.setValueB("SetInServName", false);
+		
+		logger.log(OF_LOG_NOTICE, "syphonClient.setName %s",inServName->getValueText().c_str() );
+	}
+
+}
 void testApp::eventsIn(guiCallbackData & data){
-	
+	if( data.isElement( "ExtendScreen" ) )//&& data.getInt(0) == 1 )
+	{
+		bExtendScreen = data.getInt(0);
+//		gui.setValueB("ExtendScreen", false);
+	}
+	if( data.isElement( "Grid" ) )//&& data.getInt(0) == 1 )
+	{
+		showGrid = data.getInt(0);
+//		gui.setValueB("Grid", false);
+	}
+	if(data.isElement("showDemoPic"))
+	{
+		showDemoPic = data.getInt(0);
+	}
 	//lets send all events to our logger
 	if( !data.isElement( "events logger" ) ){
 		string logStr = data.getXmlName();
@@ -125,11 +180,7 @@ void testApp::eventsIn(guiCallbackData & data){
 #define NUM_BYTE 512
 //--------------------------------------------------------------
 void testApp::update(){
-	if(reload)
-    {
-        
-		reload = false;
-    }
+	
 	
 	rm.startOffscreenDraw();
 	ofSetColor(0);
@@ -145,9 +196,10 @@ void testApp::update(){
 	ofPopMatrix();
 	syphonClient.draw(0,0,WIDTH,HEIGHT);
 	
-	
+	if(showDemoPic)img.draw(0,0,WIDTH,HEIGHT);
 	if(showGrid)
 	{
+		ofPushStyle();
 		//thick grid lines for blending
 		ofSetColor(150,150,150);
 		ofSetLineWidth(3);
@@ -163,6 +215,7 @@ void testApp::update(){
 			if(j%2==0)ofSetColor(255,255,255);
 			ofLine(0, j, WIDTH, j);
 		}
+		ofPopStyle();
 	}
 	
 	rm.endOffscreenDraw();
@@ -177,13 +230,16 @@ void testApp::draw(){
 	ofEnableAlphaBlending();
     ofBackground(0);
     ofSetColor(255);
-	
+	ofPushMatrix();
+	ofTranslate(gui.getValueI("SCREEN_POSTION",0), gui.getValueI("SCREEN_POSTION",1));
 	rm.drawScreens();
+	ofPopMatrix();
 	if(bExtendScreen)
 	{
 		ofPushMatrix();
 		if(showGrid)
 		{
+			ofPushStyle();
 			//thick grid lines for blending
 			ofSetColor(255, 255, 255);
 			ofSetLineWidth(3);
@@ -198,9 +254,10 @@ void testApp::draw(){
 				if(j%2==0)ofSetColor(255,255,255);
 				ofLine(0, j, ofGetScreenWidth(), j);
 			}
+			ofPopStyle();
 		}
 		ofTranslate(1920, 0);
-		rm.drawScreens();
+//		rm.drawScreens();
 		ofPopMatrix();
 	}
 	tex.loadScreenData(0,0,WIDTH,HEIGHT);
@@ -214,6 +271,10 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
 	//	if(textInput.getIsEditing())return;
+	bool control_panel_ate_key = gui.ofxControlPanel::keyPressed( key );
+	
+	if ( !control_panel_ate_key )
+	{
     switch(key) {
 			break;
 		case 'b':
@@ -226,6 +287,7 @@ void testApp::keyPressed(int key){
  			break;
 			
     }
+	}
 	
 	
 }

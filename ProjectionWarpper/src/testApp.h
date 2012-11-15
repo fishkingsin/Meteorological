@@ -14,7 +14,7 @@
 
 #include "ofxRenderManager.h"
 #include "ofxSyphon.h"
-#include "ofxDuration.h"
+//#include "ofxDuration.h"
 #include "ofxTextInputField.h"
 #include "ofxAutoControlPanel.h"
 #include "InputPanel.h"
@@ -40,7 +40,6 @@ public:
 	
 	//video Mapping-----------------------------------------------------
 	ofxRenderManager rm;
-//	ofRectangle guiIn,guiOut,durationRect;
 	
 	//Settings-----------------------------------------------------
     
@@ -54,16 +53,19 @@ public:
 	ofxAutoControlPanel gui;
 	simpleLogger logger;
 	void eventsIn(guiCallbackData & data);
+	void SyphonEvent(guiCallbackData & data);
 	InputPanel *inputPanel;
 	OutputPanel *outputPanel;
-	bool showGrid,bExtendScreen;
+	guiTypeTextInput *inServName;
+	guiTypeTextInput *outServName;
+	bool showGrid,bExtendScreen,showDemoPic;
 	
 	//Duration-----------------------------------------------------
-	ofxDuration duration;
+//	ofxDuration duration;
 	
-	void trackUpdated(ofxDurationEventArgs& args);
-	string ip;
-	int port;
+//	void trackUpdated(ofxDurationEventArgs& args);
+//	string ip;
+//	int port;
 	int WIDTH,HEIGHT,N_SCREEN;
 	
 };

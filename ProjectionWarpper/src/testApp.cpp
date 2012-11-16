@@ -54,8 +54,7 @@ void testApp::setup(){
 	gui.enableIgnoreLayoutFlag();
 	gui.addLogger("events logger", &logger, 410, 300);
 	gui.disableIgnoreLayoutFlag();
-	gui.setupEvents();
-	gui.enableEvents();
+
 	
 	
 	gui.ofxControlPanel::addPanel("SyphonPanel", 1);
@@ -64,9 +63,14 @@ void testApp::setup(){
 	gui.addToggle("SetOutServName", false) ;
 	inServName = gui.addTextInput("IncomingServerName", "VideoCue", 128);
 	gui.addToggle("SetInServName", false) ;
+	
+	gui.addToggle("Enable_Incoming", false) ;
+	gui.addToggle("Enable_Outgoing", false) ;
 	vector <string> list;
 	list.push_back("SetOutServName");
 	list.push_back("SetInServName");
+	list.push_back("Enable_Incoming");
+	list.push_back("Enable_Outgoing");
 	gui.createEventGroup("SyphonEvent_GROUP", list);
 	ofAddListener(gui.getEventGroup("SyphonEvent_GROUP"), this, &testApp::SyphonEvent);
 	
@@ -87,13 +91,15 @@ void testApp::setup(){
 	
 	//  -- this gives you back an ofEvent for all events in this control panel object
 	ofAddListener(gui.guiEvent, this, &testApp::eventsIn);
+	gui.setupEvents();
+	gui.enableEvents();
 	gui.loadSettings("control_settings.xml");
 	
 	syphonServer.setName(settings.getValue("OUTGOING_SYPHON_SERVER","Syphon Server"));
 	syphonClient.setup();
 	
 	syphonClient.setApplicationName("");
-	syphonClient.setServerName(settings.getValue("INCOMING_SYPHON_SERVER","VideoCue"));
+	syphonClient.setServerName(settings.getValue("INCOMING_SYPHON_SERVER","QLab"));
 
 }
 //--------------------------------------------------------------
@@ -117,17 +123,27 @@ void testApp::setup(){
 //this captures all our control panel events - unless its setup differently in testApp::setup
 //--------------------------------------------------------------
 void testApp::SyphonEvent(guiCallbackData & data){
-	printf("testApp::SyphonEvent - name is %s - \n", data.getXmlName().c_str());
+//	printf("testApp::SyphonEvent - name is %s - \n", data.getXmlName().c_str());
 	if( data.isElement( "SetOutServName" ) && data.getInt(0) == 1 ){
 		syphonServer.setName( outServName->getValueText() );
 		gui.setValueB("SetOutServName", false);
 		logger.log(OF_LOG_NOTICE, "syphonServer.setName %s",outServName->getValueText().c_str() );
+		ofLogVerbose("syphonServer.setName ")<<outServName->getValueText();;
 	}
 	else if( data.isElement( "SetInServName" ) && data.getInt(0) == 1 ){
 		syphonClient.setServerName(inServName->getValueText());
 		gui.setValueB("SetInServName", false);
 		
 		logger.log(OF_LOG_NOTICE, "syphonClient.setName %s",inServName->getValueText().c_str() );
+		ofLogVerbose("syphonClient.setName ")<<inServName->getValueText();
+	}
+	else if( data.isElement( "Enable_Incoming" ))
+	{
+		bSyphonClient = data.getInt(0);
+	}
+	else if( data.isElement( "Enable_Outgoing" ))
+	{
+		bSyphonServer = data.getInt(0);	
 	}
 
 }
@@ -194,7 +210,7 @@ void testApp::update(){
 	ofBackgroundGradient(ofColor(150), ofColor(0));
     
 	ofPopMatrix();
-	syphonClient.draw(0,0,WIDTH,HEIGHT);
+	if(bSyphonClient) syphonClient.draw(0,0,WIDTH,HEIGHT);
 	
 	if(showDemoPic)img.draw(0,0,WIDTH,HEIGHT);
 	if(showGrid)
@@ -260,8 +276,11 @@ void testApp::draw(){
 //		rm.drawScreens();
 		ofPopMatrix();
 	}
-	tex.loadScreenData(0,0,WIDTH,HEIGHT);
-	syphonServer.publishTexture(&tex);
+	if(bSyphonClient)
+	{
+		tex.loadScreenData(0,0,WIDTH,HEIGHT);
+		syphonServer.publishTexture(&tex);
+	}
 	
     
 	ofPushStyle();

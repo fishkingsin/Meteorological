@@ -58,7 +58,7 @@ public:
 	OutputPanel *outputPanel;
 	guiTypeTextInput *inServName;
 	guiTypeTextInput *outServName;
-	bool showGrid,bExtendScreen,showDemoPic;
+	bool showGrid,bExtendScreen,showDemoPic,bSyphonServer,bSyphonClient;
 	
 	//Duration-----------------------------------------------------
 //	ofxDuration duration;

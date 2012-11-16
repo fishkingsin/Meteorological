@@ -5,9 +5,15 @@
     <val_0>0.000000000</val_0>
 </Grid>
 <SCREEN_POSTION>
-    <val_0>1920.000122070</val_0>
+    <val_0>144.000000000</val_0>
     <val_1>0.000000000</val_1>
 </SCREEN_POSTION>
 <showDemoPic>
     <val_0>0.000000000</val_0>
 </showDemoPic>
+<SetOutServName>
+    <val_0>0.000000000</val_0>
+</SetOutServName>
+<SetInServName>
+    <val_0>0.000000000</val_0>
+</SetInServName>

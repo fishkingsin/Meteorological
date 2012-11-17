@@ -1,0 +1,7 @@
+ofxNetwork
+ofxOpenCv
+ofxOsc
+ofxXmlSettings
+ofxControlPanel
+ofxDuration
+ofxLEDs

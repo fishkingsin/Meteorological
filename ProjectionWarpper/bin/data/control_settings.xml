@@ -5,7 +5,7 @@
     <val_0>0.000000000</val_0>
 </Grid>
 <SCREEN_POSTION>
-    <val_0>144.000000000</val_0>
+    <val_0>0.000000000</val_0>
     <val_1>0.000000000</val_1>
 </SCREEN_POSTION>
 <showDemoPic>
@@ -17,3 +17,9 @@
 <SetInServName>
     <val_0>0.000000000</val_0>
 </SetInServName>
+<Enable_Incoming>
+    <val_0>1.000000000</val_0>
+</Enable_Incoming>
+<Enable_Outgoing>
+    <val_0>0.000000000</val_0>
+</Enable_Outgoing>

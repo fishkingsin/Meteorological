@@ -36,6 +36,8 @@ class testApp : public ofBaseApp{
     int size,padding;
     ofVideoGrabber 		vidGrabber;
     ofxCvColorImage			colorImg;
+    ofRectangle  drawRect;
+
     
     ofxCvGrayscaleImage 	grayImage;
     ofxCvGrayscaleImage 	grayBg;

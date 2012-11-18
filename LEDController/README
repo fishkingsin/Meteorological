@@ -1,0 +1,5 @@
+
+cd ../../../addons
+git clone https://github.com/YCAMInterlab/ofxDuration.git
+git clone https://github.com/kylemcdonald/ofxControlPanel.git
+git clone https://github.com/Flightphase/ofxRange.git

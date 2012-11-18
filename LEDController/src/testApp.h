@@ -3,7 +3,8 @@
 #include "ofMain.h"
 #include "ofxAutoControlPanel.h"
 #include "ofxCvMain.h"
-#define NUM_LED 50
+#define NUM_LED 25
+#define NUM_PEGGY 2
 class LED : public ofVec2f
 {
 public:
@@ -28,6 +29,8 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
     vector <LED> LEDs;
+    void renderToPeggy( int display);
+    
     ofxAutoControlPanel gui;
     void eventsIn(guiCallbackData & data);
     int size,padding;
@@ -37,7 +40,11 @@ class testApp : public ofBaseApp{
     ofxCvGrayscaleImage 	grayImage;
     ofxCvGrayscaleImage 	grayBg;
     ofxCvGrayscaleImage 	grayDiff;
+    ofxCvContourFinder 	contourFinder;
+    ofFbo scaledFbo;
+    ofPixels scaledPixels;
     int 				threshold;
-    bool				bLearnBakground;
+    bool				bLearnBakground,bSerial,bFlip,bMirror;
+    ofSerial port1,port2;
 
 };

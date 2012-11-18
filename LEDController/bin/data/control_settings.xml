@@ -4,3 +4,18 @@
 <PADDING>
     <val_0>11.449999809</val_0>
 </PADDING>
+<LEARN_BACKGROUND>
+    <val_0>0.000000000</val_0>
+</LEARN_BACKGROUND>
+<THRESHOLD>
+    <val_0>29.222223282</val_0>
+</THRESHOLD>
+<EnableSerial>
+    <val_0>0.000000000</val_0>
+</EnableSerial>
+<bFlip>
+    <val_0>1.000000000</val_0>
+</bFlip>
+<bMirror>
+    <val_0>0.000000000</val_0>
+</bMirror>

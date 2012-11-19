@@ -1,8 +1,10 @@
 # Build and Release Folders
 *.app
 *~.skp
+*.skp
 *.mp4
 *.mov
 *.m4v
 *.avi
 .DS_Store
+*.zip

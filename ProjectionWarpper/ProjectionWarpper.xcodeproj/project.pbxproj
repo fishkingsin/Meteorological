@@ -126,7 +126,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1B1B058915E3390F00172CC7 /* configs.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = configs.xml; path = bin/data/configs.xml; sourceTree = "<group>"; };
 		1B1B0F461654CF8100CE3172 /* ofOscParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofOscParameter.h; sourceTree = "<group>"; };
 		1B1B0F471654CF8100CE3172 /* ofParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofParameter.h; sourceTree = "<group>"; };
 		1B1B0F481654CF8100CE3172 /* ofxBaseGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBaseGui.cpp; sourceTree = "<group>"; };
@@ -946,7 +945,6 @@
 			isa = PBXGroup;
 			children = (
 				1B91891B15E353460031EAA8 /* README.md */,
-				1B1B058915E3390F00172CC7 /* configs.xml */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,

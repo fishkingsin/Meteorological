@@ -8,12 +8,7 @@ unsigned char peggyHeader[6] = {0xde,0xad,0xbe,0xef,1,0};
 unsigned char *peggyFrame;
 //--------------------------------------------------------------
 void testApp::setup(){
-    ofSetLogLevel(OF_LOG_VERBOSE);
-    ofSetFrameRate(60);
-    ofSetBackgroundColor(0);
-    port1.setup(peggy1Serial, 115200);
-    port2.setup(peggy2Serial, 115200);
-    ofLogVerbose("peggyHeader") << peggyHeader;
+    
     peggyFrame = new unsigned char[13*25];
     
     LEDs.assign(NUM_LED*NUM_LED*NUM_PEGGY, LED());
@@ -41,9 +36,14 @@ void testApp::setup(){
     
     
     ofxXmlSettings settings;
-    settings.loadFile("config.xml");
-    
-    gui.setup(settings.getValue("GUI_WIDTH",1280),settings.getValue("GUI_HEIGHT",768));
+    settings.loadFile("./settings/config.xml");
+    ofSetLogLevel(OF_LOG_VERBOSE);
+    ofSetFrameRate(60);
+    ofSetBackgroundColor(0);
+    port1.setup(settings.getValue("PEGGY_SERIAL_NAME",peggy1Serial,0), 115200);
+    port2.setup(settings.getValue("PEGGY_SERIAL_NAME",peggy2Serial,1), 115200);
+       
+	gui.setup(settings.getValue("GUI_WIDTH",1280),settings.getValue("GUI_HEIGHT",768));
 	gui.loadFont(settings.getValue("FONT","MONACO.TTF"), 8);
 	gui.ofxControlPanel::addPanel("Settings", 1);
 	gui.setWhichPanel("Settings");
@@ -72,7 +72,7 @@ void testApp::setup(){
 	ofAddListener(gui.guiEvent, this, &testApp::eventsIn);
 	gui.setupEvents();
 	gui.enableEvents();
-	gui.loadSettings("control_settings.xml");
+	gui.loadSettings("./settings/control_settings.xml");
     
     
     
@@ -193,9 +193,7 @@ void testApp::draw(){
             int i = x+y*NUM_LED;
             ofPushStyle();
             ofColor c = scaledPixels.getColor(x, y);
-            float avg = (c.r+c.g+c.b)*0.333333;
-
-                ofSetColor(avg);
+            ofSetColor(c.getBrightness());
             ofCircle(20+LEDs[i].x*(size+padding), 20+LEDs[i].y*(size+padding), size*0.5);
             ofPopStyle();
         }
@@ -225,7 +223,7 @@ void testApp::renderToPeggy( int display)
             int br = ((int)c.getBrightness())>>4;
             if (x % 2 ==0)
                 val = (unsigned char)br;
-            else
+            else	
             {
                 val = (unsigned char) ((br<<4)|val);
                 peggyFrame[idx++]= val;

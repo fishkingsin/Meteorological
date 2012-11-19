@@ -1,21 +1,27 @@
 <LED_SIZE>
-    <val_0>3.750000000</val_0>
+    <val_0>8.149999619</val_0>
 </LED_SIZE>
 <PADDING>
-    <val_0>11.449999809</val_0>
+    <val_0>10.900000572</val_0>
 </PADDING>
 <LEARN_BACKGROUND>
     <val_0>0.000000000</val_0>
 </LEARN_BACKGROUND>
 <THRESHOLD>
-    <val_0>29.222223282</val_0>
+    <val_0>133.644439697</val_0>
 </THRESHOLD>
 <EnableSerial>
     <val_0>0.000000000</val_0>
 </EnableSerial>
 <bFlip>
-    <val_0>1.000000000</val_0>
+    <val_0>0.000000000</val_0>
 </bFlip>
 <bMirror>
     <val_0>0.000000000</val_0>
 </bMirror>
+<bRipple>
+    <val_0>0.000000000</val_0>
+</bRipple>
+<bCV>
+    <val_0>1.000000000</val_0>
+</bCV>

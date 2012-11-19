@@ -1,6 +1,5 @@
 #include "testApp.h"
-#define CAMW 320
-#define CAMH 240
+
 string peggy1Serial = "/dev/tty.usbserial-A7004E4E";
 string peggy2Serial = "/dev/tty.usbserial-A7004E4F";
 
@@ -42,7 +41,11 @@ void testApp::setup(){
     ofSetBackgroundColor(0);
     port1.setup(settings.getValue("PEGGY_SERIAL_NAME",peggy1Serial,0), 115200);
     port2.setup(settings.getValue("PEGGY_SERIAL_NAME",peggy2Serial,1), 115200);
-       
+	
+	
+	ofxControlPanel::setBackgroundColor(simpleColor(30, 30, 30, 125));
+	ofxControlPanel::setTextColor(simpleColor(255, 255, 255, 255));
+
 	gui.setup(settings.getValue("GUI_WIDTH",1280),settings.getValue("GUI_HEIGHT",768));
 	gui.loadFont(settings.getValue("FONT","MONACO.TTF"), 8);
 	gui.ofxControlPanel::addPanel("Settings", 1);
@@ -52,6 +55,9 @@ void testApp::setup(){
     gui.addToggle("EnableSerial",bSerial);
     gui.addToggle("bFlip",bFlip);
     gui.addToggle("bMirror",bMirror);
+	gui.addToggle("bRipple",bRipple);
+	gui.addToggle("bCV",bCV);
+	
     
     gui.ofxControlPanel::addPanel("cv", 3);
 	gui.setWhichPanel("cv");
@@ -74,7 +80,11 @@ void testApp::setup(){
 	gui.enableEvents();
 	gui.loadSettings("./settings/control_settings.xml");
     
-    
+	//    ripples.assign(10,Ripple());
+	for(int i= 0 ; i < 10 ; i++)
+	{
+		ripples.push_back(new Ripple());
+	}
     
 }
 void testApp::eventsIn(guiCallbackData & data){
@@ -112,6 +122,16 @@ void testApp::eventsIn(guiCallbackData & data){
         bMirror = data.getInt(0);
         
     }
+	else if( data.isElement( "bRipple" ) )
+	{
+        bRipple = data.getInt(0);
+        
+    }
+	else if( data.isElement( "bCV" ) )
+	{
+        bCV = data.getInt(0);
+        
+    }
     
 }
 //--------------------------------------------------------------
@@ -135,41 +155,60 @@ void testApp::update(){
     contourFinder.findContours(grayDiff, 20, (340*240)/3, 10, true);	// find holes
     scaledFbo.begin();
     ofClear(0);
-//    contourFinder.draw(0,0,NUM_LED,NUM_LED*NUM_PEGGY);
-    float scalex = NUM_LED*1.0f/CAMW*1.0f;
-    float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
-    float tx = 0;
-    float ty = 0;
-    ofPushStyle();
-    glPushMatrix();
-    if(bMirror)
-    {
-        scalex = -scalex;
-        tx = NUM_LED;
-    }
-    if(bFlip)
-    {
-        scaley = -scaley;
-        ty = NUM_LED*NUM_PEGGY;
-    }
-    glTranslatef(tx, ty, 0);
-    glScalef( scalex, scaley, 0.0 );
-
-
-	// ---------------------------- draw the blobs
-	ofSetHexColor(0xFFFFFF);
-    ofFill();
-	for( int i=0; i<(int)contourFinder.blobs.size(); i++ ) {
-
-		ofBeginShape();
-		for( int j=0; j<contourFinder.blobs[i].nPts; j++ ) {
-			ofVertex( contourFinder.blobs[i].pts[j].x, contourFinder.blobs[i].pts[j].y );
+	
+	if(bRipple)
+	{
+		float scalex = NUM_LED*1.0f/CAMW*1.0f;
+		float scaley = scalex;//(NUM_LED*NUM_PEGGY)*1.0f/CAMH*2.0f;
+		glPushMatrix();
+		glScalef( scalex, scaley, 0.0 );
+		vector <Ripple*>::iterator r;
+		for(r = ripples.begin() ; r!=ripples.end() ;r++)
+		{
+			Ripple * ripple = *r;
+			ripple->render();
 		}
-		ofEndShape();
-        
+		glPopMatrix();
 	}
-	glPopMatrix();
-	ofPopStyle();
+	if(bCV)
+	{
+		float scalex = NUM_LED*1.0f/CAMW*1.0f;
+		float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
+		float tx = 0;
+		float ty = 0;
+		ofPushStyle();
+		glPushMatrix();
+
+		if(bMirror)
+		{
+			scalex = -scalex;
+			tx = NUM_LED;
+		}
+		if(bFlip)
+		{
+			scaley = -scaley;
+			ty = NUM_LED*NUM_PEGGY;
+		}
+		glTranslatef(tx, ty, 0);
+		glScalef( scalex, scaley, 0.0 );
+		
+		
+		// ---------------------------- draw the blobs
+		ofSetHexColor(0xFFFFFF);
+		ofFill();
+		for( int i=0; i<(int)contourFinder.blobs.size(); i++ ) {
+			
+			ofBeginShape();
+			for( int j=0; j<contourFinder.blobs[i].nPts; j++ ) {
+				ofVertex( contourFinder.blobs[i].pts[j].x, contourFinder.blobs[i].pts[j].y );
+			}
+			ofEndShape();
+			
+		}
+		glPopMatrix();
+		ofPopStyle();
+	}
+	
     scaledFbo.end();
     scaledFbo.readToPixels(scaledPixels);
     
@@ -181,10 +220,12 @@ void testApp::update(){
     }
 }
 
+
 //--------------------------------------------------------------
 void testApp::draw(){
     ofBackground(0);
-    
+	
+	
     
     for(int y = 0 ; y < NUM_LED*NUM_PEGGY ; y++)
     {
@@ -223,7 +264,7 @@ void testApp::renderToPeggy( int display)
             int br = ((int)c.getBrightness())>>4;
             if (x % 2 ==0)
                 val = (unsigned char)br;
-            else	
+            else
             {
                 val = (unsigned char) ((br<<4)|val);
                 peggyFrame[idx++]= val;
@@ -236,7 +277,7 @@ void testApp::renderToPeggy( int display)
     if (display == 0){
         port1.writeBytes(peggyHeader,6);
         port1.writeBytes(peggyFrame,13*25);
-    }else{ 
+    }else{
         port2.writeBytes(peggyHeader,6);
         port2.writeBytes(peggyFrame,13*25);
     }

@@ -18,7 +18,11 @@
     <val_0>0.000000000</val_0>
 </SetInServName>
 <Enable_Incoming>
+<<<<<<< HEAD:ProjectionWarpper/bin/data/control_settings.xml
     <val_0>1.000000000</val_0>
+=======
+    <val_0>0.000000000</val_0>
+>>>>>>> projection warpper update:ProjectionWarpper/bin/data/settings/control_settings.xml
 </Enable_Incoming>
 <Enable_Outgoing>
     <val_0>0.000000000</val_0>

@@ -1,4 +1,6 @@
-
+https://raw.github.com/fishkingsin/Meteorological/master/LEDController/screen_shot_01.png
+https://raw.github.com/fishkingsin/Meteorological/master/LEDController/screen_shot_02.png
+https://raw.github.com/fishkingsin/Meteorological/master/LEDController/screen_shot_03.png
 cd ../../../addons
 git clone https://github.com/YCAMInterlab/ofxDuration.git
 git clone https://github.com/kylemcdonald/ofxControlPanel.git

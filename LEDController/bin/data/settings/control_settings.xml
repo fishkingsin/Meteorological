@@ -23,17 +23,20 @@
     <val_0>0.000000000</val_0>
 </bRipple>
 <bCV>
-    <val_0>0.000000000</val_0>
+    <val_0>1.000000000</val_0>
 </bCV>
 <bImage>
-    <val_0>1.000000000</val_0>
+    <val_0>0.000000000</val_0>
 </bImage>
 <bContour>
-    <val_0>0.000000000</val_0>
+    <val_0>1.000000000</val_0>
 </bContour>
 <rippleBrightness>
     <val_0>255.000000000</val_0>
 </rippleBrightness>
 <imageBrightness>
-    <val_0>0.000000000</val_0>
+    <val_0>255.000000000</val_0>
 </imageBrightness>
+<resetBuilding>
+    <val_0>0.000000000</val_0>
+</resetBuilding>

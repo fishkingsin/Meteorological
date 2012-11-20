@@ -60,7 +60,7 @@ public:
 	ofImage *image;
 	ofVec2f pos;
 	float step,prev;
-	float scaleH;
+	float scaleH,waiting;
 	Building(ofImage &_image)
 	{
 		image = &_image;
@@ -69,6 +69,7 @@ public:
 		step = ofRandom(2,3);
 		prev = 0;
 		scaleH = ofRandom(0.8,1.2);
+		waiting = ofRandom(3,10);
 	}
 	void update(float x, float y , float w ,float h)
 	{
@@ -76,7 +77,7 @@ public:
 		if(pos.y<h-image->height)
 		{
 			float diff = ofGetElapsedTimef()-prev;
-			if(diff>3)
+			if(diff>waiting)
 			{
 				pos.y = h;
 				pos.x = ofRandom(w);
@@ -93,6 +94,14 @@ public:
 					pos.y,
 					image->width,
 					image->height*scaleH);
+	}
+	void reset()
+	{
+		waiting = ofRandom(3,10);
+		scaleH = ofRandom(0.8,1.2);
+		prev = ofGetElapsedTimef();
+		pos.y = CAMH*2+image->height;
+
 	}
 	
 
@@ -142,6 +151,15 @@ public:
 			_buildings[i]->draw(x,y,w,h);
 		}
 	}
+	void reset()
+	{
+		
+		for(int i = 0 ; i < _buildings.size() ; i++)
+		{
+			_buildings[i]->reset();
+		}
+	}
+
 	float getWidth(){return width;}
 	float getHeight(){return height;}
 	vector <ofImage> images;

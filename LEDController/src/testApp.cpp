@@ -61,7 +61,7 @@ void testApp::setup(){
 	gui.addToggle("bContour",bContour);
 //	gui.addSlider("rippleBrightness",rippleBrightness,0,255,true );
 	gui.addSlider("imageBrightness",imageBrightness,0,255,true );
-	
+	gui.addToggle("resetBuilding",false);
 	
     
     gui.ofxControlPanel::addPanel("cv", 3);
@@ -156,6 +156,11 @@ void testApp::trackUpdated(ofxDurationEventArgs& args){
 		gui.setValueB("imageBrightness", imageBrightness);
 		
     }
+	else if( args.track->name == "/resetBuilding" && args.track->type == "Bangs" )
+	{
+		buildings.reset();
+		
+    }
 //	else if( args.track->name == "/rippleBrightness" && args.track->type == "Curves" )
 //	{
 //		rippleBrightness = args.track->value*255;
@@ -222,6 +227,11 @@ void testApp::eventsIn(guiCallbackData & data){
 	{
         imageBrightness = data.getInt(0);
         
+    }
+	else if( data.isElement( "resetBuilding" ) )
+	{
+        gui.setValueB("resetBuilding",false);
+		buildings.reset();
     }
 
     

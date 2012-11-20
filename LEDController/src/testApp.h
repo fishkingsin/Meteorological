@@ -45,12 +45,12 @@ public:
 			y = ofRandom(0,CAMH*2);
 			size=0;
 		}
-//		ofPushStyle();
+		ofPushStyle();
 		ofNoFill();
-//		ofSetColor(255);
+		ofSetColor(ofMap(maxSize-size,0,maxSize,0,255));
 		ofSetLineWidth(thickness);
 		ofCircle(x, y, size);
-//		ofPopStyle();
+		ofPopStyle();
 	}
 	
 };
@@ -84,7 +84,7 @@ class testApp : public ofBaseApp{
     ofxCvGrayscaleImage				grayBg;
     ofxCvGrayscaleImage				grayDiff;
     ofxCvContourFinder				contourFinder;
-	int								threshold,imageBrightness,rippleBrightness;
+	int								threshold,imageBrightness;
 	bool							bLearnBakground,bSerial,bFlip,bMirror,bCV,bRipple,bImage,bContour;
 	
 	//LED

@@ -59,7 +59,7 @@ void testApp::setup(){
 	gui.addToggle("bCV",bCV);
 	gui.addToggle("bImage",bImage);
 	gui.addToggle("bContour",bContour);
-	gui.addSlider("rippleBrightness",rippleBrightness,0,255,true );
+//	gui.addSlider("rippleBrightness",rippleBrightness,0,255,true );
 	gui.addSlider("imageBrightness",imageBrightness,0,255,true );
 	
 	
@@ -157,12 +157,12 @@ void testApp::trackUpdated(ofxDurationEventArgs& args){
 		gui.setValueB("imageBrightness", imageBrightness);
 		
     }
-	else if( args.track->name == "/rippleBrightness" && args.track->type == "Curves" )
-	{
-		rippleBrightness = args.track->value*255;
-		gui.setValueB("rippleBrightness", rippleBrightness);
-		
-    }
+//	else if( args.track->name == "/rippleBrightness" && args.track->type == "Curves" )
+//	{
+//		rippleBrightness = args.track->value*255;
+//		gui.setValueB("rippleBrightness", rippleBrightness);
+//		
+//    }
 }
 void testApp::eventsIn(guiCallbackData & data){
 	if( data.isElement( "LED_SIZE" ) )
@@ -219,6 +219,12 @@ void testApp::eventsIn(guiCallbackData & data){
         bContour = data.getInt(0);
         
     }
+	else if( data.isElement( "imageBrightness" ) )
+	{
+        imageBrightness = data.getInt(0);
+        
+    }
+
     
 }
 //--------------------------------------------------------------
@@ -246,7 +252,7 @@ void testApp::update(){
 	if(bRipple)
 	{
 		ofPushStyle();
-		ofSetColor(rippleBrightness);
+//		ofSetColor(rippleBrightness);
 		float scalex = NUM_LED*1.0f/CAMW*1.0f;
 		float scaley = scalex;//(NUM_LED*NUM_PEGGY)*1.0f/CAMH*2.0f;
 		glPushMatrix();
@@ -268,7 +274,7 @@ void testApp::update(){
 		float ty = 0;
 		ofPushStyle();
 
-		ofSetColor(imageBrightness);
+		
 		glPushMatrix();
 		
 		if(bMirror)
@@ -286,12 +292,13 @@ void testApp::update(){
 		
 		if(bImage)
 		{
+			ofSetColor(imageBrightness);
 			colorImg.draw(0,0,CAMW,CAMH);
 		}
 		if(bContour)
 		{
 			// ---------------------------- draw the blobs
-			ofSetHexColor(0xFFFFFF);
+			ofSetColor(imageBrightness);
 			ofFill();
 			for( int i=0; i<(int)contourFinder.blobs.size(); i++ ) {
 				

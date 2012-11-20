@@ -103,8 +103,15 @@ void testApp::setup(){
 		ripples.push_back(new Ripple());
 	}
 	
+	ofDirectory dir;
 	
-    
+	dir.allowExt("png");
+	int num = dir.listDir("./images/buildings");
+	images.assign(num, ofImage());
+	for(int i = 0 ; i < num ; i++)
+	{
+		images[i].loadImage(dir.getPath(i));
+	}
 }
 //--------------------------------------------------------------
 //Or wait to receive messages, sent only when the track changed
@@ -346,6 +353,12 @@ void testApp::draw(){
             ofPopStyle();
         }
     }
+	int x = 0;
+	for(int i = 0 ; i < images.size() ; i++)
+	{
+		images[i].draw(x, 0);
+		x+=images[i].width;
+	}
     
 }
 //potfrom morganhk https://github.com/morganhk/Dual-Peggy-display-controller

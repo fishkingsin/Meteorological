@@ -1,8 +1,8 @@
 <LED_SIZE>
-    <val_0>8.149999619</val_0>
+    <val_0>12.550000191</val_0>
 </LED_SIZE>
 <PADDING>
-    <val_0>10.900000572</val_0>
+    <val_0>1.000000000</val_0>
 </PADDING>
 <LEARN_BACKGROUND>
     <val_0>0.000000000</val_0>
@@ -20,7 +20,7 @@
     <val_0>0.000000000</val_0>
 </bMirror>
 <bRipple>
-    <val_0>1.000000000</val_0>
+    <val_0>0.000000000</val_0>
 </bRipple>
 <bCV>
     <val_0>0.000000000</val_0>

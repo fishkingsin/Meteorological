@@ -87,6 +87,8 @@ class testApp : public ofBaseApp{
 	int								threshold,imageBrightness;
 	bool							bLearnBakground,bSerial,bFlip,bMirror,bCV,bRipple,bImage,bContour;
 	
+	vector<ofImage>					images;
+	
 	//LED
     ofFbo							scaledFbo;
     ofPixels						scaledPixels;

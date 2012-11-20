@@ -54,6 +54,102 @@ public:
 	}
 	
 };
+class Building
+{
+public:
+	ofImage *image;
+	ofVec2f pos;
+	float step,prev;
+	float scaleH;
+	Building(ofImage &_image)
+	{
+		image = &_image;
+		pos.x = ofRandom(CAMW);
+		pos.y = CAMH*2+image->height;
+		step = ofRandom(2,3);
+		prev = 0;
+		scaleH = ofRandom(0.8,1.2);
+	}
+	void update(float x, float y , float w ,float h)
+	{
+		
+		if(pos.y<h-image->height)
+		{
+			float diff = ofGetElapsedTimef()-prev;
+			if(diff>3)
+			{
+				pos.y = h;
+				pos.x = ofRandom(w);
+			}
+		}
+		else
+		{		pos.y-=step;
+			prev = ofGetElapsedTimef();
+		}
+	}
+	void draw(float x , float y, float w ,float h)
+	{
+		image->draw(x+pos.x-image->width*0.5,
+					pos.y,
+					image->width,
+					image->height*scaleH);
+	}
+	
+
+};
+class Buildings :public ofBaseDraws{
+public:
+	Buildings()
+	{
+		ofDirectory dir;
+		
+		dir.allowExt("png");
+		int num = dir.listDir("./images/buildings");
+		images.assign(num, ofImage());
+
+		
+		for(int i = 0 ; i < num ; i++)
+		{
+			images[i].loadImage(dir.getPath(i));
+			width+=images[i].width;
+			if(images[i].height > height)height = images[i].height;
+		}
+		maxBuilding = 20;
+	}
+	void draw(float x , float y)
+	{
+	}
+	void update(float x , float y , float w , float h)
+	{
+		for(int i = 0 ; i < _buildings.size() ; i++)
+		{
+			
+			_buildings[i]->update(x,y,w,h);
+		}
+		if(maxBuilding>_buildings.size() && ofGetFrameNum()%50==0)
+		{
+			int r = (int)ofRandom(0,images.size());
+			Building * newBuilding = new Building(images[r]);
+			
+			_buildings.push_back(newBuilding);
+		}
+	}
+	void draw(float x , float y , float w , float h)
+	{
+				
+		for(int i = 0 ; i < _buildings.size() ; i++)
+		{
+			_buildings[i]->draw(x,y,w,h);
+		}
+	}
+	float getWidth(){return width;}
+	float getHeight(){return height;}
+	vector <ofImage> images;
+	vector <Building*> _buildings;
+ 	int maxBuilding;
+	
+	int width,height;
+};
 class testApp : public ofBaseApp{
 
 	public:
@@ -87,7 +183,9 @@ class testApp : public ofBaseApp{
 	int								threshold,imageBrightness;
 	bool							bLearnBakground,bSerial,bFlip,bMirror,bCV,bRipple,bImage,bContour;
 	
-	vector<ofImage>					images;
+	//buildings
+	Buildings						buildings;
+	
 	
 	//LED
     ofFbo							scaledFbo;

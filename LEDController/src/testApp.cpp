@@ -103,15 +103,7 @@ void testApp::setup(){
 		ripples.push_back(new Ripple());
 	}
 	
-	ofDirectory dir;
 	
-	dir.allowExt("png");
-	int num = dir.listDir("./images/buildings");
-	images.assign(num, ofImage());
-	for(int i = 0 ; i < num ; i++)
-	{
-		images[i].loadImage(dir.getPath(i));
-	}
 }
 //--------------------------------------------------------------
 //Or wait to receive messages, sent only when the track changed
@@ -255,7 +247,17 @@ void testApp::update(){
     contourFinder.findContours(grayDiff, 20, (340*240)/3, 10, true);	// find holes
     scaledFbo.begin();
     ofClear(0);
-	
+	if(bImage)
+	{
+		float scalex = NUM_LED*1.0f/CAMW*1.0f;
+		float scaley = NUM_LED*1.0f/CAMH*1.0f;
+		int x = 0;
+		glPushMatrix();
+		glScalef( scalex, scaley, 0.0 );
+		buildings.update(0,0,CAMW,CAMH*2);
+		buildings.draw(0,0,CAMW,CAMH*2);
+		glPopMatrix();
+	}
 	if(bRipple)
 	{
 		ofPushStyle();
@@ -273,6 +275,7 @@ void testApp::update(){
 		glPopMatrix();
 		ofPopStyle();
 	}
+	
 	if(bCV)
 	{
 		float scalex = NUM_LED*1.0f/CAMW*1.0f;
@@ -297,11 +300,11 @@ void testApp::update(){
 		glTranslatef(tx, ty, 0);
 		glScalef( scalex, scaley, 0.0 );
 		
-		if(bImage)
-		{
-			ofSetColor(imageBrightness);
-			colorImg.draw(0,0,CAMW,CAMH);
-		}
+//		if(bImage)
+//		{
+//			ofSetColor(imageBrightness);
+//			colorImg.draw(0,0,CAMW,CAMH);
+//		}
 		if(bContour)
 		{
 			// ---------------------------- draw the blobs
@@ -353,12 +356,13 @@ void testApp::draw(){
             ofPopStyle();
         }
     }
-	int x = 0;
-	for(int i = 0 ; i < images.size() ; i++)
-	{
-		images[i].draw(x, 0);
-		x+=images[i].width;
-	}
+	buildings.draw(ofGetWidth()*0.5,0,CAMW,CAMH);
+//	int x = 0;
+//	for(int i = 0 ; i < images.size() ; i++)
+//	{
+//		images[i].draw(ofGetWidth()*0.5 -(ofGetFrameNum()) %(totalWidth)+x, CAMH-images[i].height);
+//		x+=images[i].width;
+//	}
     
 }
 //potfrom morganhk https://github.com/morganhk/Dual-Peggy-display-controller

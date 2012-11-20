@@ -1,0 +1,3 @@
+[submodule "Dual-Peggy-display-controller"]
+	path = Dual-Peggy-display-controller
+	url = https://github.com/morganhk/Dual-Peggy-display-controller.git

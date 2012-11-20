@@ -45,7 +45,7 @@ void testApp::setup(){
 	
 	ofxControlPanel::setBackgroundColor(simpleColor(30, 30, 30, 125));
 	ofxControlPanel::setTextColor(simpleColor(255, 255, 255, 255));
-
+	
 	gui.setup(settings.getValue("GUI_WIDTH",1280),settings.getValue("GUI_HEIGHT",768));
 	gui.loadFont(settings.getValue("FONT","MONACO.TTF"), 8);
 	gui.ofxControlPanel::addPanel("Settings", 1);
@@ -57,6 +57,11 @@ void testApp::setup(){
     gui.addToggle("bMirror",bMirror);
 	gui.addToggle("bRipple",bRipple);
 	gui.addToggle("bCV",bCV);
+	gui.addToggle("bImage",bImage);
+	gui.addToggle("bContour",bContour);
+	gui.addSlider("rippleBrightness",rippleBrightness,0,255,true );
+	gui.addSlider("imageBrightness",imageBrightness,0,255,true );
+	
 	
     
     gui.ofxControlPanel::addPanel("cv", 3);
@@ -74,6 +79,18 @@ void testApp::setup(){
     gui.setWhichColumn(2);
     gui.addDrawableRect("scaledFbo", &scaledFbo, CAMW*0.5, CAMH);
     gui.addDrawableRect("contourFinder", &contourFinder, CAMW*0.5, CAMH*0.5);
+	
+	gui.ofxControlPanel::addPanel("duration", 1);
+	gui.setWhichPanel("duration");
+	duration.setup(settings.getValue("DURATION_PORT",12345));
+	//ofxDuration is an OSC receiver, with special functions to listen for Duration specific messages
+	//optionally set up a font for debugging
+	duration.setupFont("GUI/NewMedia Fett.ttf", 12);
+	ofAddListener(duration.events.trackUpdated, this, &testApp::trackUpdated);
+	
+	durationPanel = new DurationPanel(&duration);
+	gui.addCustomRect("Duration", durationPanel, gui.getWidth()*0.8, gui.getHeight()*0.8);
+	
 	//  -- this gives you back an ofEvent for all events in this control panel object
 	ofAddListener(gui.guiEvent, this, &testApp::eventsIn);
 	gui.setupEvents();
@@ -85,7 +102,67 @@ void testApp::setup(){
 	{
 		ripples.push_back(new Ripple());
 	}
+	
+	
     
+}
+//--------------------------------------------------------------
+//Or wait to receive messages, sent only when the track changed
+void testApp::trackUpdated(ofxDurationEventArgs& args){
+	ofLogVerbose("Duration Event") << "track type " << args.track->type << " updated with name " << args.track->name << " and value " << args.track->value << endl;
+	
+	if( args.track->name == "/LEARN_BACKGROUND"  && args.track->type == "Bangs")
+	{
+        grayBg = grayImage;
+    }
+    else if( args.track->name == "/THRESHOLD"  && args.track->type == "Curves")
+	{
+        threshold = args.track->value*255;
+		gui.setValueI("THRESHOLD", args.track->value*255);
+        
+    }
+    else if( args.track->name == "/EnableSerial"  && args.track->type == "Switches")
+	{
+        bSerial = args.track->on;
+		gui.setValueB("EnableSerial", bSerial);
+        
+    }
+    else if( args.track->name == "/bFlip" && args.track->type == "Switches")
+	{
+		bFlip = args.track->on;
+		gui.setValueB("bFlip", bFlip);
+		
+    }
+    else if( args.track->name == "/bMirror" && args.track->type == "Switches" )
+	{
+		bMirror = args.track->on;
+		gui.setValueB("bMirror", bMirror);
+		
+    }
+	else if( args.track->name == "/bRipple" && args.track->type == "Switches" )
+	{
+		bRipple = args.track->on;
+		gui.setValueB("bRipple", bRipple);
+		
+    }
+	else if( args.track->name == "/bCV" && args.track->type == "Switches" )
+	{
+		bCV = args.track->on;
+		gui.setValueB("bCV", bCV);
+		
+    }
+	else if( args.track->name == "/imageBrightness" && args.track->type == "Curves" )
+	{
+		imageBrightness = args.track->value*255;
+		gui.setValueB("imageBrightness", imageBrightness);
+		
+    }
+	else if( args.track->name == "/rippleBrightness" && args.track->type == "Curves" )
+	{
+		rippleBrightness = args.track->value*255;
+		gui.setValueB("rippleBrightness", rippleBrightness);
+		
+    }
 }
 void testApp::eventsIn(guiCallbackData & data){
 	if( data.isElement( "LED_SIZE" ) )
@@ -132,6 +209,16 @@ void testApp::eventsIn(guiCallbackData & data){
         bCV = data.getInt(0);
         
     }
+	else if( data.isElement( "bImage" ) )
+	{
+        bImage = data.getInt(0);
+        
+    }
+	else if( data.isElement( "bContour" ) )
+	{
+        bContour = data.getInt(0);
+        
+    }
     
 }
 //--------------------------------------------------------------
@@ -158,6 +245,8 @@ void testApp::update(){
 	
 	if(bRipple)
 	{
+		ofPushStyle();
+		ofSetColor(rippleBrightness);
 		float scalex = NUM_LED*1.0f/CAMW*1.0f;
 		float scaley = scalex;//(NUM_LED*NUM_PEGGY)*1.0f/CAMH*2.0f;
 		glPushMatrix();
@@ -169,6 +258,7 @@ void testApp::update(){
 			ripple->render();
 		}
 		glPopMatrix();
+		ofPopStyle();
 	}
 	if(bCV)
 	{
@@ -177,8 +267,10 @@ void testApp::update(){
 		float tx = 0;
 		float ty = 0;
 		ofPushStyle();
-		glPushMatrix();
 
+		ofSetColor(imageBrightness);
+		glPushMatrix();
+		
 		if(bMirror)
 		{
 			scalex = -scalex;
@@ -192,19 +284,26 @@ void testApp::update(){
 		glTranslatef(tx, ty, 0);
 		glScalef( scalex, scaley, 0.0 );
 		
-		
-		// ---------------------------- draw the blobs
-		ofSetHexColor(0xFFFFFF);
-		ofFill();
-		for( int i=0; i<(int)contourFinder.blobs.size(); i++ ) {
-			
-			ofBeginShape();
-			for( int j=0; j<contourFinder.blobs[i].nPts; j++ ) {
-				ofVertex( contourFinder.blobs[i].pts[j].x, contourFinder.blobs[i].pts[j].y );
-			}
-			ofEndShape();
-			
+		if(bImage)
+		{
+			colorImg.draw(0,0,CAMW,CAMH);
 		}
+		if(bContour)
+		{
+			// ---------------------------- draw the blobs
+			ofSetHexColor(0xFFFFFF);
+			ofFill();
+			for( int i=0; i<(int)contourFinder.blobs.size(); i++ ) {
+				
+				ofBeginShape();
+				for( int j=0; j<contourFinder.blobs[i].nPts; j++ ) {
+					ofVertex( contourFinder.blobs[i].pts[j].x, contourFinder.blobs[i].pts[j].y );
+				}
+				ofEndShape();
+				
+			}
+		}
+		
 		glPopMatrix();
 		ofPopStyle();
 	}
@@ -233,6 +332,7 @@ void testApp::draw(){
         {
             int i = x+y*NUM_LED;
             ofPushStyle();
+			ofFill();
             ofColor c = scaledPixels.getColor(x, y);
             ofSetColor(c.getBrightness());
             ofCircle(20+LEDs[i].x*(size+padding), 20+LEDs[i].y*(size+padding), size*0.5);

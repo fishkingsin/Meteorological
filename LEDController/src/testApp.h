@@ -3,7 +3,10 @@
 #include "ofMain.h"
 #include "ofxAutoControlPanel.h"
 #include "ofxCvMain.h"
-#define NUM_LED 25
+#include "ofxDuration.h"
+#include "DurationPanel.h"
+#include "ofxPeggy.h"
+//#define NUM_LED 25
 #define NUM_PEGGY 2
 #define CAMW 320
 #define CAMH 240
@@ -42,12 +45,12 @@ public:
 			y = ofRandom(0,CAMH*2);
 			size=0;
 		}
-		ofPushStyle();
+//		ofPushStyle();
 		ofNoFill();
-		ofSetColor(255);
+//		ofSetColor(255);
 		ofSetLineWidth(thickness);
 		ofCircle(x, y, size);
-		ofPopStyle();
+//		ofPopStyle();
 	}
 	
 };
@@ -68,26 +71,38 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-	vector <Ripple*> ripples;
-    vector <LED> LEDs;
-    void renderToPeggy( int display);
+	
+    //gui
+    ofxAutoControlPanel				gui;
+    void							eventsIn(guiCallbackData & data);
     
-    ofxAutoControlPanel gui;
-    void eventsIn(guiCallbackData & data);
-    int size,padding;
-    ofVideoGrabber 		vidGrabber;
-    ofxCvColorImage			colorImg;
-    ofRectangle  drawRect;
+	//cv
+    ofVideoGrabber					vidGrabber;
+    ofxCvColorImage					colorImg;
+    ofRectangle						drawRect;
+    ofxCvGrayscaleImage				grayImage;
+    ofxCvGrayscaleImage				grayBg;
+    ofxCvGrayscaleImage				grayDiff;
+    ofxCvContourFinder				contourFinder;
+	int								threshold,imageBrightness,rippleBrightness;
+	bool							bLearnBakground,bSerial,bFlip,bMirror,bCV,bRipple,bImage,bContour;
+	
+	//LED
+    ofFbo							scaledFbo;
+    ofPixels						scaledPixels;
+	vector <Ripple*>				ripples;
+    vector <LED>					LEDs;
+    void							renderToPeggy( int display);
+    
+    ofSerial						port1,port2;
+	int								size,padding;
+	
+	//duration
+	DurationPanel					*durationPanel;
+	ofxDuration						duration;
+	void							trackUpdated(ofxDurationEventArgs& args);
+	string							ip;
+	int								port;
 
-    
-    ofxCvGrayscaleImage 	grayImage;
-    ofxCvGrayscaleImage 	grayBg;
-    ofxCvGrayscaleImage 	grayDiff;
-    ofxCvContourFinder 	contourFinder;
-    ofFbo scaledFbo;
-    ofPixels scaledPixels;
-    int 				threshold;
-    bool				bLearnBakground,bSerial,bFlip,bMirror,bCV,bRipple;
-    ofSerial port1,port2;
 
 };

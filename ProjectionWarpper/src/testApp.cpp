@@ -24,7 +24,7 @@ void testApp::setup(){
 	if(settings.pushTag("SETTINGS"))
 	{
 		ofSetWindowTitle(settings.getValue("TITLE","Projection Warpper"));
-		
+		input
 		N_SCREEN = settings.getValue("N_SCREEN",2);
 		WIDTH = settings.getValue("WIDTH",1024);
 		HEIGHT = settings.getValue("HEIGHT",768);

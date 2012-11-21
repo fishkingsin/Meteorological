@@ -334,9 +334,9 @@ void testApp::update(){
 		glPopMatrix();
 		ofPopStyle();
 	}
-	
+	scaledFbo.readToPixels(scaledPixels);
     scaledFbo.end();
-    scaledFbo.readToPixels(scaledPixels);
+    
     
     if(bSerial){
         //Top screen

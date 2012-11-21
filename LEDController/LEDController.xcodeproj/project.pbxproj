@@ -11,7 +11,6 @@
 		0d98e43ab0144630ef2206b3f3fdd8ad /* guiTypeButtonSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8f5afda23de220f49ea17cbc7f5b9bb8 /* guiTypeButtonSlider.cpp */; };
 		125506cd3e5f428aafe5cc657e873ba0 /* ofxTCPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = f399b91e98dc31cda6ddacb450bb19da /* ofxTCPManager.cpp */; };
 		169d3c72fde6c5590a1616f500a456b4 /* ofxCvFloatImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7b6a03390302d5a2c9f0e4ab630ae8d6 /* ofxCvFloatImage.cpp */; };
-		1BF5EE90165B4CCF0014C2FD /* ofxPeggy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BF5EE7B165B4CCF0014C2FD /* ofxPeggy.cpp */; };
 		1d5f3298c2fa073628012944b1efde88 /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = c76de5c29bdbd2caa1dd0021a7376220 /* ofxCvContourFinder.cpp */; };
 		250a95ba26587be85db0a353e6e1dea2 /* ofxCvColorImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ce9c7160245b19131dae61282ee6cb53 /* ofxCvColorImage.cpp */; };
 		27073aa02d97c328de31c3d513e6b168 /* ofxDuration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3473715cfd2bc4514a533238e3b52e1a /* ofxDuration.cpp */; };
@@ -134,8 +133,6 @@
 		114b872696817cc33990fc83feb1259e /* imgproc.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = imgproc.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/imgproc/imgproc.hpp; sourceTree = SOURCE_ROOT; };
 		1445907105c17263f76087d0df1a696e /* guiTypeVairableLister.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = guiTypeVairableLister.h; path = ../../../addons/ofxControlPanel/src/guiTypeVairableLister.h; sourceTree = SOURCE_ROOT; };
 		1BF5EE3B165B3F380014C2FD /* DurationPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DurationPanel.h; sourceTree = "<group>"; };
-		1BF5EE7B165B4CCF0014C2FD /* ofxPeggy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPeggy.cpp; sourceTree = "<group>"; };
-		1BF5EE7C165B4CCF0014C2FD /* ofxPeggy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPeggy.h; sourceTree = "<group>"; };
 		1c085e327dab912cfa2a443d084c3628 /* ofxTCPServer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxTCPServer.cpp; path = ../../../addons/ofxNetwork/src/ofxTCPServer.cpp; sourceTree = SOURCE_ROOT; };
 		1d8b9a8480a5b3d82cefff066dafba2e /* simpleFileLister.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = simpleFileLister.h; path = ../../../addons/ofxControlPanel/src/simpleFileLister.h; sourceTree = SOURCE_ROOT; };
 		1dfa26f2c6bbd1b8ac24c0b1a41060fb /* ofxNetworkUtils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxNetworkUtils.h; path = ../../../addons/ofxNetwork/src/ofxNetworkUtils.h; sourceTree = SOURCE_ROOT; };
@@ -445,24 +442,6 @@
 			name = ofxNetwork;
 			sourceTree = "<group>";
 		};
-		1BF5EE3C165B4CCF0014C2FD /* ofxPeggy */ = {
-			isa = PBXGroup;
-			children = (
-				1BF5EE7A165B4CCF0014C2FD /* src */,
-			);
-			name = ofxPeggy;
-			path = ../../../addons/ofxPeggy;
-			sourceTree = "<group>";
-		};
-		1BF5EE7A165B4CCF0014C2FD /* src */ = {
-			isa = PBXGroup;
-			children = (
-				1BF5EE7B165B4CCF0014C2FD /* ofxPeggy.cpp */,
-				1BF5EE7C165B4CCF0014C2FD /* ofxPeggy.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		1e45f8c3ccff6847bff957aa83a88979 /* flann */ = {
 			isa = PBXGroup;
 			children = (
@@ -702,7 +681,6 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				1BF5EE3C165B4CCF0014C2FD /* ofxPeggy */,
 				E390BC0D1657EA7C0087ACEB /* ofxRange */,
 				18240ecce4076fb0833a8578697ffa74 /* ofxNetwork */,
 				a0b90d3b0adb9c1716816714bf7f212b /* ofxOpenCv */,
@@ -1173,7 +1151,6 @@
 				9fef7afad4ddffd2a55aa54a1c323431 /* simpleFileLister.cpp in Sources */,
 				d41b30cf66da734f99a45d5e96d168e4 /* simpleLogger.cpp in Sources */,
 				27073aa02d97c328de31c3d513e6b168 /* ofxDuration.cpp in Sources */,
-				1BF5EE90165B4CCF0014C2FD /* ofxPeggy.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

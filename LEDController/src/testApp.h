@@ -5,8 +5,8 @@
 #include "ofxCvMain.h"
 #include "ofxDuration.h"
 #include "DurationPanel.h"
-#include "ofxPeggy.h"
-//#define NUM_LED 25
+//#include "ofxPeggy.h"
+#define NUM_LED 25
 #define NUM_PEGGY 2
 #define CAMW 320
 #define CAMH 240
@@ -74,7 +74,7 @@ public:
 	void update(float x, float y , float w ,float h)
 	{
 		
-		if(pos.y<h-image->height)
+		if(pos.y<h-image->height*scaleH)
 		{
 			float diff = ofGetElapsedTimef()-prev;
 			if(diff>waiting)

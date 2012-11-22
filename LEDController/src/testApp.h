@@ -61,6 +61,7 @@ public:
 	ofVec2f pos;
 	float step,prev;
 	float scaleH,waiting;
+    int brightness;
 	Building(ofImage &_image)
 	{
 		image = &_image;
@@ -70,17 +71,22 @@ public:
 		prev = 0;
 		scaleH = ofRandom(0.8,1.2);
 		waiting = ofRandom(3,10);
+        brightness = 255;
+        
 	}
 	void update(float x, float y , float w ,float h)
 	{
 		
 		if(pos.y<h-image->height*scaleH)
 		{
+
 			float diff = ofGetElapsedTimef()-prev;
+            brightness = ofMap(diff,0,waiting,255,0);
 			if(diff>waiting)
 			{
 				pos.y = h;
 				pos.x = ofRandom(w);
+                brightness = 255;
 			}
 		}
 		else
@@ -90,6 +96,7 @@ public:
 	}
 	void draw(float x , float y, float w ,float h)
 	{
+        ofSetColor(brightness);
 		image->draw(x+pos.x-image->width*0.5,
 					pos.y,
 					image->width,

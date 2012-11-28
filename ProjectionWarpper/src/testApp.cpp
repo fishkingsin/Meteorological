@@ -24,7 +24,7 @@ void testApp::setup(){
 	if(settings.pushTag("SETTINGS"))
 	{
 		ofSetWindowTitle(settings.getValue("TITLE","Projection Warpper"));
-		input
+
 		N_SCREEN = settings.getValue("N_SCREEN",2);
 		WIDTH = settings.getValue("WIDTH",1024);
 		HEIGHT = settings.getValue("HEIGHT",768);
@@ -94,6 +94,13 @@ void testApp::setup(){
 		gui.setWhichPanel("OutputPanel");
 		outputPanel = new OutputPanel(&rm);
 		gui.addCustomRect("Output Diagnosis", outputPanel, gui.getWidth()*0.8, gui.getHeight()*0.8);
+		
+		gui.ofxControlPanel::addPanel("KinectPanel", 2);
+		gui.setWhichPanel("KinectPanel");
+		kinectPanel = new KinectPanel();
+		gui.addCustomRect("Kinect", kinectPanel, gui.getWidth()*0.8, gui.getHeight()*0.8);
+		
+		
 		
 		//  -- this gives you back an ofEvent for all events in this control panel object
 		ofAddListener(gui.guiEvent, this, &testApp::eventsIn);

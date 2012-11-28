@@ -19,6 +19,7 @@
 #include "ofxAutoControlPanel.h"
 #include "InputPanel.h"
 #include "OutputPanel.h"
+#include "KinectPanel.h"
 class testApp : public ofBaseApp {
     
 public:
@@ -56,6 +57,7 @@ public:
 	void SyphonEvent(guiCallbackData & data);
 	InputPanel *inputPanel;
 	OutputPanel *outputPanel;
+	KinectPanel *kinectPanel;
 	guiTypeTextInput *inServName;
 	guiTypeTextInput *outServName;
 	bool showGrid,bExtendScreen,showDemoPic,bSyphonServer,bSyphonClient;

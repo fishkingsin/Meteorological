@@ -1,8 +1,8 @@
 <LED_SIZE>
-    <val_0>6.500000000</val_0>
+    <val_0>15.850000381</val_0>
 </LED_SIZE>
 <PADDING>
-    <val_0>15.300000191</val_0>
+    <val_0>1.000000000</val_0>
 </PADDING>
 <LEARN_BACKGROUND>
     <val_0>0.000000000</val_0>
@@ -23,10 +23,10 @@
     <val_0>0.000000000</val_0>
 </bRipple>
 <bCV>
-    <val_0>0.000000000</val_0>
+    <val_0>1.000000000</val_0>
 </bCV>
 <bImage>
-    <val_0>1.000000000</val_0>
+    <val_0>0.000000000</val_0>
 </bImage>
 <bContour>
     <val_0>0.000000000</val_0>
@@ -40,3 +40,6 @@
 <resetBuilding>
     <val_0>0.000000000</val_0>
 </resetBuilding>
+<bGrayscale>
+    <val_0>1.000000000</val_0>
+</bGrayscale>

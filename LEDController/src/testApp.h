@@ -206,7 +206,7 @@ class testApp : public ofBaseApp{
     ofxCvGrayscaleImage				grayDiff;
     ofxCvContourFinder				contourFinder;
 	int								threshold,imageBrightness;
-	bool							bLearnBakground,bSerial,bFlip,bMirror,bCV,bRipple,bImage,bContour;
+	bool							bLearnBakground,bSerial,bFlip,bMirror,bCV,bRipple,bImage,bContour,bGrayscale;
 	
 	//buildings
 	Buildings						buildings;

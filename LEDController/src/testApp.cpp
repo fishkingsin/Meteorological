@@ -59,6 +59,7 @@ void testApp::setup(){
 	gui.addToggle("bCV",bCV);
 	gui.addToggle("bImage",bImage);
 	gui.addToggle("bContour",bContour);
+	gui.addToggle("bGrayscale",bGrayscale);
 //	gui.addSlider("rippleBrightness",rippleBrightness,0,255,true );
 	gui.addSlider("imageBrightness",imageBrightness,0,255,true );
 	gui.addToggle("resetBuilding",false);
@@ -223,6 +224,12 @@ void testApp::eventsIn(guiCallbackData & data){
         bContour = data.getInt(0);
         
     }
+	else if( data.isElement( "bGrayscale" ) )
+	{
+        bGrayscale = data.getInt(0);
+        
+    }
+	
 	else if( data.isElement( "imageBrightness" ) )
 	{
         imageBrightness = data.getInt(0);
@@ -329,6 +336,10 @@ void testApp::update(){
 				ofEndShape();
 				
 			}
+		}
+		else if (bGrayscale)
+		{
+			grayImage.draw(0, 0,CAMW,CAMH);
 		}
 		
 		glPopMatrix();

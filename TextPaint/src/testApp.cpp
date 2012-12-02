@@ -51,7 +51,9 @@ void testApp::setup(){
 	receiver = new ofxTSPSReceiver();
 	receiver->setListener( this );
 	receiver->connect(PORT);
-	
+    
+    font.loadFont("LiHei.ttf", 12);
+	character = font.getStringAsPoints("溫情聖誕有冇人要聖誕卡?");
 }
 
 //--------------------------------------------------------------
@@ -69,14 +71,25 @@ void testApp::draw(){
 		ofxTSPSPerson* person = receiver->personAtIndex(i);
 		ofColor* color = (ofColor*)person->customAttributes;
 		ofSetColor(color->r, color->g, color->b);
+        float x = person->centroid.x*ofGetWidth();
+        float y = person->centroid.y*ofGetHeight();
+        ofLine(x+10, y, x-10, y);
+        ofLine(x, y-10, x, y+10);
 		for(int c = 1; c < person->contour.size(); c++){
+
 			ofLine(person->contour[c-1].x*ofGetWidth(), person->contour[c-1].y*ofGetHeight(), 
 				   person->contour[c  ].x*ofGetWidth(), person->contour[c  ].y*ofGetHeight());
 		}
 	}
+    ofSetColor(0, 0, 0);
+//    for(int i = 0 ; i < character.size() ; i++)
+//    {
+//        character[i] ( 20+i*20 , 20 );
+//    }
+        //    font.drawString("溫情聖誕有冇人要聖誕卡?",20,20);
 }
-
-//called when the person enters the system
+                    
+                    //called when the person enters the system
 void testApp::personEntered( ofxTSPSPerson* person, ofxTSPSScene* scene )
 {
 	ofColor* color = new ofColor();

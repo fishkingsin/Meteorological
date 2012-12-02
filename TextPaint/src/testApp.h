@@ -44,7 +44,7 @@
 
 #include "ofMain.h"
 #include "ofxTSPSReceiver.h"
-
+#include "ofxTrueTypeFontUC.h"
 #define PORT 12000
 
 class testApp : public ofBaseApp, public ofxTSPSListener
@@ -73,7 +73,8 @@ class testApp : public ofBaseApp, public ofxTSPSListener
 	void personWillLeave( ofxTSPSPerson* person, ofxTSPSScene* scene );
 	//called every frame no matter what.
 	void personUpdated(ofxTSPSPerson* person, ofxTSPSScene* scene);
-	
+	ofxTrueTypeFontUC font;
+    vector<ofTTFCharacterUC>character;
 };
 
 #endif

@@ -9,6 +9,19 @@
 /* Begin PBXBuildFile section */
 		0546d1a38e13bd319cc9755b5ca7e1a0 /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9bf3aa0d4faa89d0f8a0e545403162be /* OscReceivedElements.cpp */; };
 		125506cd3e5f428aafe5cc657e873ba0 /* ofxTCPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = f399b91e98dc31cda6ddacb450bb19da /* ofxTCPManager.cpp */; };
+		1B46FCE8166C696A00C1AC51 /* ofxEasing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCC0166C696A00C1AC51 /* ofxEasing.cpp */; };
+		1B46FCE9166C696A00C1AC51 /* ofxEasingBack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCC2166C696A00C1AC51 /* ofxEasingBack.cpp */; };
+		1B46FCEA166C696A00C1AC51 /* ofxEasingBounce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCC4166C696A00C1AC51 /* ofxEasingBounce.cpp */; };
+		1B46FCEB166C696A00C1AC51 /* ofxEasingCirc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCC6166C696A00C1AC51 /* ofxEasingCirc.cpp */; };
+		1B46FCEC166C696A00C1AC51 /* ofxEasingCubic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCC8166C696A00C1AC51 /* ofxEasingCubic.cpp */; };
+		1B46FCED166C696A00C1AC51 /* ofxEasingElastic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCCA166C696A00C1AC51 /* ofxEasingElastic.cpp */; };
+		1B46FCEE166C696A00C1AC51 /* ofxEasingExpo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCCC166C696A00C1AC51 /* ofxEasingExpo.cpp */; };
+		1B46FCEF166C696A00C1AC51 /* ofxEasingLinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCCE166C696A00C1AC51 /* ofxEasingLinear.cpp */; };
+		1B46FCF0166C696A00C1AC51 /* ofxEasingQuad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCD0166C696A00C1AC51 /* ofxEasingQuad.cpp */; };
+		1B46FCF1166C696A00C1AC51 /* ofxEasingQuart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCD2166C696A00C1AC51 /* ofxEasingQuart.cpp */; };
+		1B46FCF2166C696A00C1AC51 /* ofxEasingQuint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCD4166C696A00C1AC51 /* ofxEasingQuint.cpp */; };
+		1B46FCF3166C696A00C1AC51 /* ofxEasingSine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCD6166C696A00C1AC51 /* ofxEasingSine.cpp */; };
+		1B46FCF4166C696A00C1AC51 /* ofxTween.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B46FCD8166C696A00C1AC51 /* ofxTween.cpp */; };
 		28090deb5109115003e8f1c540f04092 /* UdpSocketWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5928aa323f5c2690b06c837d8d036f55 /* UdpSocketWin.cpp */; };
 		510cafe035e576a4e1502d52c11243bb /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = e6def695b88ba5faaceaa93785a12fd9 /* UdpSocket.cpp */; };
 		5864ad82e20f15536d054ea319473de3 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = df49d76c45d5db505a234880104e4dc7 /* ofxOscMessage.cpp */; };
@@ -91,6 +104,33 @@
 		029684cf678f70f6d3537a29773654a6 /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscOutboundPacketStream.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h; sourceTree = SOURCE_ROOT; };
 		13d4661604f5babf84daa31592e2ca0c /* FTBufferFont.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = FTBufferFont.h; path = ../../../addons/ofxFTGL/libs/FTGL/include/FTGL/FTBufferFont.h; sourceTree = SOURCE_ROOT; };
 		19ade7f5c5edf826406fc4cc61ce4aeb /* FTBBox.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = FTBBox.h; path = ../../../addons/ofxFTGL/libs/FTGL/include/FTGL/FTBBox.h; sourceTree = SOURCE_ROOT; };
+		1B46FCBF166C696A00C1AC51 /* easing_terms_of_use.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = easing_terms_of_use.html; sourceTree = "<group>"; };
+		1B46FCC0166C696A00C1AC51 /* ofxEasing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasing.cpp; sourceTree = "<group>"; };
+		1B46FCC1166C696A00C1AC51 /* ofxEasing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasing.h; sourceTree = "<group>"; };
+		1B46FCC2166C696A00C1AC51 /* ofxEasingBack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingBack.cpp; sourceTree = "<group>"; };
+		1B46FCC3166C696A00C1AC51 /* ofxEasingBack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingBack.h; sourceTree = "<group>"; };
+		1B46FCC4166C696A00C1AC51 /* ofxEasingBounce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingBounce.cpp; sourceTree = "<group>"; };
+		1B46FCC5166C696A00C1AC51 /* ofxEasingBounce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingBounce.h; sourceTree = "<group>"; };
+		1B46FCC6166C696A00C1AC51 /* ofxEasingCirc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingCirc.cpp; sourceTree = "<group>"; };
+		1B46FCC7166C696A00C1AC51 /* ofxEasingCirc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingCirc.h; sourceTree = "<group>"; };
+		1B46FCC8166C696A00C1AC51 /* ofxEasingCubic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingCubic.cpp; sourceTree = "<group>"; };
+		1B46FCC9166C696A00C1AC51 /* ofxEasingCubic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingCubic.h; sourceTree = "<group>"; };
+		1B46FCCA166C696A00C1AC51 /* ofxEasingElastic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingElastic.cpp; sourceTree = "<group>"; };
+		1B46FCCB166C696A00C1AC51 /* ofxEasingElastic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingElastic.h; sourceTree = "<group>"; };
+		1B46FCCC166C696A00C1AC51 /* ofxEasingExpo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingExpo.cpp; sourceTree = "<group>"; };
+		1B46FCCD166C696A00C1AC51 /* ofxEasingExpo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingExpo.h; sourceTree = "<group>"; };
+		1B46FCCE166C696A00C1AC51 /* ofxEasingLinear.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingLinear.cpp; sourceTree = "<group>"; };
+		1B46FCCF166C696A00C1AC51 /* ofxEasingLinear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingLinear.h; sourceTree = "<group>"; };
+		1B46FCD0166C696A00C1AC51 /* ofxEasingQuad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingQuad.cpp; sourceTree = "<group>"; };
+		1B46FCD1166C696A00C1AC51 /* ofxEasingQuad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingQuad.h; sourceTree = "<group>"; };
+		1B46FCD2166C696A00C1AC51 /* ofxEasingQuart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingQuart.cpp; sourceTree = "<group>"; };
+		1B46FCD3166C696A00C1AC51 /* ofxEasingQuart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingQuart.h; sourceTree = "<group>"; };
+		1B46FCD4166C696A00C1AC51 /* ofxEasingQuint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingQuint.cpp; sourceTree = "<group>"; };
+		1B46FCD5166C696A00C1AC51 /* ofxEasingQuint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingQuint.h; sourceTree = "<group>"; };
+		1B46FCD6166C696A00C1AC51 /* ofxEasingSine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingSine.cpp; sourceTree = "<group>"; };
+		1B46FCD7166C696A00C1AC51 /* ofxEasingSine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingSine.h; sourceTree = "<group>"; };
+		1B46FCD8166C696A00C1AC51 /* ofxTween.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTween.cpp; sourceTree = "<group>"; };
+		1B46FCD9166C696A00C1AC51 /* ofxTween.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTween.h; sourceTree = "<group>"; };
 		1acfa260be58b7a36eea144868f55223 /* ofxFTGLFont.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxFTGLFont.h; path = ../../../addons/ofxFTGL/src/ofxFTGLFont.h; sourceTree = SOURCE_ROOT; };
 		1c085e327dab912cfa2a443d084c3628 /* ofxTCPServer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxTCPServer.cpp; path = ../../../addons/ofxNetwork/src/ofxTCPServer.cpp; sourceTree = SOURCE_ROOT; };
 		1dfa26f2c6bbd1b8ac24c0b1a41060fb /* ofxNetworkUtils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxNetworkUtils.h; path = ../../../addons/ofxNetwork/src/ofxNetworkUtils.h; sourceTree = SOURCE_ROOT; };
@@ -237,6 +277,57 @@
 			name = ofxNetwork;
 			sourceTree = "<group>";
 		};
+		1B46FCA7166C696A00C1AC51 /* ofxTween */ = {
+			isa = PBXGroup;
+			children = (
+				1B46FCBD166C696A00C1AC51 /* src */,
+			);
+			name = ofxTween;
+			path = ../../../addons/ofxTween;
+			sourceTree = "<group>";
+		};
+		1B46FCBD166C696A00C1AC51 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				1B46FCBE166C696A00C1AC51 /* Easings */,
+				1B46FCD8166C696A00C1AC51 /* ofxTween.cpp */,
+				1B46FCD9166C696A00C1AC51 /* ofxTween.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		1B46FCBE166C696A00C1AC51 /* Easings */ = {
+			isa = PBXGroup;
+			children = (
+				1B46FCBF166C696A00C1AC51 /* easing_terms_of_use.html */,
+				1B46FCC0166C696A00C1AC51 /* ofxEasing.cpp */,
+				1B46FCC1166C696A00C1AC51 /* ofxEasing.h */,
+				1B46FCC2166C696A00C1AC51 /* ofxEasingBack.cpp */,
+				1B46FCC3166C696A00C1AC51 /* ofxEasingBack.h */,
+				1B46FCC4166C696A00C1AC51 /* ofxEasingBounce.cpp */,
+				1B46FCC5166C696A00C1AC51 /* ofxEasingBounce.h */,
+				1B46FCC6166C696A00C1AC51 /* ofxEasingCirc.cpp */,
+				1B46FCC7166C696A00C1AC51 /* ofxEasingCirc.h */,
+				1B46FCC8166C696A00C1AC51 /* ofxEasingCubic.cpp */,
+				1B46FCC9166C696A00C1AC51 /* ofxEasingCubic.h */,
+				1B46FCCA166C696A00C1AC51 /* ofxEasingElastic.cpp */,
+				1B46FCCB166C696A00C1AC51 /* ofxEasingElastic.h */,
+				1B46FCCC166C696A00C1AC51 /* ofxEasingExpo.cpp */,
+				1B46FCCD166C696A00C1AC51 /* ofxEasingExpo.h */,
+				1B46FCCE166C696A00C1AC51 /* ofxEasingLinear.cpp */,
+				1B46FCCF166C696A00C1AC51 /* ofxEasingLinear.h */,
+				1B46FCD0166C696A00C1AC51 /* ofxEasingQuad.cpp */,
+				1B46FCD1166C696A00C1AC51 /* ofxEasingQuad.h */,
+				1B46FCD2166C696A00C1AC51 /* ofxEasingQuart.cpp */,
+				1B46FCD3166C696A00C1AC51 /* ofxEasingQuart.h */,
+				1B46FCD4166C696A00C1AC51 /* ofxEasingQuint.cpp */,
+				1B46FCD5166C696A00C1AC51 /* ofxEasingQuint.h */,
+				1B46FCD6166C696A00C1AC51 /* ofxEasingSine.cpp */,
+				1B46FCD7166C696A00C1AC51 /* ofxEasingSine.h */,
+			);
+			path = Easings;
+			sourceTree = "<group>";
+		};
 		1f4fb5c423662b96adfdcc0badec1cb0 /* ofxXmlSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -346,6 +437,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				1B46FCA7166C696A00C1AC51 /* ofxTween */,
 				E3018038166BC34C00B0C486 /* ofxTSPSReceiver */,
 				18240ecce4076fb0833a8578697ffa74 /* ofxNetwork */,
 				e6053ab7fec63d5f83825b880ce53c41 /* ofxOsc */,
@@ -691,6 +783,19 @@
 				E3018057166BC34C00B0C486 /* ofxTSPSPerson.cpp in Sources */,
 				E3018058166BC34C00B0C486 /* ofxTSPSReceiver.cpp in Sources */,
 				E3018059166BC34C00B0C486 /* ofxTSPSScene.cpp in Sources */,
+				1B46FCE8166C696A00C1AC51 /* ofxEasing.cpp in Sources */,
+				1B46FCE9166C696A00C1AC51 /* ofxEasingBack.cpp in Sources */,
+				1B46FCEA166C696A00C1AC51 /* ofxEasingBounce.cpp in Sources */,
+				1B46FCEB166C696A00C1AC51 /* ofxEasingCirc.cpp in Sources */,
+				1B46FCEC166C696A00C1AC51 /* ofxEasingCubic.cpp in Sources */,
+				1B46FCED166C696A00C1AC51 /* ofxEasingElastic.cpp in Sources */,
+				1B46FCEE166C696A00C1AC51 /* ofxEasingExpo.cpp in Sources */,
+				1B46FCEF166C696A00C1AC51 /* ofxEasingLinear.cpp in Sources */,
+				1B46FCF0166C696A00C1AC51 /* ofxEasingQuad.cpp in Sources */,
+				1B46FCF1166C696A00C1AC51 /* ofxEasingQuart.cpp in Sources */,
+				1B46FCF2166C696A00C1AC51 /* ofxEasingQuint.cpp in Sources */,
+				1B46FCF3166C696A00C1AC51 /* ofxEasingSine.cpp in Sources */,
+				1B46FCF4166C696A00C1AC51 /* ofxTween.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +853,7 @@
 					../../../addons/ofxFTGL/src,
 					../../../addons/ofxTrueTypeFontUC/libs,
 					../../../addons/ofxTrueTypeFontUC/src,
+					../../../addons/ofxTSPSReceiver/src/,
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
@@ -806,6 +912,7 @@
 					../../../addons/ofxFTGL/src,
 					../../../addons/ofxTrueTypeFontUC/libs,
 					../../../addons/ofxTrueTypeFontUC/src,
+					../../../addons/ofxTSPSReceiver/src/,
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",

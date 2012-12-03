@@ -50,7 +50,8 @@ void testApp::setup(){
 		gui.addToggle("ExtendScreen", bExtendScreen) ;
 		gui.addToggle("Grid", showGrid) ;
 		gui.addToggle("showDemoPic", showDemoPic) ;
-		
+		gui.addToggle("bTriangula", bTriangula) ;
+
 		//	vector <string> list;
 		//	list.push_back("ExtendScreen");
 		//	list.push_back("Grid");
@@ -61,13 +62,12 @@ void testApp::setup(){
 		gui.addLogger("events logger", &logger, 410, 300);
 		gui.disableIgnoreLayoutFlag();
 		
-		
-		
 		gui.ofxControlPanel::addPanel("SyphonPanel", 1);
 		gui.setWhichPanel("SyphonPanel");
 		outServName = gui.addTextInput("OutgoingServerName", "Syphon Server", 128);
 		gui.addToggle("SetOutServName", false) ;
 		inServName = gui.addTextInput("IncomingServerName", "VideoCue", 128);
+		inServAppName = gui.addTextInput("IncomingServerApplicationName", "VideoCue", 128);
 		gui.addToggle("SetInServName", false) ;
 		
 		gui.addToggle("Enable_Incoming", false) ;
@@ -95,12 +95,7 @@ void testApp::setup(){
 		outputPanel = new OutputPanel(&rm);
 		gui.addCustomRect("Output Diagnosis", outputPanel, gui.getWidth()*0.8, gui.getHeight()*0.8);
 		
-		gui.ofxControlPanel::addPanel("KinectPanel", 2);
-		gui.setWhichPanel("KinectPanel");
-		kinectPanel = new KinectPanel();
-		gui.addCustomRect("Kinect", kinectPanel, gui.getWidth()*0.8, gui.getHeight()*0.8);
-		
-		
+
 		
 		//  -- this gives you back an ofEvent for all events in this control panel object
 		ofAddListener(gui.guiEvent, this, &testApp::eventsIn);
@@ -150,6 +145,7 @@ void testApp::SyphonEvent(guiCallbackData & data){
 	}
 	else if( data.isElement( "SetInServName" ) && data.getInt(0) == 1 ){
 		syphonClient.setServerName(inServName->getValueText());
+		syphonClient.setApplicationName(inServAppName->getValueText());
 		gui.setValueB("SetInServName", false);
 		
 		logger.log(OF_LOG_NOTICE, "syphonClient.setName %s",inServName->getValueText().c_str() );
@@ -180,6 +176,11 @@ void testApp::eventsIn(guiCallbackData & data){
 	{
 		showDemoPic = data.getInt(0);
 	}
+	if(data.isElement("bTriangula"))
+	{
+		bTriangula = data.getInt(0);
+	}
+	
 	//lets send all events to our logger
 	if( !data.isElement( "events logger" ) ){
 		string logStr = data.getXmlName();

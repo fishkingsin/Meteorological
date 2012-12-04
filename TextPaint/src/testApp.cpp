@@ -39,23 +39,71 @@
  */
 
 #include "testApp.h"
-
+#define FONT_SIZE 12
+int StringToWString(std::wstring &ws, const std::string &s)
+{
+    std::wstring wsTmp(s.begin(), s.end());
+	
+    ws = wsTmp;
+	
+    return 0;
+}
 //--------------------------------------------------------------
 void testApp::setup(){
 	
 	ofEnableSmoothing();
 	ofSetVerticalSync(true);
 	ofEnableAlphaBlending();
+	ofSetLogLevel(OF_LOG_VERBOSE);
 	
-	//this connects our app to any running openTSPS copy that is sending OSC messages to port 12000 with our IP
-	receiver = new ofxTSPSReceiver();
-	receiver->setListener( this );
-	receiver->connect(PORT);
+	tspsReceiver.connect(12000);
+  
+	ofxAddTSPSListeners(this);
     
-    font.loadFont("LiHei.ttf", 12);
-	character = font.getStringAsPoints("溫情聖誕有冇人要聖誕卡?");
+    font.loadFont("LiHei.ttf",FONT_SIZE , true,true ,0.3,0);
+	setupFromTextFile("data.txt");
+	count = 0;
 }
-
+void testApp::setupFromTextFile(string file_path)
+{
+	ofFile file(file_path);
+	ofBuffer buf = file.readToBuffer();
+	
+	int step=0;
+	int maxChar = (ofGetWidth()-100)/FONT_SIZE;
+	
+	ofUniString uni = ofTextConverter::toUTF32(buf.getText());
+	count = 0;
+	string utf8_1_out;
+	
+	character.clear();
+	character.assign(uni.size(), myCharactor());
+	for (int i = 0 ; i<uni.size(); i++) {
+		
+		
+		character[i].font = &font;
+		character[i].charUC =  ofTextConverter::toUTF8(uni[i]);
+		character[i].offset.set(100+(step%maxChar)*FONT_SIZE,100+(step/maxChar*1.0f)*FONT_SIZE*1.1);
+		step++;
+		character[i].setOriginalPosition(ofVec2f(0,ofGetHeight()*2));
+	}
+}
+void testApp::updateCharactorPosition(float x ,float y)
+{
+	character[count].setNewPosition(ofVec2f(x,y));
+	count++;
+	if(count == character.size())
+	{
+		count = 0;
+		//do something
+		
+		//reset char position
+		for (int i = 0 ; i<character.size(); i++) {
+			character[i].setOriginalPosition(ofVec2f(0,ofGetHeight()*2));
+		}
+		//or load other file
+	}
+}
 //--------------------------------------------------------------
 void testApp::update(){
 	
@@ -67,57 +115,44 @@ void testApp::draw(){
 	ofBackground(255, 255, 255);
 	ofSetLineWidth(3);
 	
-	for(int i = 0; i < receiver->totalPeople(); i++){
-		ofxTSPSPerson* person = receiver->personAtIndex(i);
-		ofColor* color = (ofColor*)person->customAttributes;
-		ofSetColor(color->r, color->g, color->b);
-        float x = person->centroid.x*ofGetWidth();
-        float y = person->centroid.y*ofGetHeight();
-        ofLine(x+10, y, x-10, y);
-        ofLine(x, y-10, x, y+10);
-		for(int c = 1; c < person->contour.size(); c++){
-
-			ofLine(person->contour[c-1].x*ofGetWidth(), person->contour[c-1].y*ofGetHeight(), 
-				   person->contour[c  ].x*ofGetWidth(), person->contour[c  ].y*ofGetHeight());
-		}
-	}
+	tspsReceiver.draw(ofGetWidth(), ofGetHeight());
     ofSetColor(0, 0, 0);
-//    for(int i = 0 ; i < character.size() ; i++)
-//    {
-//        character[i] ( 20+i*20 , 20 );
-//    }
-        //    font.drawString("溫情聖誕有冇人要聖誕卡?",20,20);
+
+    for(int i = 0 ; i < character.size() ; i++)
+    {
+		
+        character[i].draw ( );
+
+
+    }
+	
 }
                     
                     //called when the person enters the system
-void testApp::personEntered( ofxTSPSPerson* person, ofxTSPSScene* scene )
-{
-	ofColor* color = new ofColor();
-	color->r = ofRandom(0, 255);
-	color->g = ofRandom(0, 255);
-	color->b = ofRandom(0, 255);
-	color->a = 255;
+//--------------------------------------------------------------
+void testApp::onPersonEntered( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "New person!");
+    // you can access the person like this:
+    // tspsEvent.person
+}
+
+//--------------------------------------------------------------
+void testApp::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "Person updated!");
+    // you can access the person like this:
+    // tspsEvent.person
+    float x = tspsEvent.person->centroid.x*ofGetWidth();
+	float y = tspsEvent.person->centroid.y*ofGetHeight();
+	updateCharactorPosition(x,y);
+}
+
+//--------------------------------------------------------------
+void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "Person left!");
+    // you can access the person like this:
+    // tspsEvent.person
 	
-	//put a color into the custom attributes field
-	person->customAttributes = color;
-	
-}
-
-//called each time the centroid moves (a lot)
-void testApp::personMoved( ofxTSPSPerson* person, ofxTSPSScene* scene )
-{
-}
-
-//called one frame before the person is removed from the list to let you clean up
-void testApp::personWillLeave( ofxTSPSPerson* person, ofxTSPSScene* scene )
-{
-	//delete the color so we free up memory.
-	delete (ofColor*)person->customAttributes;
-}
-
-//called every frame no matter what.
-void testApp::personUpdated(ofxTSPSPerson* person, ofxTSPSScene* scene)
-{
+    
 }
 
 //--------------------------------------------------------------
@@ -137,7 +172,8 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-
+	
+	updateCharactorPosition(x,y);
 }
 
 //--------------------------------------------------------------
@@ -154,4 +190,7 @@ void testApp::mouseReleased(int x, int y, int button){
 void testApp::windowResized(int w, int h){
 
 }
-
+void testApp::dragEvent(ofDragInfo dragInfo) {
+	setupFromTextFile(dragInfo.files[0]);
+	
+}

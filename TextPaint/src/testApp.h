@@ -45,10 +45,43 @@
 #include "ofMain.h"
 #include "ofxTSPSReceiver.h"
 #include "ofxTrueTypeFontUC.h"
+#include "ofxTween.h"
+#include "ofUTF8.h"
+#include "ofUnicode.h"
+#include "ofTextConverter.h"
 #define PORT 12000
 
-class testApp : public ofBaseApp, public ofxTSPSListener
+class myCharactor
 {
+	public :
+	
+	void update()
+	{
+		
+	}
+	void draw()
+	{
+		
+		font->drawString(charUC,tweenX.update(),tweenY.update());
+	}
+	void setOriginalPosition(ofVec2f v2)
+	{
+		tweenX.setParameters(0,easing,ofxTween::easeOut,v2.x,v2.x,0,0.);
+		tweenY.setParameters(0,easing,ofxTween::easeOut,v2.y,v2.y,0,0.);
+	}
+	void setNewPosition(ofVec2f v2)
+	{
+		tweenX.setParameters(1,easing,ofxTween::easeOut,v2.x,offset.x,1000,0.);
+		tweenY.setParameters(1,easing,ofxTween::easeOut,v2.y,offset.y,1000,0.);
+	}
+	ofxTween tweenX;
+	ofxTween tweenY;
+	ofxEasingQuad 	easing;
+	string charUC;
+	ofVec2f offset;
+	ofxTrueTypeFontUC *font;
+};
+class testApp : public ofBaseApp{
 
   public:
 	void setup();
@@ -62,19 +95,20 @@ class testApp : public ofBaseApp, public ofxTSPSListener
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void windowResized(int w, int h);
-	
-	ofxTSPSReceiver* receiver;
-	
-	//called when the person enters the system
-	void personEntered( ofxTSPSPerson* person, ofxTSPSScene* scene );
-	//called each time the centroid moves (a lot)
-	void personMoved( ofxTSPSPerson* person, ofxTSPSScene* scene );
-	//called one frame before the person is removed from the list to let you clean up
-	void personWillLeave( ofxTSPSPerson* person, ofxTSPSScene* scene );
-	//called every frame no matter what.
-	void personUpdated(ofxTSPSPerson* person, ofxTSPSScene* scene);
+	void dragEvent(ofDragInfo dragInfo);
+	void setupFromTextFile(string path);
+	void updateCharactorPosition(float x , float y);
+	ofxTSPS::Receiver tspsReceiver;
+    
+	// event listeners
+	void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
+	void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
+	void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
 	ofxTrueTypeFontUC font;
-    vector<ofTTFCharacterUC>character;
+    vector<myCharactor>character;
+	
+	int count;
+	
 };
 
 #endif

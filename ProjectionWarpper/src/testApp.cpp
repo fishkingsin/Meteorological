@@ -11,7 +11,7 @@ void testApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     glDisable(GL_DEPTH_TEST);
     ofEnableAlphaBlending();
-    ofEnableSmoothing();
+//    ofEnableSmoothing();
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
 	
@@ -24,7 +24,7 @@ void testApp::setup(){
 	if(settings.pushTag("SETTINGS"))
 	{
 		ofSetWindowTitle(settings.getValue("TITLE","Projection Warpper"));
-
+		
 		N_SCREEN = settings.getValue("N_SCREEN",2);
 		WIDTH = settings.getValue("WIDTH",1024);
 		HEIGHT = settings.getValue("HEIGHT",768);
@@ -50,8 +50,8 @@ void testApp::setup(){
 		gui.addToggle("ExtendScreen", bExtendScreen) ;
 		gui.addToggle("Grid", showGrid) ;
 		gui.addToggle("showDemoPic", showDemoPic) ;
-		gui.addToggle("bTriangula", bTriangula) ;
-
+		gui.addToggle("bEnableTriangleMesh", bEnableTriangleMesh) ;
+		
 		//	vector <string> list;
 		//	list.push_back("ExtendScreen");
 		//	list.push_back("Grid");
@@ -95,7 +95,7 @@ void testApp::setup(){
 		outputPanel = new OutputPanel(&rm);
 		gui.addCustomRect("Output Diagnosis", outputPanel, gui.getWidth()*0.8, gui.getHeight()*0.8);
 		
-
+		
 		
 		//  -- this gives you back an ofEvent for all events in this control panel object
 		ofAddListener(gui.guiEvent, this, &testApp::eventsIn);
@@ -114,26 +114,12 @@ void testApp::setup(){
 		ofLogError()<<" <SETTINGS> not found in config.xml!";
 	}
 	
+	tspsReceiver.connect(12000);
+	
+	ofxAddTSPSListeners(this);
+	
 }
-//--------------------------------------------------------------
-//Or wait to receive messages, sent only when the track changed
-//void testApp::trackUpdated(ofxDurationEventArgs& args){
-//	ofLogVerbose("Duration Event") << "track type " << args.track->type << " updated with name " << args.track->name << " and value " << args.track->value << endl;
-//
-//	if(args.track->name=="/FBOSetting")
-//	{
-//		ofLogVerbose("FBOSetting") << "track type " << args.track->type << " updated with name " <<
-//		args.track->name << " and value " << args.track->flag.c_str() << endl;
-//
-//		ofFile file(args.track->flag);
-//		if(file.exists() && file.getExtension()=="xml")
-//		{
-//
-//			rm.loadFromXml(args.track->flag);
-//		}
-//	}
-//}
-//this captures all our control panel events - unless its setup differently in testApp::setup
+
 //--------------------------------------------------------------
 void testApp::SyphonEvent(guiCallbackData & data){
 	//	printf("testApp::SyphonEvent - name is %s - \n", data.getXmlName().c_str());
@@ -176,9 +162,9 @@ void testApp::eventsIn(guiCallbackData & data){
 	{
 		showDemoPic = data.getInt(0);
 	}
-	if(data.isElement("bTriangula"))
+	if(data.isElement("bEnableTriangleMesh"))
 	{
-		bTriangula = data.getInt(0);
+		bEnableTriangleMesh = data.getInt(0);
 	}
 	
 	//lets send all events to our logger
@@ -212,6 +198,76 @@ void testApp::eventsIn(guiCallbackData & data){
 	
 	printf("\n");
 }
+
+//called when the person enters the system
+//--------------------------------------------------------------
+void testApp::onPersonEntered( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "New person!");
+    // you can access the person like this:
+    // tspsEvent.person
+}
+
+//--------------------------------------------------------------
+void testApp::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "Person updated!");
+	if(bEnableTriangleMesh)
+	{
+		ofxTSPS::Person* person = tspsEvent.person;
+		
+		ofPolyline lineRespaced;
+		for(int j = 0 ; j < person->contour.size() ; j++)
+		{
+			lineRespaced.addVertex(person->contour[j].x*WIDTH,person->contour[j].y*HEIGHT);
+		}
+		lineRespaced.addVertex(lineRespaced[0]);
+		
+		lineRespaced = lineRespaced.getResampledBySpacing(20);
+		// I want to make sure the first point and the last point are not the same, since triangle is unhappy:
+		lineRespaced.getVertices().erase(lineRespaced.getVertices().begin());
+		
+		// if we have a proper set of points, mesh them:
+		if (lineRespaced.size() > 5){
+			
+			mesh.triangulate(lineRespaced, -1, 200);
+			int num = mesh.triangulatedMesh.getNumVertices();
+			//apply texcoord
+			if(bSyphonClient){
+				for (int j = 0 ;  j < num ; j++)
+				{
+					ofVec2f v2= mesh.triangulatedMesh.getVertex(j);
+					mesh.triangulatedMesh.addTexCoord(v2);
+					
+				}
+			}
+			else
+			{
+				for (int j = 0 ;  j < num ; j++)
+				{
+					ofVec2f v2= mesh.triangulatedMesh.getVertex(j);
+					mesh.triangulatedMesh.addTexCoord(v2);
+					
+				}
+			}
+			//apply color
+			//			for(int i = 0 ; i <mesh.triangles.size() ; i++)
+			//			{
+			//				ofVec2f v2 = mesh.triangles[i].pts[0];
+			//				mesh.triangles[i].randomColor = vidGrabber.getPixelsRef().getColor(v2.x, v2.y);
+			//
+			//			}
+		}
+	}
+	
+	
+}
+
+//--------------------------------------------------------------
+void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "Person left!");
+	
+	
+    
+}
 #define NUM_BYTE 512
 //--------------------------------------------------------------
 void testApp::update(){
@@ -229,7 +285,22 @@ void testApp::update(){
 	ofBackgroundGradient(ofColor(150), ofColor(0));
     
 	ofPopMatrix();
-	if(bSyphonClient) syphonClient.draw(0,0,WIDTH,HEIGHT);
+	if(bEnableTriangleMesh)
+	{
+		
+		
+		ofPushMatrix();
+		if(bSyphonClient){
+			syphonClient.bind();
+			mesh.triangulatedMesh.drawFaces();
+			syphonClient.unbind();
+		}
+		else{
+			mesh.draw();
+		}
+		ofPopMatrix();
+	}
+	else if(bSyphonClient) syphonClient.draw(0,0,WIDTH,HEIGHT);
 	
 	if(showDemoPic)img.draw(0,0,WIDTH,HEIGHT);
 	if(showGrid)

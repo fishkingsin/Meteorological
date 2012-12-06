@@ -19,6 +19,8 @@
 #include "ofxAutoControlPanel.h"
 #include "InputPanel.h"
 #include "OutputPanel.h"
+#include "ofxTSPSReceiver.h"
+#include "ofxTriangleMesh.h"
 class testApp : public ofBaseApp {
     
 public:
@@ -62,7 +64,7 @@ public:
 	guiTypeTextInput *outServName;
 	
 	
-	bool showGrid,bExtendScreen,showDemoPic,bSyphonServer,bSyphonClient,bTriangula;
+	bool showGrid,bExtendScreen,showDemoPic,bSyphonServer,bSyphonClient;
 	
 	//Duration-----------------------------------------------------
 //	ofxDuration duration;
@@ -72,6 +74,15 @@ public:
 //	int port;
 	int WIDTH,HEIGHT,N_SCREEN;
 	
+	
+	//tri mesh
+	bool bEnableTriangleMesh;
+	ofxTSPS::Receiver tspsReceiver;
+	ofxTriangleMesh mesh;
+	void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
+	void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
+	void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
+
 };
 
 #endif

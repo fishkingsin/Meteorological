@@ -50,11 +50,14 @@
 #include "ofUnicode.h"
 #include "ofTextConverter.h"
 #define PORT 12000
-
+#include "ofxAutoControlPanel.h"
 class myCharactor
 {
 	public :
-	
+	myCharactor()
+	{
+		speed = 1000;
+	}
 	void update()
 	{
 		
@@ -71,8 +74,8 @@ class myCharactor
 	}
 	void setNewPosition(ofVec2f v2)
 	{
-		tweenX.setParameters(1,easing,ofxTween::easeOut,v2.x,offset.x,1000,0.);
-		tweenY.setParameters(1,easing,ofxTween::easeOut,v2.y,offset.y,1000,0.);
+		tweenX.setParameters(1,easing,ofxTween::easeOut,v2.x,offset.x,speed,0.);
+		tweenY.setParameters(1,easing,ofxTween::easeOut,v2.y,offset.y,speed,0.);
 	}
 	ofxTween tweenX;
 	ofxTween tweenY;
@@ -80,6 +83,7 @@ class myCharactor
 	string charUC;
 	ofVec2f offset;
 	ofxTrueTypeFontUC *font;
+	int speed;
 };
 class testApp : public ofBaseApp{
 
@@ -104,11 +108,23 @@ class testApp : public ofBaseApp{
 	void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
 	void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
 	void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
+	
+	//font
+	int fontSize;
 	ofxTrueTypeFontUC font;
     vector<myCharactor>character;
-	
+	int fadeInSpeed;
 	int count;
 	
+	//control panel
+	ofxAutoControlPanel gui;
+	ofxXmlSettings settings;
+	void eventsIn(guiCallbackData & data);
+	void initSettings();
+	void resetOutputDimension();
+	ofRectangle output;
+	ofRectangle input;
+	bool enabled,debug;
 };
 
 #endif

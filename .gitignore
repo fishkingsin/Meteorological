@@ -10,3 +10,5 @@
 *.zip
 Duration/
 Duration.app
+*.o
+*.build

@@ -23,5 +23,11 @@
     <val_0>1.000000000</val_0>
 </Enable_Incoming>
 <Enable_Outgoing>
-    <val_0>1.000000000</val_0>
+    <val_0>0.000000000</val_0>
 </Enable_Outgoing>
+<bTriangula>
+    <val_0>0.000000000</val_0>
+</bTriangula>
+<bEnableTriangleMesh>
+    <val_0>1.000000000</val_0>
+</bEnableTriangleMesh>

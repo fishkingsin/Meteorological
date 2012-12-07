@@ -235,8 +235,11 @@ void testApp::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
 				for (int j = 0 ;  j < num ; j++)
 				{
 					ofVec2f v2= mesh.triangulatedMesh.getVertex(j);
-					mesh.triangulatedMesh.addTexCoord(v2);
-					
+//					mesh.triangulatedMesh.addTexCoord(v2);
+					ofVec2f n = v2;
+                    n.x =(n.x/WIDTH)*syphonClient.getWidth();
+                    n.y =syphonClient.getHeight()-((n.y/HEIGHT)*syphonClient.getHeight());
+					mesh.triangulatedMesh.addTexCoord(n);
 				}
 			}
 			else
@@ -296,7 +299,9 @@ void testApp::update(){
 			syphonClient.unbind();
 		}
 		else{
+            img.getTextureReference().bind();
 			mesh.draw();
+            img.getTextureReference().unbind();
 		}
 		ofPopMatrix();
 	}

@@ -39,6 +39,7 @@ void testApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetFrameRate(60);
     ofSetBackgroundColor(0);
+    ofEnableAlphaBlending();
     port1.setup(settings.getValue("PEGGY_SERIAL_NAME",peggy1Serial,0), 115200);
     port2.setup(settings.getValue("PEGGY_SERIAL_NAME",peggy2Serial,1), 115200);
 	
@@ -292,11 +293,11 @@ void testApp::update(){
 		glPopMatrix();
 		ofPopStyle();
 	}
-	
+	float scalex = NUM_LED*1.0f/CAMW*1.0f;
+    float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
 	if(bCV)
 	{
-		float scalex = NUM_LED*1.0f/CAMW*1.0f;
-		float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
+		
 		float tx = 0;
 		float ty = 0;
 		ofPushStyle();
@@ -343,8 +344,20 @@ void testApp::update(){
 		}
 		
 		glPopMatrix();
-		ofPopStyle();
+		
+        ofPopStyle();
 	}
+    {
+        glPushMatrix();
+//        float scalex = NUM_LED*1.0f/CAMW*1.0f;
+//        float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
+//        glScalef( scalex, scalex, 0.0 );
+        for (int i = 0; i < balls.size(); i++) {
+            balls[i]->calc();
+            balls[i]->draw();
+        }
+        glPopMatrix();
+    }
 	scaledFbo.readToPixels(scaledPixels);
     scaledFbo.end();
     
@@ -378,6 +391,13 @@ void testApp::draw(){
         }
     }
 	buildings.draw(ofGetWidth()*0.5,0,CAMW,CAMH);
+    ofPushMatrix();
+    ofTranslate(ofGetWidth()*0.5,0);
+    for (int i = 0; i < balls.size(); i++) {
+
+        balls[i]->draw();
+    }
+    ofPopMatrix();
 //	int x = 0;
 //	for(int i = 0 ; i < images.size() ; i++)
 //	{
@@ -429,7 +449,28 @@ void testApp::renderToPeggy( int display)
 }
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    
+    switch(key)
+    {
+        case '1':
+        {
+            balls.push_back(new Ball(0,ofRandom(NUM_LED*2),NUM_LED,NUM_LED*2,ofRandom(0.5,1),0));
+        }
+            break;
+        case '2':
+        {
+            balls.push_back(new Ball(ofRandom(NUM_LED),0,NUM_LED,NUM_LED*2,0,ofRandom(0.5,1)));
+        }
+        break;
+        case '3':
+            while(!balls.empty())
+            {
+               Ball*ball =  balls.back();
+                ball->~Ball();
+                balls.pop_back();
+            }
+            balls.clear();
+            break;
+    }
 }
 
 //--------------------------------------------------------------

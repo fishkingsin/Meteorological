@@ -10,6 +10,7 @@
 #define NUM_PEGGY 2
 #define CAMW 320
 #define CAMH 240
+#include "Ball.h"
 class LED : public ofVec2f
 {
 public:
@@ -96,7 +97,7 @@ public:
 	}
 	void draw(float x , float y, float w ,float h)
 	{
-        ofSetColor(brightness);
+        ofSetColor(255,brightness);
 		image->draw(x+pos.x-image->width*0.5,
 					pos.y,
 					image->width,
@@ -228,6 +229,6 @@ class testApp : public ofBaseApp{
 	void							trackUpdated(ofxDurationEventArgs& args);
 	string							ip;
 	int								port;
-
+    vector<Ball*>balls;
 
 };

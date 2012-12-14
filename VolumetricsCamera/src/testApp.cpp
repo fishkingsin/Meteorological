@@ -1,4 +1,5 @@
 #include "testApp.h"
+string currentCompositionDirectory = "./settings/";
 void testApp::initVolumetrics()
 {
     imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
@@ -44,6 +45,17 @@ void testApp::setup(){
     ofEnableAlphaBlending();
     ofEnableSmoothing();
    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	
+	gui.setup("Settings", "defaultGuiSettings.xml");
+    
+    gui.add(shouldResetCamera.setup("Reset Camera", ofxParameter<bool>()));
+    gui.add(cameraSpeed.setup("Camera Speed", ofxParameter<float>(), 0, 40));
+    gui.add(cameraRollSpeed.setup("Cam Roll Speed", ofxParameter<float>(), .0, 4));
+    gui.add(shouldSaveCameraPoint.setup("Set Camera Point", ofxParameter<bool>()));
+    gui.add(currentLockCamera.setup("Lock to Track", ofxParameter<bool>()));
+    
+    gui.loadFromFile("defaultGuiSettings.xml");
+	
     initVolumetrics();
 
     cam.setup();
@@ -76,29 +88,90 @@ void testApp::populateTimelineElements(){
 	
 	timeline.setPageName("Camera");
 	timeline.addTrack("Camera", &cameraTrack);
+	timeline.addCurves("Volume Threshold", currentCompositionDirectory + "VolumeThreshold.xml", ofRange(0, 1), myVolume.getThreshold() );
+	timeline.addCurves("Volume Density", currentCompositionDirectory + "VolumeDensity.xml", ofRange(0, 1), myVolume.getDensity() );
+	timeline.addCurves("Volume XyQuality", currentCompositionDirectory + "VolumeXyQuality.xml", ofRange(0, 1), myVolume.getXyQuality() );
+	timeline.addCurves("Volume ZQuality", currentCompositionDirectory + "VolumeZQuality.xml", ofRange(0, 1), myVolume.getZQuality() );
+	timeline.addSwitches("Volume LinearFilter", currentCompositionDirectory + "VolumeLinearFilter.xml" );
+	
+	cameraTrack.setup();
+    cameraTrack.load();
+	cameraTrack.enable();
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-
+	
+	myVolume.setThreshold(timeline.getValue("Volume Threshold"));
+	
+	myVolume.setDensity(timeline.getValue("Volume Density"));
+	
+	myVolume.setXyQuality(timeline.getValue("Volume XyQuality"));
+	
+	myVolume.setZQuality(timeline.getValue("Volume ZQuality"));
+		
+//	myVolume.setVolumeTextureFilterMode(GL_LINEAR);
+//	linearFilter = true;
+//	myVolume.setVolumeTextureFilterMode(GL_NEAREST);
+//	linearFilter = false;
+	if(shouldSaveCameraPoint){
+//		cameraTrack.getCameraTrack().sample(timeline.getCurrentFrame());
+	}
+	if(shouldResetCamera){
+        resetCameraPosition();
+	}
+	cam.speed = cameraSpeed;
+    cam.rollSpeed = cameraRollSpeed;
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	ofSetBackgroundColor(ofColor::white);
     cam.begin();
     ofPushMatrix();
-    ofRotate(-90, 1, 0, 0);
+    ofRotate(90, 1, 0, 0);
     myVolume.drawVolume(0,0,0, ofGetHeight(), 0);
     ofPopMatrix();
     cam.end();
+	gui.draw();
     timeline.draw();
 }
-
+//--------------------------------------------------------------
+void testApp::resetCameraPosition(){
+    cam.targetNode.setPosition(ofVec3f());
+    cam.targetNode.setOrientation(ofQuaternion());
+    cam.targetXRot = -180;
+    cam.targetYRot = 0;
+    cam.rotationZ = 0;
+}
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
+	if(key == 'f'){
+		ofToggleFullscreen();
+	}
     if(key == 'T'){
 //        cameraTrack.getCameraTrack().sample(timeline.getCurrentFrame());
     }
+	if(key == ' '){
+		timeline.togglePlay();
+	}
+	if(key == 'h'){
+		timeline.toggleShow();
+	}
+	if(key == 'L'){
+    	currentLockCamera = !currentLockCamera;
+    }
+	if(key=='s')
+	{
+		saveSettings();
+	}
+}
+void testApp::saveSettings()
+{
+	cam.saveCameraPosition();
+	cameraTrack.save();
+	
+	timeline.save();
 }
 
 //--------------------------------------------------------------

@@ -1,8 +1,38 @@
 <positions>
     <element name="Camera">
         <x>0.000000000</x>
-        <y>708.000000000</y>
-        <width>1024.000000000</width>
+        <y>568.000000000</y>
+        <width>1280.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="Volume Density">
+        <x>0.000000000</x>
+        <y>696.000000000</y>
+        <width>1280.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="Volume LinearFilter">
+        <x>0.000000000</x>
+        <y>888.000000000</y>
+        <width>1280.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="Volume Threshold">
+        <x>0.000000000</x>
+        <y>632.000000000</y>
+        <width>1280.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="Volume XyQuality">
+        <x>0.000000000</x>
+        <y>760.000000000</y>
+        <width>1280.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="Volume ZQuality">
+        <x>0.000000000</x>
+        <y>824.000000000</y>
+        <width>1280.000000000</width>
         <height>40.000000000</height>
     </element>
 </positions>

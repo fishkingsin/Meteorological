@@ -5,6 +5,7 @@
 #include "ofxGameCamera.h"
 #include "ofxVolumetrics.h"
 #include "ofxTLCameraTrack.h"
+#include "ofxGui.h"
 class testApp : public ofBaseApp{
     
 public:
@@ -37,6 +38,20 @@ public:
     //camera
     ofxGameCamera cam;
     ofxTLCameraTrack cameraTrack;
+	
     void populateTimelineElements();
-    
+	void saveSettings();
+	
+	
+	
+	//gui
+	void resetCameraPosition();
+	ofxPanel gui;
+    ofxButton shouldResetCamera;
+    ofxFloatSlider cameraSpeed;
+    ofxFloatSlider cameraRollSpeed;
+    ofxButton shouldSaveCameraPoint;
+    ofxToggle currentLockCamera;
+
+	
 };

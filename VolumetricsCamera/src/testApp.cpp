@@ -114,8 +114,24 @@ void testApp::update(){
 //	linearFilter = true;
 //	myVolume.setVolumeTextureFilterMode(GL_NEAREST);
 //	linearFilter = false;
+	
+//	cameraTrack.lockCameraToTrack = currentLockCamera;
+//	cameraTrack.setTimelineInOutToTrack();
+	
+	if(currentLockCamera != cameraTrack.lockCameraToTrack){
+		if(!currentLockCamera){
+			cam.targetNode.setPosition(cam.getPosition());
+			cam.targetNode.setOrientation(cam.getOrientationQuat());
+			cam.rotationX = cam.targetXRot = -cam.getHeading();
+			cam.rotationY = cam.targetYRot = -cam.getPitch();
+			cam.rotationZ = -cam.getRoll();
+		}
+		cameraTrack.lockCameraToTrack = currentLockCamera;
+	}
+	
 	if(shouldSaveCameraPoint){
-//		cameraTrack.getCameraTrack().sample(timeline.getCurrentFrame());
+		
+		cameraTrack.addKeyframe();
 	}
 	if(shouldResetCamera){
         resetCameraPosition();
@@ -150,7 +166,7 @@ void testApp::keyPressed(int key){
 		ofToggleFullscreen();
 	}
     if(key == 'T'){
-//        cameraTrack.getCameraTrack().sample(timeline.getCurrentFrame());
+		cameraTrack.addKeyframe();
     }
 	if(key == ' '){
 		timeline.togglePlay();

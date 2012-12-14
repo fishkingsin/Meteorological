@@ -177,6 +177,13 @@ void testApp::keyPressed(int key){
 	if(key == 'L'){
     	currentLockCamera = !currentLockCamera;
     }
+	if(key == 'i'){
+		timeline.setCurrentTimeToInPoint();
+	}
+	
+	if(key == 'o'){
+		timeline.setCurrentTimeToOutPoint();
+	}
 	if(key=='s')
 	{
 		saveSettings();

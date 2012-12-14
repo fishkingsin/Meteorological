@@ -3,6 +3,9 @@ string currentCompositionDirectory = "./settings/";
 void testApp::initVolumetrics()
 {
     imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
+//    imageSequence.init("volumes/pelvis/pelvis_",4,".tif", 1);
+//    imageSequence.init("volumes/hip/hip_",4,".tif", 1);
+//    imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
     volWidth = imageSequence.getWidth();
     volHeight = imageSequence.getHeight();
     volDepth = imageSequence.getSequenceLength();
@@ -184,7 +187,7 @@ void testApp::keyPressed(int key){
 	if(key == 'o'){
 		timeline.setCurrentTimeToOutPoint();
 	}
-	if(key=='s')
+	if(key=='S')
 	{
 		saveSettings();
 	}

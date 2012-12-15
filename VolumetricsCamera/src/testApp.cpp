@@ -1,31 +1,41 @@
 #include "testApp.h"
 string currentCompositionDirectory = "./settings/";
-void testApp::initVolumetrics()
+void testApp::initVolumetrics(ofxImageSequencePlayer &_imageSequence)
 {
-    imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
-//    imageSequence.init("volumes/pelvis/pelvis_",4,".tif", 1);
-//    imageSequence.init("volumes/hip/hip_",4,".tif", 1);
-//    imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
-    volWidth = imageSequence.getWidth();
-    volHeight = imageSequence.getHeight();
-    volDepth = imageSequence.getSequenceLength();
+    //    imageSequence.init("volumes/TheVisibleMan2/",4,".tif", 1);
+    //    imageSequence.init("volumes/shoulder/shoulder_",4,".tif", 1);
+    //    imageSequence.init("volumes/mrbrain-8bit/mrbrain-8bit",3,".tif", 1);
+    //    imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
+    //    imageSequence.init("volumes/pelvis/",4,".tif", 1);
+    //    imageSequence.init("volumes/hip/hip_",4,".tif", 1);
+    //    imageSequence.init("volumes/head2/head2_",4,".tif", 1);
+    volWidth = _imageSequence.getWidth();
+    volHeight = _imageSequence.getHeight();
+    volDepth = _imageSequence.getSequenceLength();
     
     cout << "setting up volume data buffer at " << volWidth << "x" << volHeight << "x" << volDepth <<"\n";
+    
+    if(bVolumeSetup)
+    {
+        myVolume.destroy();
+        bVolumeSetup = false;
+        free(volumeData);
+    }
     
     volumeData = new unsigned char[volWidth*volHeight*volDepth*4];
     
     for(int z=0; z<volDepth; z++)
     {
-        imageSequence.loadFrame(z);
+        _imageSequence.loadFrame(z);
         for(int x=0; x<volWidth; x++)
         {
             for(int y=0; y<volHeight; y++)
             {
                 // convert from greyscale to RGBA, false color
                 int i4 = ((x+volWidth*y)+z*volWidth*volHeight)*4;
-                int sample = imageSequence.getPixels()[x+y*volWidth];
+                int sample = _imageSequence.getPixels()[x+y*volWidth];
                 ofColor c;
-                c.setHsb(sample, 255-sample, sample);
+                c.setHsb(255-sample, 255-sample, 255-sample);
                 
                 volumeData[i4] = c.r;
                 volumeData[i4+1] = c.g;
@@ -35,19 +45,22 @@ void testApp::initVolumetrics()
         }
     }
     
-    myVolume.setup(volWidth, volHeight, volDepth, ofVec3f(1,1,2));
+    
+    myVolume.setup(volWidth, volHeight, volDepth, ofVec3f(1,1,0.5));
     myVolume.updateVolumeData(volumeData,volWidth,volHeight,volDepth,0,0,0);
-    myVolume.setRenderSettings(0.5, 0.75, 0.75, 0.1);
+    bVolumeSetup = true;
+//    myVolume.setRenderSettings(0.5, 0.75, 0.75, 0.1);
     
     linearFilter = false;
     
 }
 //--------------------------------------------------------------
 void testApp::setup(){
+    ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetFrameRate(60);
     ofEnableAlphaBlending();
     ofEnableSmoothing();
-   ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	
 	gui.setup("Settings", "defaultGuiSettings.xml");
     
@@ -59,8 +72,26 @@ void testApp::setup(){
     
     gui.loadFromFile("defaultGuiSettings.xml");
 	
-    initVolumetrics();
-
+    ofDirectory dir;
+    int num = dir.listDir("./volumes");
+    imageSequence.assign(num,ofxImageSequencePlayer());
+    ofLogVerbose() << "List All Volume";
+    for(int i = 0 ;i < num ; i++)
+    {
+        ofLogVerbose() << dir.getPath(i);
+        imageSequence[i].init(dir.getPath(i)+"/",4,".tif",1);
+        //        imageSequence.init("volumes/TheVisibleMan2/",4,".tif", 1);
+        //    imageSequence.init("volumes/shoulder/shoulder_",4,".tif", 1);
+        //    imageSequence.init("volumes/mrbrain-8bit/mrbrain-8bit",3,".tif", 1);
+        //    imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
+        //    imageSequence.init("volumes/pelvis/",4,".tif", 1);
+        //    imageSequence.init("volumes/hip/hip_",4,".tif", 1);
+        //    imageSequence.init("volumes/head2/head2_",4,".tif", 1);
+    }
+    bVolumeSetup = false;
+    initVolumetrics(imageSequence[0]);
+    
+    
     cam.setup();
 	cam.speed = 10;
 	cam.autosavePosition = true;
@@ -82,7 +113,7 @@ void testApp::setup(){
 	timeline.getColors().load();
 	timeline.setOffset(ofVec2f(0, ofGetHeight() - 200));
 	timeline.setPageName("Main");
-	timeline.setDurationInFrames(300); //base duration
+	timeline.setDurationInSeconds(300);
     timeline.setMovePlayheadOnDrag(false);
     
     populateTimelineElements();
@@ -92,7 +123,7 @@ void testApp::populateTimelineElements(){
 	timeline.setPageName("Camera");
 	timeline.addTrack("Camera", &cameraTrack);
 	timeline.addCurves("Volume Threshold", currentCompositionDirectory + "VolumeThreshold.xml", ofRange(0, 1), myVolume.getThreshold() );
-	timeline.addCurves("Volume Density", currentCompositionDirectory + "VolumeDensity.xml", ofRange(0, 1), myVolume.getDensity() );
+	timeline.addCurves("Volume Density", currentCompositionDirectory + "VolumeDensity.xml", ofRange(0, 0.2), myVolume.getDensity() );
 	timeline.addCurves("Volume XyQuality", currentCompositionDirectory + "VolumeXyQuality.xml", ofRange(0, 1), myVolume.getXyQuality() );
 	timeline.addCurves("Volume ZQuality", currentCompositionDirectory + "VolumeZQuality.xml", ofRange(0, 1), myVolume.getZQuality() );
 	timeline.addSwitches("Volume LinearFilter", currentCompositionDirectory + "VolumeLinearFilter.xml" );
@@ -112,14 +143,14 @@ void testApp::update(){
 	myVolume.setXyQuality(timeline.getValue("Volume XyQuality"));
 	
 	myVolume.setZQuality(timeline.getValue("Volume ZQuality"));
-		
-//	myVolume.setVolumeTextureFilterMode(GL_LINEAR);
-//	linearFilter = true;
-//	myVolume.setVolumeTextureFilterMode(GL_NEAREST);
-//	linearFilter = false;
+    
+    //	myVolume.setVolumeTextureFilterMode(GL_LINEAR);
+    //	linearFilter = true;
+    //	myVolume.setVolumeTextureFilterMode(GL_NEAREST);
+    //	linearFilter = false;
 	
-//	cameraTrack.lockCameraToTrack = currentLockCamera;
-//	cameraTrack.setTimelineInOutToTrack();
+    //	cameraTrack.lockCameraToTrack = currentLockCamera;
+    //	cameraTrack.setTimelineInOutToTrack();
 	
 	if(currentLockCamera != cameraTrack.lockCameraToTrack){
 		if(!currentLockCamera){
@@ -165,6 +196,22 @@ void testApp::resetCameraPosition(){
 }
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
+    switch(key)
+    {
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        {
+            int index = key-'1';
+            
+            if(index<imageSequence.size())initVolumetrics(imageSequence[index]);
+        }
+            break;
+    }
 	if(key == 'f'){
 		ofToggleFullscreen();
 	}
@@ -202,27 +249,27 @@ void testApp::saveSettings()
 
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
@@ -233,10 +280,10 @@ void testApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void testApp::gotMessage(ofMessage msg){
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::dragEvent(ofDragInfo dragInfo){ 
-
+    
 }

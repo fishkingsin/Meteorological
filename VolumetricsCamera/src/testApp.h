@@ -6,6 +6,10 @@
 #include "ofxVolumetrics.h"
 #include "ofxTLCameraTrack.h"
 #include "ofxGui.h"
+class VolumeDataSet
+{
+public:
+};
 class testApp : public ofBaseApp{
     
 public:
@@ -25,12 +29,13 @@ public:
     
     
     ofxVolumetrics myVolume;
+    bool bVolumeSetup;
     unsigned char * volumeData;
     int volWidth, volHeight, volDepth;
     ofImage background;
-    ofxImageSequencePlayer imageSequence;
+    vector<ofxImageSequencePlayer >imageSequence;
     bool linearFilter;
-    void initVolumetrics();
+    void initVolumetrics(ofxImageSequencePlayer &_imageSequence);
     
     //timeline
     ofxTimeline timeline;
@@ -52,6 +57,6 @@ public:
     ofxFloatSlider cameraRollSpeed;
     ofxButton shouldSaveCameraPoint;
     ofxToggle currentLockCamera;
-
+    
 	
 };

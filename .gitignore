@@ -6,6 +6,11 @@
 *.mov
 *.m4v
 *.avi
+*.obj
+*.mtl
+*.lwo
+*.3ds
+*.ply
 .DS_Store
 *.zip
 Duration/

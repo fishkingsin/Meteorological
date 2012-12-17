@@ -24,4 +24,7 @@ public:
 	ofEasyCam cam;
 	ofxCubeMap myCubeMap;
 	ofShader cubeMapShader;
+	
+	bool bAnimate;
+	float animationTime;
 };

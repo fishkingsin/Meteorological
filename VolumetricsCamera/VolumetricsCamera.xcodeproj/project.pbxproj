@@ -63,6 +63,10 @@
 		E3BB978A167B84D800EEAA4A /* ofxPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB9782167B84D800EEAA4A /* ofxPanel.cpp */; };
 		E3BB978B167B84D800EEAA4A /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB9784167B84D800EEAA4A /* ofxSlider.cpp */; };
 		E3BB978C167B84D800EEAA4A /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3BB9786167B84D800EEAA4A /* ofxToggle.cpp */; };
+		E3DEA3D1167CBEAA007777FB /* ofxTSPSEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3DEA3C2167CBEA9007777FB /* ofxTSPSEvents.cpp */; };
+		E3DEA3D2167CBEAA007777FB /* ofxTSPSPerson.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3DEA3C4167CBEA9007777FB /* ofxTSPSPerson.cpp */; };
+		E3DEA3D3167CBEAA007777FB /* ofxTSPSReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3DEA3C6167CBEA9007777FB /* ofxTSPSReceiver.cpp */; };
+		E3DEA3D4167CBEAA007777FB /* ofxTSPSScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3DEA3C8167CBEA9007777FB /* ofxTSPSScene.cpp */; };
 		E3E082001674B7B90087F5EA /* ofxGameCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E081F71674B7B90087F5EA /* ofxGameCamera.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -285,6 +289,14 @@
 		E3BB9785167B84D800EEAA4A /* ofxSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSlider.h; sourceTree = "<group>"; };
 		E3BB9786167B84D800EEAA4A /* ofxToggle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxToggle.cpp; sourceTree = "<group>"; };
 		E3BB9787167B84D800EEAA4A /* ofxToggle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxToggle.h; sourceTree = "<group>"; };
+		E3DEA3C2167CBEA9007777FB /* ofxTSPSEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTSPSEvents.cpp; sourceTree = "<group>"; };
+		E3DEA3C3167CBEA9007777FB /* ofxTSPSEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTSPSEvents.h; sourceTree = "<group>"; };
+		E3DEA3C4167CBEA9007777FB /* ofxTSPSPerson.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTSPSPerson.cpp; sourceTree = "<group>"; };
+		E3DEA3C5167CBEA9007777FB /* ofxTSPSPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTSPSPerson.h; sourceTree = "<group>"; };
+		E3DEA3C6167CBEA9007777FB /* ofxTSPSReceiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTSPSReceiver.cpp; sourceTree = "<group>"; };
+		E3DEA3C7167CBEA9007777FB /* ofxTSPSReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTSPSReceiver.h; sourceTree = "<group>"; };
+		E3DEA3C8167CBEA9007777FB /* ofxTSPSScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTSPSScene.cpp; sourceTree = "<group>"; };
+		E3DEA3C9167CBEA9007777FB /* ofxTSPSScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTSPSScene.h; sourceTree = "<group>"; };
 		E3E081F71674B7B90087F5EA /* ofxGameCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGameCamera.cpp; sourceTree = "<group>"; };
 		E3E081F81674B7B90087F5EA /* ofxGameCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGameCamera.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -772,6 +784,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E3DEA3B4167CBEA9007777FB /* ofxTSPSReceiver */,
 				E3BB9779167B84D800EEAA4A /* ofxGui */,
 				E3E081E31674B7B80087F5EA /* ofxGameCamera */,
 				2c8f245acbe61e28646c17f20b185423 /* ofxAssimpModelLoader */,
@@ -846,6 +859,30 @@
 				E3BB9785167B84D800EEAA4A /* ofxSlider.h */,
 				E3BB9786167B84D800EEAA4A /* ofxToggle.cpp */,
 				E3BB9787167B84D800EEAA4A /* ofxToggle.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E3DEA3B4167CBEA9007777FB /* ofxTSPSReceiver */ = {
+			isa = PBXGroup;
+			children = (
+				E3DEA3C1167CBEA9007777FB /* src */,
+			);
+			name = ofxTSPSReceiver;
+			path = ../../../addons/ofxTSPSReceiver;
+			sourceTree = "<group>";
+		};
+		E3DEA3C1167CBEA9007777FB /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E3DEA3C2167CBEA9007777FB /* ofxTSPSEvents.cpp */,
+				E3DEA3C3167CBEA9007777FB /* ofxTSPSEvents.h */,
+				E3DEA3C4167CBEA9007777FB /* ofxTSPSPerson.cpp */,
+				E3DEA3C5167CBEA9007777FB /* ofxTSPSPerson.h */,
+				E3DEA3C6167CBEA9007777FB /* ofxTSPSReceiver.cpp */,
+				E3DEA3C7167CBEA9007777FB /* ofxTSPSReceiver.h */,
+				E3DEA3C8167CBEA9007777FB /* ofxTSPSScene.cpp */,
+				E3DEA3C9167CBEA9007777FB /* ofxTSPSScene.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -1312,6 +1349,10 @@
 				E3BB978A167B84D800EEAA4A /* ofxPanel.cpp in Sources */,
 				E3BB978B167B84D800EEAA4A /* ofxSlider.cpp in Sources */,
 				E3BB978C167B84D800EEAA4A /* ofxToggle.cpp in Sources */,
+				E3DEA3D1167CBEAA007777FB /* ofxTSPSEvents.cpp in Sources */,
+				E3DEA3D2167CBEAA007777FB /* ofxTSPSPerson.cpp in Sources */,
+				E3DEA3D3167CBEAA007777FB /* ofxTSPSReceiver.cpp in Sources */,
+				E3DEA3D4167CBEAA007777FB /* ofxTSPSScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

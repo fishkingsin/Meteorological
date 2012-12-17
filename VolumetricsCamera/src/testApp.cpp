@@ -1,14 +1,11 @@
 #include "testApp.h"
 string currentCompositionDirectory = "./settings/";
+string info = "Press 1-6 change model \
+press button lock camera to change free mode\
+w,s,a,d move camera forward, backward ,left, right\
+etc..";
 void testApp::initVolumetrics(ofxImageSequencePlayer &_imageSequence)
 {
-    //    imageSequence.init("volumes/TheVisibleMan2/",4,".tif", 1);
-    //    imageSequence.init("volumes/shoulder/shoulder_",4,".tif", 1);
-    //    imageSequence.init("volumes/mrbrain-8bit/mrbrain-8bit",3,".tif", 1);
-    //    imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
-    //    imageSequence.init("volumes/pelvis/",4,".tif", 1);
-    //    imageSequence.init("volumes/hip/hip_",4,".tif", 1);
-    //    imageSequence.init("volumes/head2/head2_",4,".tif", 1);
     volWidth = _imageSequence.getWidth();
     volHeight = _imageSequence.getHeight();
     volDepth = _imageSequence.getSequenceLength();
@@ -49,7 +46,7 @@ void testApp::initVolumetrics(ofxImageSequencePlayer &_imageSequence)
     myVolume.setup(volWidth, volHeight, volDepth, ofVec3f(1,1,0.5));
     myVolume.updateVolumeData(volumeData,volWidth,volHeight,volDepth,0,0,0);
     bVolumeSetup = true;
-//    myVolume.setRenderSettings(0.5, 0.75, 0.75, 0.1);
+    //    myVolume.setRenderSettings(0.5, 0.75, 0.75, 0.1);
     
     linearFilter = false;
     
@@ -62,6 +59,10 @@ void testApp::setup(){
     ofEnableSmoothing();
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	
+    tspsReceiver.connect(12000);
+    
+    ofxAddTSPSListeners(this);
+    
 	gui.setup("Settings", "defaultGuiSettings.xml");
     
     gui.add(shouldResetCamera.setup("Reset Camera", ofxParameter<bool>()));
@@ -80,13 +81,6 @@ void testApp::setup(){
     {
         ofLogVerbose() << dir.getPath(i);
         imageSequence[i].init(dir.getPath(i)+"/",4,".tif",1);
-        //        imageSequence.init("volumes/TheVisibleMan2/",4,".tif", 1);
-        //    imageSequence.init("volumes/shoulder/shoulder_",4,".tif", 1);
-        //    imageSequence.init("volumes/mrbrain-8bit/mrbrain-8bit",3,".tif", 1);
-        //    imageSequence.init("volumes/head/cthead-8bit",3,".tif", 1);
-        //    imageSequence.init("volumes/pelvis/",4,".tif", 1);
-        //    imageSequence.init("volumes/hip/hip_",4,".tif", 1);
-        //    imageSequence.init("volumes/head2/head2_",4,".tif", 1);
     }
     bVolumeSetup = false;
     initVolumetrics(imageSequence[0]);
@@ -107,7 +101,7 @@ void testApp::setup(){
 	cam.rollSpeed = 1;
     
     cameraTrack.lockCameraToTrack = false;
-    
+    viewportGameCam.set(0,0,ofGetWidth()*0.5,ofGetHeight()*0.5);
     
     timeline.setup();
 	timeline.getColors().load();
@@ -173,18 +167,71 @@ void testApp::update(){
 	cam.speed = cameraSpeed;
     cam.rollSpeed = cameraRollSpeed;
 }
+//--------------------------------------------------------------
+void testApp::onPersonEntered( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "New person!");
+    // you can access the person like this:
+    // tspsEvent.person
+}
 
+//--------------------------------------------------------------
+void testApp::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "Person updated!");
+    // you can access the person like this:
+    // tspsEvent.person
+    
+}
+
+//--------------------------------------------------------------
+void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
+    ofLog(OF_LOG_NOTICE, "Person left!");
+    // you can access the person like this:
+    // tspsEvent.person
+    
+}
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofSetBackgroundColor(ofColor::white);
-    cam.begin();
-    ofPushMatrix();
-    ofRotate(90, 1, 0, 0);
-    myVolume.drawVolume(0,0,0, ofGetHeight(), 0);
-    ofPopMatrix();
-    cam.end();
+    
+//    ofPushView();
+    {
+//        ofViewport(viewportGameCam);
+//        ofSetupScreen();
+        cam.begin();
+        ofPushMatrix();
+        ofRotate(90, 1, 0, 0);
+        myVolume.drawVolume(0,0,0, ofGetHeight(), 0);
+        ofPopMatrix();
+        cam.end();
+        
+    }
+//    ofPopView();
+    vector<ofxTSPS::Person*> people = tspsReceiver.getPeople();
+    for ( int i=0; i<people.size(); i++){
+        
+        ofPushStyle();
+        ofFill();
+        ofSetHexColor(0x000000);
+        
+        ofBeginShape();
+        for( int j=0; j<people[i]->contour.size(); j++ ) {
+            ofVertex( people[i]->contour[j].x * ofGetWidth(), people[i]->contour[j].y * ofGetHeight() );
+        }
+        ofEndShape();
+        ofPopStyle();
+    }
+    
 	gui.draw();
     timeline.draw();
+}
+void testApp::alignCameraToTrack()
+{
+    cam.targetNode.setPosition(cam.getPosition());
+    cam.targetNode.setOrientation(cam.getOrientationQuat());
+    cam.rotationX = cam.targetXRot = -cam.getHeading();
+    cam.rotationY = cam.targetYRot = -cam.getPitch();
+    cam.rotationZ = -cam.getRoll();
+
 }
 //--------------------------------------------------------------
 void testApp::resetCameraPosition(){
@@ -238,6 +285,10 @@ void testApp::keyPressed(int key){
 	{
 		saveSettings();
 	}
+    if(key == 'A')
+    {
+        alignCameraToTrack();
+    }
 }
 void testApp::saveSettings()
 {
@@ -284,6 +335,6 @@ void testApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void testApp::dragEvent(ofDragInfo dragInfo){
     
 }

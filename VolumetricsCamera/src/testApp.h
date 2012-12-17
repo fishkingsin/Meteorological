@@ -6,10 +6,8 @@
 #include "ofxVolumetrics.h"
 #include "ofxTLCameraTrack.h"
 #include "ofxGui.h"
-class VolumeDataSet
-{
-public:
-};
+#include "ofxTSPSReceiver.h"
+
 class testApp : public ofBaseApp{
     
 public:
@@ -42,6 +40,7 @@ public:
     
     //camera
     ofxGameCamera cam;
+    ofRectangle viewportGameCam;
     ofxTLCameraTrack cameraTrack;
 	
     void populateTimelineElements();
@@ -51,6 +50,7 @@ public:
 	
 	//gui
 	void resetCameraPosition();
+    void alignCameraToTrack();
 	ofxPanel gui;
     ofxButton shouldResetCamera;
     ofxFloatSlider cameraSpeed;
@@ -58,5 +58,13 @@ public:
     ofxButton shouldSaveCameraPoint;
     ofxToggle currentLockCamera;
     
+    
+    //TSPS contour
+    ofxTSPS::Receiver tspsReceiver;
+    
+    // event listeners
+    void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
+    void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
+    void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
 	
 };

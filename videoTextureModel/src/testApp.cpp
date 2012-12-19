@@ -2,25 +2,27 @@
 int size = 255;
 ofPoint pos[6]={ofPoint(size*2,size),
 	ofPoint(0,size),
-	ofPoint(size,size*2),
 	ofPoint(size,0),
+	ofPoint(size,size*2),
 	ofPoint(size,size),
 	ofPoint(size*3,size)};
+#define TEST_WITH_VIDEO
 //--------------------------------------------------------------
 void testApp::setup(){
 	glEnable(GL_DEPTH_TEST);
-	model.loadModel("body/respitory_body.obj");
+	model.loadModel("koala.obj");
 	//	model.loadModel("NewSquirrel.3ds");
-	model.setRotation(1, 90, 1, 0, 0);
+	model.setRotation(1, 180,0, 0, 1);
 	myVideo.loadMovie("myVideo.mov");
 	myVideo.play();
 	myVideo.setLoopState(OF_LOOP_NORMAL);
-	
+#ifdef USE_CUBEMAP
 	cubeMapShader.load("CubeMap");
+#ifdef TEST_WITH_VIDEO
 	myCubeMap.initEmptyTextures(size);
-	bAnimate = false;
-	animationTime	= 0.0;
-	myVideo.update();
+#else
+	myCubeMap.loadImages("skybox/positive_x.png", "skybox/negative_x.png", "skybox/positive_y.png", "skybox/negative_y.png", "skybox/positive_z.png", "skybox/negative_z.png");
+#endif
 	for( int i = 0; i < 6; i++ )
 	{
 		myCubeMap.beginDrawingInto2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i );
@@ -29,6 +31,20 @@ void testApp::setup(){
 		myVideo.getTextureReference().drawSubsection(0, 0, size, size, pos[i].x, pos[i].y, size, size);
 		myCubeMap.endDrawingInto2D();
 	}
+#else
+	ofDisableArbTex();
+	texMapShader.load("shaders/displace");
+	colormap.loadImage("mars_1k_color.jpg");
+	bumpmap.loadImage("mars_1k_topo.jpg");
+	quadratic = gluNewQuadric();
+	gluQuadricTexture(quadratic, GL_TRUE);
+	gluQuadricNormals(quadratic, GLU_SMOOTH);
+	sampler2dTex.allocate(512,512);
+#endif
+	bAnimate = false;
+	animationTime	= 0.0;
+	myVideo.update();
+	
 }
 
 //--------------------------------------------------------------
@@ -36,6 +52,8 @@ void testApp::update(){
 	
 	myVideo.update();
 	
+	#ifdef USE_CUBEMAP
+	#ifdef TEST_WITH_VIDEO
 	for( int i = 0; i < 6; i++ )
 	{
 		myCubeMap.beginDrawingInto2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i );
@@ -47,7 +65,14 @@ void testApp::update(){
 		
 		myCubeMap.endDrawingInto2D();
 	}
-	
+#else
+#endif
+#else
+	sampler2dTex.begin();
+	ofClear(0);
+	myVideo.draw(0, 0,512,512);
+	 sampler2dTex.end();
+#endif
 	if( bAnimate ){
 		animationTime += ofGetLastFrameTime();
 		if( animationTime >= 1.0 ){
@@ -60,24 +85,40 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofBackgroundGradient(ofColor::white, ofColor::gray);
+#ifndef USE_CUBEMAP
+//	sampler2dTex.draw(0,0);
+#endif
 	glDisable(GL_DEPTH_TEST);
-	myVideo.draw(0, 0);
+	for( int i = 0; i < 6; i++ )
+	{
+		myVideo.getTextureReference().drawSubsection(pos[i].x, pos[i].y, size, size, pos[i].x, pos[i].y, size, size);
+	}
 	glEnable(GL_DEPTH_TEST);
 	cam.begin();
 	
-	
+#ifdef USE_CUBEMAP
 	myCubeMap.bind();
 	
     cubeMapShader.begin();
     cubeMapShader.setUniform1i("EnvMap", 0);
 	
-	//	myCubeMap.drawSkybox( 800 );
+//	myCubeMap.drawSkybox( 800 );
 	model.drawFaces();
 	
     cubeMapShader.end();
 	
 	myCubeMap.unbind();
-	
+#else
+
+	texMapShader.begin();
+	texMapShader.setUniformTexture("colormap",sampler2dTex , 1);
+//	texMapShader.setUniformTexture("bumpmap", bumpmap, 2);
+//	texMapShader.setUniform1i("maxHeight",0);
+	model.drawFaces();
+//	myCubeMap.drawSkybox( 400 );
+//	gluSphere(quadratic, 150, 400, 400);
+	texMapShader.end();
+#endif
 	
 	
 	
@@ -100,10 +141,11 @@ void testApp::keyPressed(int key){
             model.loadModel("astroBoy_walk.dae");
             ofEnableSeparateSpecularLight();
 			model.setRotation(1, 180, 1, 0, 0);
+			model.setPosition(0, -(float)ofGetHeight() * 0.5 , 0);
             break;
         case '2':
             model.loadModel("TurbochiFromXSI.dae");
-            model.setRotation(0,90,1,0,0);
+//            model.setRotation(0,90,1,0,0);
 //            ofEnableSeparateSpecularLight();
             break;
         case '3':
@@ -126,7 +168,7 @@ void testApp::keyPressed(int key){
             break;
     }
 	
-	model.setPosition(0, -(float)ofGetHeight() * 0.75 , 0);
+	
 	
 }
 

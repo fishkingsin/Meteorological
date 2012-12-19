@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxAssimpModelLoader.h"
 #include "ofxCubeMap.h"
+#define USE_CUBEMAP
 class testApp : public ofBaseApp{
 	
 public:
@@ -23,8 +24,15 @@ public:
 	ofxAssimpModelLoader model;
 	ofEasyCam cam;
 	ofxCubeMap myCubeMap;
-	ofShader cubeMapShader;
+	#ifdef USE_CUBEMAP
 	
+	ofShader cubeMapShader;
+#else
+	ofShader texMapShader;
+	ofImage colormap,bumpmap;
+	GLUquadricObj *quadratic;
+	ofFbo sampler2dTex;
+#endif
 	bool bAnimate;
 	float animationTime;
 };

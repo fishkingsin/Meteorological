@@ -1,5 +1,6 @@
 #include "testApp.h"
 int size = 255;
+bool bDebug = false;
 ofPoint pos[6]={ofPoint(size*2,size),
 	ofPoint(0,size),
 	ofPoint(size,0),
@@ -9,6 +10,7 @@ ofPoint pos[6]={ofPoint(size*2,size),
 #define TEST_WITH_VIDEO
 //--------------------------------------------------------------
 void testApp::setup(){
+	ofSetLogLevel(OF_LOG_VERBOSE);
 	glEnable(GL_DEPTH_TEST);
 	model.loadModel("koala.obj");
 	//	model.loadModel("NewSquirrel.3ds");
@@ -33,6 +35,7 @@ void testApp::setup(){
 	}
 #else
 	ofDisableArbTex();
+    ofEnableNormalizedTexCoords();
 	texMapShader.load("shaders/displace");
 	colormap.loadImage("mars_1k_color.jpg");
 	bumpmap.loadImage("mars_1k_topo.jpg");
@@ -70,7 +73,7 @@ void testApp::update(){
 #else
 	sampler2dTex.begin();
 	ofClear(0);
-	myVideo.draw(0, 0,512,512);
+	myVideo.draw(0, 0,sampler2dTex.getWidth(),sampler2dTex.getHeight());
 	 sampler2dTex.end();
 #endif
 	if( bAnimate ){
@@ -88,12 +91,21 @@ void testApp::draw(){
 #ifndef USE_CUBEMAP
 //	sampler2dTex.draw(0,0);
 #endif
+	if(bDebug)
+	{
 	glDisable(GL_DEPTH_TEST);
+	ofPushStyle();
+	ofSetColor(255);
+	myVideo.draw(0, 0);
+	ofSetColor(200);
 	for( int i = 0; i < 6; i++ )
 	{
 		myVideo.getTextureReference().drawSubsection(pos[i].x, pos[i].y, size, size, pos[i].x, pos[i].y, size, size);
 	}
+	ofPopStyle();
+	}
 	glEnable(GL_DEPTH_TEST);
+
 	cam.begin();
 	
 #ifdef USE_CUBEMAP
@@ -101,10 +113,11 @@ void testApp::draw(){
 	
     cubeMapShader.begin();
     cubeMapShader.setUniform1i("EnvMap", 0);
-	
+	ofPushMatrix();
+//	ofRotate(ofGetFrameNum(), 0, 1, 0);
 //	myCubeMap.drawSkybox( 800 );
 	model.drawFaces();
-	
+	ofPopMatrix();
     cubeMapShader.end();
 	
 	myCubeMap.unbind();
@@ -113,8 +126,11 @@ void testApp::draw(){
 	texMapShader.begin();
 	texMapShader.setUniformTexture("colormap",sampler2dTex , 1);
 //	texMapShader.setUniformTexture("bumpmap", bumpmap, 2);
-//	texMapShader.setUniform1i("maxHeight",0);
+//	texMapShader.setUniform1i("maxHeight",mouseX);
+	ofPushMatrix();
+//	ofRotate(ofGetFrameNum(), 0, 1, 0);
 	model.drawFaces();
+	ofPopMatrix();
 //	myCubeMap.drawSkybox( 400 );
 //	gluSphere(quadratic, 150, 400, 400);
 	texMapShader.end();
@@ -134,14 +150,12 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
 	switch (key) {
 		case '0':
-			model.loadModel("body/respitory_body.obj");
-			model.setRotation(1, 90, 1, 0, 0);
+			model.loadModel("body.obj");
 			break;
         case '1':
-            model.loadModel("astroBoy_walk.dae");
+            model.loadModel("koala.obj");
             ofEnableSeparateSpecularLight();
 			model.setRotation(1, 180, 1, 0, 0);
-			model.setPosition(0, -(float)ofGetHeight() * 0.5 , 0);
             break;
         case '2':
             model.loadModel("TurbochiFromXSI.dae");
@@ -161,6 +175,12 @@ void testApp::keyPressed(int key){
 //            model.setRotation(0,-90,1,0,0);
             ofDisableSeparateSpecularLight();
 			break;
+		case '6':
+            model.loadModel("astroBoy_walk.dae");
+            ofEnableSeparateSpecularLight();
+			model.setRotation(1, 180, 1, 0, 0);
+			model.setPosition(0, -(float)ofGetHeight() * 0.5 , 0);
+            break;
 		case ' ':
 			bAnimate = !bAnimate;
 			break;

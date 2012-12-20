@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxAssimpModelLoader.h"
 #include "ofxCubeMap.h"
-#define USE_CUBEMAP
+//#define USE_CUBEMAP
 class testApp : public ofBaseApp{
 	
 public:

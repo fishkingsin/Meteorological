@@ -8,6 +8,10 @@
 #include "ofxGui.h"
 #include "ofxTSPSReceiver.h"
 #include "ofxAssimpModelLoader.h"
+#define USE_SYPHON
+#ifdef USE_SYPHON
+#include "ofxSyphonServer.h"
+#endif
 class testApp : public ofBaseApp{
     
 public:
@@ -72,5 +76,7 @@ public:
 	ofxAssimpModelLoader model;
 	ofShader texMapShader;
 	ofFbo sampler2dTex;
-	
+	#ifdef USE_SYPHON
+	ofxSyphonServer server;
+#endif
 };

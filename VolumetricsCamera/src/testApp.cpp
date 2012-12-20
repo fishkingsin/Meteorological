@@ -49,7 +49,7 @@ void testApp::initVolumetrics(ofxImageSequencePlayer &_imageSequence)
     //    myVolume.setRenderSettings(0.5, 0.75, 0.75, 0.1);
     
     linearFilter = false;
-    
+
 }
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -58,7 +58,10 @@ void testApp::setup(){
     ofEnableAlphaBlending();
     ofEnableSmoothing();
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	
+#ifdef USE_SYPHON
+    server.setName("VolumetricsCamera");
+//	ofSetWindowTitle("VolumetricsCamera");
+#endif
 	ofDisableArbTex();
     ofEnableNormalizedTexCoords();
 	model.loadModel("koala.obj");
@@ -258,6 +261,9 @@ void testApp::draw(){
         ofEndShape();
         ofPopStyle();
     }
+#ifdef USE_SYPHON
+    server.publishScreen();
+#endif
     if(mode==1)
 	{
 		myVideo.draw(512, 256, 256 , 256);

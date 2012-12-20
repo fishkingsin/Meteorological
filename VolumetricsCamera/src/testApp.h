@@ -7,7 +7,7 @@
 #include "ofxTLCameraTrack.h"
 #include "ofxGui.h"
 #include "ofxTSPSReceiver.h"
-
+#include "ofxAssimpModelLoader.h"
 class testApp : public ofBaseApp{
     
 public:
@@ -57,7 +57,7 @@ public:
     ofxFloatSlider cameraRollSpeed;
     ofxButton shouldSaveCameraPoint;
     ofxToggle currentLockCamera;
-    
+    ofxIntSlider mode;
     
     //TSPS contour
     ofxTSPS::Receiver tspsReceiver;
@@ -66,5 +66,11 @@ public:
     void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
     void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
     void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
+	
+	//3d model
+	ofVideoPlayer myVideo;
+	ofxAssimpModelLoader model;
+	ofShader texMapShader;
+	ofFbo sampler2dTex;
 	
 };

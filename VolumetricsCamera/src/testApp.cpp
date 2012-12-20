@@ -59,6 +59,16 @@ void testApp::setup(){
     ofEnableSmoothing();
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	
+	ofDisableArbTex();
+    ofEnableNormalizedTexCoords();
+	model.loadModel("koala.obj");
+	model.setRotation(1, 180,0, 0, 1);
+	myVideo.loadMovie("myVideo.mov");
+	myVideo.play();
+	myVideo.setLoopState(OF_LOOP_NORMAL);
+	texMapShader.load("shaders/displace");
+	sampler2dTex.allocate(512,512);
+	ofEnableArbTex();
     tspsReceiver.connect(12000);
     
     ofxAddTSPSListeners(this);
@@ -70,7 +80,8 @@ void testApp::setup(){
     gui.add(cameraRollSpeed.setup("Cam Roll Speed", ofxParameter<float>(), .0, 4));
     gui.add(shouldSaveCameraPoint.setup("Set Camera Point", ofxParameter<bool>()));
     gui.add(currentLockCamera.setup("Lock to Track", ofxParameter<bool>()));
-    
+    gui.add(mode.setup("DisplayMode", ofxParameter<int>(), 0,3));
+
     gui.loadFromFile("defaultGuiSettings.xml");
 	
     ofDirectory dir;
@@ -129,7 +140,8 @@ void testApp::populateTimelineElements(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-	
+	if(mode==0)
+	{
 	myVolume.setThreshold(timeline.getValue("Volume Threshold"));
 	
 	myVolume.setDensity(timeline.getValue("Volume Density"));
@@ -138,6 +150,16 @@ void testApp::update(){
 	
 	myVolume.setZQuality(timeline.getValue("Volume ZQuality"));
     
+	}
+	else if (mode==1)
+	{
+		myVideo.update();
+		
+		sampler2dTex.begin();
+		ofClear(0);
+		myVideo.draw(0, 0,sampler2dTex.getWidth(),sampler2dTex.getHeight());
+		sampler2dTex.end();
+	}
     //	myVolume.setVolumeTextureFilterMode(GL_LINEAR);
     //	linearFilter = true;
     //	myVolume.setVolumeTextureFilterMode(GL_NEAREST);
@@ -192,20 +214,36 @@ void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofSetBackgroundColor(ofColor::white);
-    
+	glEnable(GL_DEPTH_TEST);
 //    ofPushView();
     {
 //        ofViewport(viewportGameCam);
 //        ofSetupScreen();
         cam.begin();
+		if(mode==0)
+		{
         ofPushMatrix();
         ofRotate(90, 1, 0, 0);
         myVolume.drawVolume(0,0,0, ofGetHeight(), 0);
         ofPopMatrix();
+		}
+		else if(mode==1)
+		{
+			texMapShader.begin();
+			texMapShader.setUniformTexture("colormap",sampler2dTex , 1);
+
+			ofPushMatrix();
+			ofSetColor(255);
+			ofRotate(180, 1, 0, 0);
+			model.drawFaces();
+			ofPopMatrix();
+			texMapShader.end();
+		}
         cam.end();
         
     }
-//    ofPopView();
+	glDisable(GL_DEPTH_TEST);
+	//    ofPopView();
     vector<ofxTSPS::Person*> people = tspsReceiver.getPeople();
     for ( int i=0; i<people.size(); i++){
         
@@ -220,7 +258,11 @@ void testApp::draw(){
         ofEndShape();
         ofPopStyle();
     }
-    
+    if(mode==1)
+	{
+		myVideo.draw(512, 256, 256 , 256);
+		sampler2dTex.draw(512, 512,256,256);
+	}
 	gui.draw();
     timeline.draw();
 }

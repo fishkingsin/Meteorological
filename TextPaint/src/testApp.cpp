@@ -82,7 +82,7 @@ void testApp::initSettings()
 		gui.addToggle("Debug", "DEBUG", false);
 		gui.setWhichPanel("General");
 		gui.setWhichColumn(0);
-		gui.addSlider("FadeIntSpeed", "FADE_IN_SPEED", 1000, 1.0, 10000, true);
+		gui.addSlider("FadeIntSpeed", "FADE_IN_SPEED", 7000, 1.0, 10000, true);
 		
 		//guiType2DSlider * ofxControlPanel::addSlider2D(string sliderName, string xmlName, float valueX, float valueY, float minX, float maxX, float minY, float maxY, bool isInt)
 		gui.setWhichColumn(1);
@@ -171,6 +171,8 @@ void testApp::setupFromTextFile(string file_path)
 		character[i].font = &font;
 		character[i].charUC =  ofTextConverter::toUTF8(uni[i]);
 		character[i].setOriginalPosition(ofVec2f(0,ofGetHeight()*2));
+        	character[i].speed = gui.getValueI("FADE_IN_SPEED");
+		
 	}
 	resetOutputDimension();
 }
@@ -181,19 +183,29 @@ void testApp::updateCharactorPosition(float x ,float y)
 	count++;
 	if(count == character.size())
 	{
-		count = 0;
+        fadeOut();
+//		count = 0;
 		//do something
 		
 		//reset char position
-		for (int i = 0 ; i<character.size(); i++) {
-			character[i].setOriginalPosition(ofVec2f(0,ofGetHeight()*2));
-		}
+//		for (int i = 0 ; i<character.size(); i++) {
+//            character[i].setNewPosition(ofVec2f(x,ofGetHeight()*2));
+////			character[i].setOriginalPosition(ofVec2f(0,ofGetHeight()*2));
+//            
+//		}
 		//or load other file
 	}
 }
 //--------------------------------------------------------------
 void testApp::update(){
-	
+	if(enabled)
+	{
+		for(int i = 0 ; i < character.size() ; i++)
+		{
+			
+			character[i].update();
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -254,9 +266,22 @@ void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
     
 }
 
+void testApp::fadeOut()
+{
+    count = 0;
+    for (int i = 0 ; i<character.size(); i++) {
+        character[i].offset.set(character[i].offset.x,-ofRandom(100,ofGetHeight()));
+        
+        character[i].setNewPosition(character[i].pos);
+        character[i].speed = ofRandom(5000,10000);
+    }
+}
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	
+	if(key==OF_KEY_BACKSPACE)
+    {
+        fadeOut();
+    }
 }
 
 //--------------------------------------------------------------

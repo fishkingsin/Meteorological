@@ -60,13 +60,15 @@ class myCharactor
 	}
 	void update()
 	{
-		
+		pos.x = tweenX.update();
+        pos.y = tweenY.update();
 	}
 	void draw()
 	{
 		
-		font->drawString(charUC,tweenX.update(),tweenY.update());
+		font->drawString(charUC,pos.x,pos.y);
 	}
+    
 	void setOriginalPosition(ofVec2f v2)
 	{
 		tweenX.setParameters(0,easing,ofxTween::easeOut,v2.x,v2.x,0,0.);
@@ -77,6 +79,7 @@ class myCharactor
 		tweenX.setParameters(1,easing,ofxTween::easeOut,v2.x,offset.x,speed,0.);
 		tweenY.setParameters(1,easing,ofxTween::easeOut,v2.y,offset.y,speed,0.);
 	}
+    ofPoint pos;
 	ofxTween tweenX;
 	ofxTween tweenY;
 	ofxEasingQuad 	easing;
@@ -125,6 +128,7 @@ class testApp : public ofBaseApp{
 	ofRectangle output;
 	ofRectangle input;
 	bool enabled,debug;
+    void fadeOut();
 };
 
 #endif

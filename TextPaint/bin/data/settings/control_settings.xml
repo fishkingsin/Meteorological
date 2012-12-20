@@ -1,5 +1,5 @@
 <FADE_IN_SPEED>
-    <val_0>3334.000000000</val_0>
+    <val_0>7500.250000000</val_0>
 </FADE_IN_SPEED>
 <INPUT_POSITION>
     <val_0>322.559997559</val_0>
@@ -13,7 +13,7 @@
     <val_0>1.000000000</val_0>
 </ENABLE>
 <DEBUG>
-    <val_0>1.000000000</val_0>
+    <val_0>0.000000000</val_0>
 </DEBUG>
 <OUTPUT_POSITION>
     <val_0>143.360000610</val_0>

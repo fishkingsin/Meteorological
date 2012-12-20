@@ -1,7 +1,7 @@
 #include "testApp.h"
 #define NUM_LED 25
 #define NUM_PEGGY 2
-string peggy1Serial = "/dev/tty.usbserial-A7004E4E";
+string peggy1Serial = "/dev/tty.usbserial-AH0183W2";
 string peggy2Serial = "/dev/tty.usbserial-A7004E4F";
 
 unsigned char peggyHeader[6] = {0xde,0xad,0xbe,0xef,1,0};
@@ -32,7 +32,7 @@ void renderToPeggy( int display)
         unsigned val = 0;
         for (int x=0; x < NUM_LED; x++)
         {
-            ofColor c = scaledPixels.getColor(x, y);
+            ofColor c = scaledPixels.getColor(y, x);
             int br = ((int)c.getBrightness())>>4;
             if (x % 2 ==0)
                 val = (unsigned char)br;

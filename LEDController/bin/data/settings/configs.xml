@@ -8,6 +8,6 @@
 	<GUI_HEIGHT>720</GUI_HEIGHT>
 	<FONT>./GUI/NewMedia Fett.ttf</FONT>    
 	<FONT_SIZE>12</FONT_SIZE>
-	<PEGGY_SERIAL_NAME>/dev/tty.usbserial-1</PEGGY_SERIAL_NAME>   
-	<PEGGY_SERIAL_NAME>/dev/tty.usbserial-2</PEGGY_SERIAL_NAME>   
+	<PEGGY_SERIAL_NAME>/dev/tty.usbserial-AH0183W2</PEGGY_SERIAL_NAME>
+	<PEGGY_SERIAL_NAME>/dev/tty.usbserial-A700eyrb</PEGGY_SERIAL_NAME>
 </SETTINGS>

@@ -28,7 +28,7 @@ public:
 	Ripple()
 	{
 		size = 0;
-		step = ofRandom(0.1,0.5);
+		step = ofRandom(0.01,0.05);
 		prevMillis = 0;
 		maxSize = (int)ofRandom(CAMW*0.5,CAMW);
 		x = ofRandom(0,CAMW);

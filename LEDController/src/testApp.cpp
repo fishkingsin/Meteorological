@@ -1,6 +1,6 @@
 #include "testApp.h"
 
-string peggy1Serial = "/dev/tty.usbserial-A7004E4E";
+string peggy1Serial = "/dev/tty.usbserial-AH0183W2";
 string peggy2Serial = "/dev/tty.usbserial-A7004E4F";
 
 unsigned char peggyHeader[6] = {0xde,0xad,0xbe,0xef,1,0};
@@ -35,11 +35,12 @@ void testApp::setup(){
     
     
     ofxXmlSettings settings;
-    settings.loadFile("./settings/config.xml");
+    settings.loadFile("settings/config.xml");
     ofSetLogLevel(OF_LOG_VERBOSE);
-    ofSetFrameRate(60);
+    ofSetFrameRate(25);
     ofSetBackgroundColor(0);
     ofEnableAlphaBlending();
+    port1.listDevices();
     port1.setup(settings.getValue("PEGGY_SERIAL_NAME",peggy1Serial,0), 115200);
     port2.setup(settings.getValue("PEGGY_SERIAL_NAME",peggy2Serial,1), 115200);
 	
@@ -425,7 +426,7 @@ void testApp::renderToPeggy( int display)
         unsigned val = 0;
         for (int x=0; x < NUM_LED; x++)
         {
-            ofColor c = scaledPixels.getColor(x, y);
+            ofColor c = scaledPixels.getColor(y, x);
             int br = ((int)c.getBrightness())>>4;
             if (x % 2 ==0)
                 val = (unsigned char)br;

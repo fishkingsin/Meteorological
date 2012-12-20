@@ -29,8 +29,8 @@ public:
 	ofShader cubeMapShader;
 #else
 	ofShader texMapShader;
-	ofImage colormap,bumpmap;
-	GLUquadricObj *quadratic;
+//	ofImage colormap,bumpmap;
+//	GLUquadricObj *quadratic;
 	ofFbo sampler2dTex;
 #endif
 	bool bAnimate;

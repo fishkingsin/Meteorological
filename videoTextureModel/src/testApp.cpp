@@ -37,11 +37,11 @@ void testApp::setup(){
 	ofDisableArbTex();
     ofEnableNormalizedTexCoords();
 	texMapShader.load("shaders/displace");
-	colormap.loadImage("mars_1k_color.jpg");
-	bumpmap.loadImage("mars_1k_topo.jpg");
-	quadratic = gluNewQuadric();
-	gluQuadricTexture(quadratic, GL_TRUE);
-	gluQuadricNormals(quadratic, GLU_SMOOTH);
+//	colormap.loadImage("mars_1k_color.jpg");
+//	bumpmap.loadImage("mars_1k_topo.jpg");
+//	quadratic = gluNewQuadric();
+//	gluQuadricTexture(quadratic, GL_TRUE);
+//	gluQuadricNormals(quadratic, GLU_SMOOTH);
 	sampler2dTex.allocate(512,512);
 #endif
 	bAnimate = false;

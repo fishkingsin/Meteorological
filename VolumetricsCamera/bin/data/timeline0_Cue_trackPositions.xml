@@ -1,0 +1,38 @@
+<positions>
+    <element name="3DModelAlpha">
+        <x>0.000000000</x>
+        <y>628.000000000</y>
+        <width>1024.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="3DModelEnabled">
+        <x>0.000000000</x>
+        <y>500.000000000</y>
+        <width>1024.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="3DModleAlpha">
+        <x>0.000000000</x>
+        <y>628.000000000</y>
+        <width>1024.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="VideoAlpha">
+        <x>0.000000000</x>
+        <y>692.000000000</y>
+        <width>1024.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="VideoEnabled">
+        <x>0.000000000</x>
+        <y>564.000000000</y>
+        <width>1024.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="VolumeEnabled">
+        <x>0.000000000</x>
+        <y>454.000000000</y>
+        <width>1024.000000000</width>
+        <height>22.000000000</height>
+    </element>
+</positions>

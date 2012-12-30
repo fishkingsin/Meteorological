@@ -1,0 +1,44 @@
+<positions>
+    <element name="Volume Density">
+        <x>0.000000000</x>
+        <y>525.000000000</y>
+        <width>1024.000000000</width>
+        <height>64.000000000</height>
+    </element>
+    <element name="Volume LinearFilter">
+        <x>0.000000000</x>
+        <y>735.000000000</y>
+        <width>1024.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="Volume Threshold">
+        <x>0.000000000</x>
+        <y>454.000000000</y>
+        <width>1024.000000000</width>
+        <height>47.000000000</height>
+    </element>
+    <element name="Volume XyQuality">
+        <x>0.000000000</x>
+        <y>613.000000000</y>
+        <width>1024.000000000</width>
+        <height>51.000000000</height>
+    </element>
+    <element name="Volume ZQuality">
+        <x>0.000000000</x>
+        <y>688.000000000</y>
+        <width>1024.000000000</width>
+        <height>59.000000000</height>
+    </element>
+    <element name="VolumeEnabled">
+        <x>0.000000000</x>
+        <y>454.000000000</y>
+        <width>1024.000000000</width>
+        <height>21.000000000</height>
+    </element>
+    <element name="VolumeFiles">
+        <x>0.000000000</x>
+        <y>499.000000000</y>
+        <width>1024.000000000</width>
+        <height>11.000000000</height>
+    </element>
+</positions>

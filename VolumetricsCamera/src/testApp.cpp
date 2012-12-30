@@ -14,7 +14,7 @@ void testApp::initVolumetrics(ofxImageSequencePlayer &_imageSequence)
     
     if(bVolumeSetup)
     {
-        myVolume.destroy();
+        //        myVolume.destroy();
         bVolumeSetup = false;
         free(volumeData);
     }
@@ -48,8 +48,8 @@ void testApp::initVolumetrics(ofxImageSequencePlayer &_imageSequence)
     bVolumeSetup = true;
     //    myVolume.setRenderSettings(0.5, 0.75, 0.75, 0.1);
     
-    linearFilter = false;
-
+//    linearFilter = false;
+    
 }
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -60,22 +60,23 @@ void testApp::setup(){
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 #ifdef USE_SYPHON
     server.setName("VolumetricsCamera");
-//	ofSetWindowTitle("VolumetricsCamera");
+    //	ofSetWindowTitle("VolumetricsCamera");
 #endif
 	ofDisableArbTex();
     ofEnableNormalizedTexCoords();
-	model.loadModel("koala.obj");
+	model.loadModel("koala.obj",true);
 	model.setRotation(1, 180,0, 0, 1);
-	myVideo.loadMovie("myVideo.mov");
+	myVideo.loadMovie("movies/myVideo.mov");
 	myVideo.play();
 	myVideo.setLoopState(OF_LOOP_NORMAL);
 	texMapShader.load("shaders/displace");
 	sampler2dTex.allocate(512,512);
 	ofEnableArbTex();
+    #ifdef USE_TSPS
     tspsReceiver.connect(12000);
     
     ofxAddTSPSListeners(this);
-    
+#endif
 	gui.setup("Settings", "defaultGuiSettings.xml");
     
     gui.add(shouldResetCamera.setup("Reset Camera", ofxParameter<bool>()));
@@ -84,10 +85,14 @@ void testApp::setup(){
     gui.add(shouldSaveCameraPoint.setup("Set Camera Point", ofxParameter<bool>()));
     gui.add(currentLockCamera.setup("Lock to Track", ofxParameter<bool>()));
     gui.add(mode.setup("DisplayMode", ofxParameter<int>(), 0,3));
-
+    gui.add(vebose.setup("LogLevel", ofxParameter<int>(), 0,5));
+    
+    
     gui.loadFromFile("defaultGuiSettings.xml");
-	
+    int logl = vebose;
+    ofSetLogLevel((ofLogLevel)logl);
     ofDirectory dir;
+    dir.allowExt("vol");
     int num = dir.listDir("./volumes");
     imageSequence.assign(num,ofxImageSequencePlayer());
     ofLogVerbose() << "List All Volume";
@@ -98,7 +103,6 @@ void testApp::setup(){
     }
     bVolumeSetup = false;
     initVolumetrics(imageSequence[0]);
-    
     
     cam.setup();
 	cam.speed = 10;
@@ -119,23 +123,43 @@ void testApp::setup(){
     
     timeline.setup();
 	timeline.getColors().load();
-	timeline.setOffset(ofVec2f(0, ofGetHeight() - 200));
+	timeline.setOffset(ofVec2f(0, ofGetHeight()-500));
 	timeline.setPageName("Main");
-	timeline.setDurationInSeconds(300);
+//	timeline.setDurationInSeconds(482);
     timeline.setMovePlayheadOnDrag(false);
+    
     
     populateTimelineElements();
 }
 void testApp::populateTimelineElements(){
-	
+    
+    waveform.loadSoundfile("sounds/Yuh Solo.aif");
+
+	timeline.setDurationInSeconds(waveform.getDuration());
+
 	timeline.setPageName("Camera");
 	timeline.addTrack("Camera", &cameraTrack);
+
+
+    timeline.addPage("Cue");
+    timeline.addTrack("Track", &waveform);
+    volumeEnabled = timeline.addSwitches("VolumeEnabled");
+    modelEnabled = timeline.addSwitches("3DModelEnabled");
+    videoEnabled = timeline.addSwitches("VideoEnabled");
+    timeline.addCurves("3DModelAlpha");
+    timeline.addCurves("VideoAlpha");
+    
+    timeline.addPage("Files");
+    timeline.addFlags("VolumeFiles");
+    timeline.addFlags("3DModelFile");
+    timeline.addFlags("VideoFile");
+
+    timeline.addPage("Volume");
 	timeline.addCurves("Volume Threshold", currentCompositionDirectory + "VolumeThreshold.xml", ofRange(0, 1), myVolume.getThreshold() );
 	timeline.addCurves("Volume Density", currentCompositionDirectory + "VolumeDensity.xml", ofRange(0, 0.2), myVolume.getDensity() );
 	timeline.addCurves("Volume XyQuality", currentCompositionDirectory + "VolumeXyQuality.xml", ofRange(0, 1), myVolume.getXyQuality() );
 	timeline.addCurves("Volume ZQuality", currentCompositionDirectory + "VolumeZQuality.xml", ofRange(0, 1), myVolume.getZQuality() );
-	timeline.addSwitches("Volume LinearFilter", currentCompositionDirectory + "VolumeLinearFilter.xml" );
-	
+    
 	cameraTrack.setup();
     cameraTrack.load();
 	cameraTrack.enable();
@@ -143,18 +167,23 @@ void testApp::populateTimelineElements(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-	if(mode==0)
+    int logl = vebose;
+    ofSetLogLevel((ofLogLevel)logl);
+//    volumeEnabled = timeline.getValue("VolumeEnabled");
+//    modelEnabled = timeline.getValue("3DModelFile");
+//    videoEnabled = timeline.getValue("VideoEnabled");
+	if(volumeEnabled->isOn())
 	{
-	myVolume.setThreshold(timeline.getValue("Volume Threshold"));
-	
-	myVolume.setDensity(timeline.getValue("Volume Density"));
-	
-	myVolume.setXyQuality(timeline.getValue("Volume XyQuality"));
-	
-	myVolume.setZQuality(timeline.getValue("Volume ZQuality"));
-    
+        myVolume.setThreshold(timeline.getValue("Volume Threshold"));
+        
+        myVolume.setDensity(timeline.getValue("Volume Density"));
+        
+        myVolume.setXyQuality(timeline.getValue("Volume XyQuality"));
+        
+        myVolume.setZQuality(timeline.getValue("Volume ZQuality"));
+        
 	}
-	else if (mode==1)
+	else if (modelEnabled->isOn() || videoEnabled->isOn())
 	{
 		myVideo.update();
 		
@@ -192,6 +221,7 @@ void testApp::update(){
 	cam.speed = cameraSpeed;
     cam.rollSpeed = cameraRollSpeed;
 }
+#ifdef USE_TSPS
 //--------------------------------------------------------------
 void testApp::onPersonEntered( ofxTSPS::EventArgs & tspsEvent ){
     ofLog(OF_LOG_NOTICE, "New person!");
@@ -211,33 +241,37 @@ void testApp::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
 void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
     ofLog(OF_LOG_NOTICE, "Person left!");
     // you can access the person like this:
-    // tspsEvent.person
+    // tspsEvent.person1
     
 }
+#endif
 //--------------------------------------------------------------
 void testApp::draw(){
-	ofSetBackgroundColor(ofColor::white);
+	ofSetBackgroundColor(ofColor::black);
 	glEnable(GL_DEPTH_TEST);
-//    ofPushView();
+    ofClear(0);
+    //    ofPushView();
     {
-//        ofViewport(viewportGameCam);
-//        ofSetupScreen();
+        //        ofViewport(viewportGameCam);
+        //        ofSetupScreen();
         cam.begin();
-		if(mode==0)
+        ofClear(0);
+		if(volumeEnabled->isOn())
 		{
-        ofPushMatrix();
-        ofRotate(90, 1, 0, 0);
-        myVolume.drawVolume(0,0,0, ofGetHeight(), 0);
-        ofPopMatrix();
+            ofPushMatrix();
+//            ofSetColor(255, 255*timeline.getValue("VolumeAlpha"));
+            ofRotate(90, 1, 0, 0);
+            myVolume.drawVolume(0,0,0, ofGetHeight(), 0);
+            ofPopMatrix();
 		}
-		else if(mode==1)
+        if(modelEnabled->isOn())
 		{
 			texMapShader.begin();
 			texMapShader.setUniformTexture("colormap",sampler2dTex , 1);
-
+            
 			ofPushMatrix();
-			ofSetColor(255);
-			ofRotate(180, 1, 0, 0);
+                        ofSetColor(255, 255*timeline.getValue("3DModelAlpha"));
+//			ofRotate(180, 1, 0, 0);
 			model.drawFaces();
 			ofPopMatrix();
 			texMapShader.end();
@@ -245,8 +279,11 @@ void testApp::draw(){
         cam.end();
         
     }
-	glDisable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
+#ifdef USE_TSPS
+	
 	//    ofPopView();
+    
     vector<ofxTSPS::Person*> people = tspsReceiver.getPeople();
     for ( int i=0; i<people.size(); i++){
         
@@ -261,13 +298,18 @@ void testApp::draw(){
         ofEndShape();
         ofPopStyle();
     }
+#endif
 #ifdef USE_SYPHON
     server.publishScreen();
 #endif
-    if(mode==1)
+    if(videoEnabled->isOn())
 	{
-		myVideo.draw(512, 256, 256 , 256);
-		sampler2dTex.draw(512, 512,256,256);
+        ofPushStyle();
+        ofSetColor(255, 255*timeline.getValue("VideoAlpha"));
+        myVideo.draw(0,0,ofGetWidth(),ofGetHeight());
+        ofPopStyle();
+        //		myVideo.draw(512, 256, 256 , 256);
+        //		sampler2dTex.draw(512, 512,256,256);
 	}
 	gui.draw();
     timeline.draw();
@@ -279,7 +321,7 @@ void testApp::alignCameraToTrack()
     cam.rotationX = cam.targetXRot = -cam.getHeading();
     cam.rotationY = cam.targetYRot = -cam.getPitch();
     cam.rotationZ = -cam.getRoll();
-
+    
 }
 //--------------------------------------------------------------
 void testApp::resetCameraPosition(){
@@ -306,6 +348,18 @@ void testApp::keyPressed(int key){
             if(index<imageSequence.size())initVolumetrics(imageSequence[index]);
         }
             break;
+    }
+    if (key == OF_KEY_F1)
+    {
+        mode = 0;
+    }
+    if (key == OF_KEY_F2)
+    {
+        mode = 1;
+    }
+    if (key == OF_KEY_F3)
+    {
+        mode = 2;
     }
 	if(key == 'f'){
 		ofToggleFullscreen();
@@ -374,7 +428,7 @@ void testApp::mouseReleased(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
     timeline.setWidth(w);
-	timeline.setOffset(ofVec2f(0, ofGetHeight() - timeline.getDrawRect().height));
+	timeline.setOffset(ofVec2f(0, ofGetHeight() *0.5));
 }
 
 //--------------------------------------------------------------
@@ -384,5 +438,8 @@ void testApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void testApp::dragEvent(ofDragInfo dragInfo){
-    
+    if(dragInfo.files[0].find("mov")!=string::npos)
+    {
+        myVideo.loadMovie(dragInfo.files[0]);
+    }
 }

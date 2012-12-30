@@ -5,13 +5,19 @@
 #include "ofxGameCamera.h"
 #include "ofxVolumetrics.h"
 #include "ofxTLCameraTrack.h"
+#include "ofxTLAudioTrack.h"
 #include "ofxGui.h"
+#ifdef USE_TSPS
 #include "ofxTSPSReceiver.h"
+#endif
 #include "ofxAssimpModelLoader.h"
 #define USE_SYPHON
 #ifdef USE_SYPHON
-#include "ofxSyphonServer.h"
+#include "ofxSyphon.h"
 #endif
+#define VOLUMETRICS 1
+#define MODEL 2
+#define VIDEO 3
 class testApp : public ofBaseApp{
     
 public:
@@ -41,6 +47,7 @@ public:
     
     //timeline
     ofxTimeline timeline;
+    ofxTLAudioTrack waveform;
     
     //camera
     ofxGameCamera cam;
@@ -50,7 +57,9 @@ public:
     void populateTimelineElements();
 	void saveSettings();
 	
-	
+    ofxTLSwitches* volumeEnabled,
+    *modelEnabled,
+    *videoEnabled;
 	
 	//gui
 	void resetCameraPosition();
@@ -62,15 +71,17 @@ public:
     ofxButton shouldSaveCameraPoint;
     ofxToggle currentLockCamera;
     ofxIntSlider mode;
+    ofxIntSlider vebose;
     
     //TSPS contour
+    #ifdef USE_TSPS
     ofxTSPS::Receiver tspsReceiver;
     
     // event listeners
     void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
     void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
     void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
-	
+#endif
 	//3d model
 	ofVideoPlayer myVideo;
 	ofxAssimpModelLoader model;
@@ -78,5 +89,6 @@ public:
 	ofFbo sampler2dTex;
 	#ifdef USE_SYPHON
 	ofxSyphonServer server;
+    ofxSyphonClient client;
 #endif
 };

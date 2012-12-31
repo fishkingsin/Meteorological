@@ -47,7 +47,7 @@ public:
     
     //timeline
     ofxTimeline timeline;
-    ofxTLAudioTrack waveform;
+//    ofxTLAudioTrack waveform;
     void bangFired(ofxTLBangEventArgs& bang);
 	
     //camera
@@ -85,7 +85,9 @@ public:
 #endif
 	//3d model
 //	ofVideoPlayer myVideo;
-	ofxAssimpModelLoader model;
+	vector<ofxAssimpModelLoader> models;
+	ofxAssimpModelLoader *model;
+	int currentModel;
 	ofShader texMapShader;
 	ofFbo sampler2dTex;
 	#ifdef USE_SYPHON

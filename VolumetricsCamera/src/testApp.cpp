@@ -67,8 +67,19 @@ void testApp::setup(){
 #endif
 	ofDisableArbTex();
     ofEnableNormalizedTexCoords();
-	model.loadModel("models/koala.obj",true);
-//	model.setRotation(1, 180,0, 0, 1);
+	ofDirectory dirModel;
+	dirModel.allowExt("obj");
+	dirModel.allowExt("dae");
+	dirModel.allowExt("3ds");
+	int nModel =  dirModel.listDir("models/");
+	models.assign(nModel, ofxAssimpModelLoader());
+	for(int i = 0 ; i < nModel ; i++)
+	{
+		models[i].loadModel(dirModel.getPath(i));
+	}
+	currentModel = 0;
+	model = &models[currentModel];
+//	model->setRotation(1, 180,0, 0, 1);
 //	myVideo.loadMovie("movies/cloud.mov");
 //	myVideo.play();
 //	myVideo.setLoopState(OF_LOOP_NORMAL);
@@ -129,7 +140,7 @@ void testApp::setup(){
 	timeline.getColors().load();
 	timeline.setOffset(ofVec2f(0, ofGetHeight()-500));
 	timeline.setPageName("Main");
-//	timeline.setDurationInSeconds(482);
+	timeline.setDurationInSeconds(482);
     timeline.setMovePlayheadOnDrag(false);
     
     
@@ -137,16 +148,16 @@ void testApp::setup(){
 }
 void testApp::populateTimelineElements(){
     
-    waveform.loadSoundfile("sounds/Yuh Solo.aif");
+//    waveform.loadSoundfile("sounds/Yuh Solo.aif");
 
-	timeline.setDurationInSeconds(waveform.getDuration());
+//	timeline.setDurationInSeconds(waveform.getDuration());
 
 	timeline.setPageName("Camera");
 	timeline.addTrack("Camera", &cameraTrack);
-    timeline.addTrack("Track", &waveform);
-
+//    timeline.addTrack("Track", &waveform);
+	timeline.addFlags("SyphonServer");
     timeline.addPage("Cue");
-
+	
     volumeEnabled = timeline.addSwitches("VolumeEnabled");
     modelEnabled = timeline.addSwitches("3DModelEnabled");
     videoEnabled = timeline.addSwitches("VideoEnabled");
@@ -173,7 +184,7 @@ void testApp::populateTimelineElements(){
 //--------------------------------------------------------------
 void testApp::bangFired(ofxTLBangEventArgs& bang){
 	ofLogNotice("bangFired")<<bang.track->getDisplayName() <<" flag " <<  bang.flag;
-	if(bang.track->getDisplayName()=="VideoFile")
+	if(bang.track->getDisplayName()=="SyphonServer")
 	{
 		
 		//ofFile newFile(bang.flag);
@@ -185,11 +196,16 @@ void testApp::bangFired(ofxTLBangEventArgs& bang){
 	}
 	else if(bang.track->getDisplayName()=="3DModelFile")
 	{
-		ofFile newFile(bang.flag);
-		if (newFile.canRead() && newFile.getExtension()=="obj") {
-			model.loadModel(bang.flag);
+//		ofFile newFile(bang.flag);
+//		if (newFile.canRead() && newFile.getExtension()=="obj") {
+//			model->loadModel(bang.flag);
+//		}
+		currentModel = ofToInt(bang.flag);
+		if(currentModel<models.size() && currentModel >=-0)
+		{
+			model = &models[currentModel];
 		}
-		
+
 	}
 	else if(bang.track->getDisplayName()=="VolumeFile")
 	{
@@ -311,7 +327,8 @@ void testApp::draw(){
 			ofSetColor(255, 255*timeline.getValue("3DModelAlpha"));
 			texMapShader.begin();
 			texMapShader.setUniformTexture("colormap",sampler2dTex , 1);
-			model.drawFaces();
+			texMapShader.setUniform1f("alpha",timeline.getValue("3DModelAlpha") );
+			model->drawFaces();
 			texMapShader.end();
 			ofPopMatrix();
 			ofPopStyle();
@@ -435,6 +452,10 @@ void testApp::keyPressed(int key){
     {
         alignCameraToTrack();
     }
+	if(key == OF_KEY_RETURN)
+	{
+		ofSaveFrame();
+	}
 }
 void testApp::saveSettings()
 {

@@ -3,6 +3,7 @@ uniform sampler2D colormap;
 //varying vec2  TexCoord;
 varying vec4 diffuse,ambient;
 varying vec3 normal,halfVector;
+uniform float alpha;
 void main(void) {
 	
 	vec3 n,halfV;
@@ -32,5 +33,5 @@ void main(void) {
 	vec4 tex = texture2D(colormap, gl_TexCoord[0].st);
 	vec4 light = color* tex ;
 
-	gl_FragColor = tex;//vec4(mix(tex.rgb,light.rgb,0.3),1.0);
+	gl_FragColor = vec4(mix(tex.rgb,light.rgb,0.3),alpha);
 }

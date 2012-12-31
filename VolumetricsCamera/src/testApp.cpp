@@ -156,7 +156,7 @@ void testApp::populateTimelineElements(){
     timeline.addPage("Files");
     timeline.addFlags("VolumeFiles");
     timeline.addFlags("3DModelFile");
-    timeline.addFlags("VideoFile");
+//    timeline.addFlags("VideoFile");
 
     timeline.addPage("Volume");
 	timeline.addCurves("Volume Threshold", currentCompositionDirectory + "VolumeThreshold.xml", ofRange(0, 1), myVolume.getThreshold() );

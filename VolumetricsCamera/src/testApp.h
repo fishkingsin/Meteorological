@@ -48,7 +48,8 @@ public:
     //timeline
     ofxTimeline timeline;
     ofxTLAudioTrack waveform;
-    
+    void bangFired(ofxTLBangEventArgs& bang);
+	
     //camera
     ofxGameCamera cam;
     ofRectangle viewportGameCam;

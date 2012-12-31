@@ -64,9 +64,9 @@ void testApp::setup(){
 #endif
 	ofDisableArbTex();
     ofEnableNormalizedTexCoords();
-	model.loadModel("koala.obj",true);
-	model.setRotation(1, 180,0, 0, 1);
-	myVideo.loadMovie("movies/myVideo.mov");
+	model.loadModel("models/koala.obj",true);
+//	model.setRotation(1, 180,0, 0, 1);
+	myVideo.loadMovie("movies/cloud.mov");
 	myVideo.play();
 	myVideo.setLoopState(OF_LOOP_NORMAL);
 	texMapShader.load("shaders/displace");
@@ -102,7 +102,7 @@ void testApp::setup(){
         imageSequence[i].init(dir.getPath(i)+"/",4,".tif",1);
     }
     bVolumeSetup = false;
-    initVolumetrics(imageSequence[0]);
+    if(imageSequence.size()>0)initVolumetrics(imageSequence[0]);
     
     cam.setup();
 	cam.speed = 10;
@@ -139,10 +139,10 @@ void testApp::populateTimelineElements(){
 
 	timeline.setPageName("Camera");
 	timeline.addTrack("Camera", &cameraTrack);
-
+    timeline.addTrack("Track", &waveform);
 
     timeline.addPage("Cue");
-    timeline.addTrack("Track", &waveform);
+
     volumeEnabled = timeline.addSwitches("VolumeEnabled");
     modelEnabled = timeline.addSwitches("3DModelEnabled");
     videoEnabled = timeline.addSwitches("VideoEnabled");
@@ -160,11 +160,39 @@ void testApp::populateTimelineElements(){
 	timeline.addCurves("Volume XyQuality", currentCompositionDirectory + "VolumeXyQuality.xml", ofRange(0, 1), myVolume.getXyQuality() );
 	timeline.addCurves("Volume ZQuality", currentCompositionDirectory + "VolumeZQuality.xml", ofRange(0, 1), myVolume.getZQuality() );
     
+	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
+	
 	cameraTrack.setup();
     cameraTrack.load();
 	cameraTrack.enable();
 }
+//--------------------------------------------------------------
+void testApp::bangFired(ofxTLBangEventArgs& bang){
+	ofLogNotice("bangFired")<<bang.track->getDisplayName() <<" flag " <<  bang.flag;
+	if(bang.track->getDisplayName()=="VideoFile")
+	{
+		
+		//ofFile newFile(bang.flag);
+		
+		//if (newFile.canRead() && newFile.getExtension()=="mov") {
+			myVideo.loadMovie(bang.flag);
+		//}
 
+	}
+	else if(bang.track->getDisplayName()=="3DModelFile")
+	{
+		ofFile newFile(bang.flag);
+		if (newFile.canRead() && newFile.getExtension()=="obj") {
+			model.loadModel(bang.flag);
+		}
+		
+	}
+	else if(bang.track->getDisplayName()=="VolumeFile")
+	{
+		
+	}
+	
+}
 //--------------------------------------------------------------
 void testApp::update(){
     int logl = vebose;
@@ -258,23 +286,28 @@ void testApp::draw(){
         ofClear(0);
 		if(volumeEnabled->isOn())
 		{
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_ADD);
             ofPushMatrix();
 //            ofSetColor(255, 255*timeline.getValue("VolumeAlpha"));
             ofRotate(90, 1, 0, 0);
             myVolume.drawVolume(0,0,0, ofGetHeight(), 0);
             ofPopMatrix();
+			ofPopStyle();
 		}
         if(modelEnabled->isOn())
 		{
+			
+            
+			ofPushStyle();
+			ofPushMatrix();
+			ofSetColor(255, 255*timeline.getValue("3DModelAlpha"));
 			texMapShader.begin();
 			texMapShader.setUniformTexture("colormap",sampler2dTex , 1);
-            
-			ofPushMatrix();
-                        ofSetColor(255, 255*timeline.getValue("3DModelAlpha"));
-//			ofRotate(180, 1, 0, 0);
 			model.drawFaces();
-			ofPopMatrix();
 			texMapShader.end();
+			ofPopMatrix();
+			ofPopStyle();
 		}
         cam.end();
         

@@ -60,17 +60,21 @@ void testApp::setup(){
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 #ifdef USE_SYPHON
     server.setName("VolumetricsCamera");
+	client.setup();
+	client.setApplicationName("VideoCue");
+	client.setServerName("VideoCue");
     //	ofSetWindowTitle("VolumetricsCamera");
 #endif
 	ofDisableArbTex();
     ofEnableNormalizedTexCoords();
 	model.loadModel("models/koala.obj",true);
 //	model.setRotation(1, 180,0, 0, 1);
-	myVideo.loadMovie("movies/cloud.mov");
-	myVideo.play();
-	myVideo.setLoopState(OF_LOOP_NORMAL);
+//	myVideo.loadMovie("movies/cloud.mov");
+//	myVideo.play();
+//	myVideo.setLoopState(OF_LOOP_NORMAL);
 	texMapShader.load("shaders/displace");
 	sampler2dTex.allocate(512,512);
+	    
 	ofEnableArbTex();
     #ifdef USE_TSPS
     tspsReceiver.connect(12000);
@@ -175,7 +179,7 @@ void testApp::bangFired(ofxTLBangEventArgs& bang){
 		//ofFile newFile(bang.flag);
 		
 		//if (newFile.canRead() && newFile.getExtension()=="mov") {
-			myVideo.loadMovie(bang.flag);
+//			myVideo.loadMovie(bang.flag);
 		//}
 
 	}
@@ -213,11 +217,14 @@ void testApp::update(){
 	}
 	else if (modelEnabled->isOn() || videoEnabled->isOn())
 	{
-		myVideo.update();
+//		myVideo.update();
 		
 		sampler2dTex.begin();
 		ofClear(0);
-		myVideo.draw(0, 0,sampler2dTex.getWidth(),sampler2dTex.getHeight());
+		ofDisableNormalizedTexCoords();
+		client.draw(0,0,sampler2dTex.getWidth(),sampler2dTex.getHeight());
+		ofEnableNormalizedTexCoords();
+//		myVideo.draw(0, 0,sampler2dTex.getWidth(),sampler2dTex.getHeight());
 		sampler2dTex.end();
 	}
     //	myVolume.setVolumeTextureFilterMode(GL_LINEAR);
@@ -337,9 +344,13 @@ void testApp::draw(){
 #endif
     if(videoEnabled->isOn())
 	{
+		
         ofPushStyle();
+		ofDisableNormalizedTexCoords();
         ofSetColor(255, 255*timeline.getValue("VideoAlpha"));
-        myVideo.draw(0,0,ofGetWidth(),ofGetHeight());
+//        myVideo.draw(0,0,ofGetWidth(),ofGetHeight());
+		client.draw(0,0,ofGetWidth(),ofGetHeight());
+		ofEnableNormalizedTexCoords();
         ofPopStyle();
         //		myVideo.draw(512, 256, 256 , 256);
         //		sampler2dTex.draw(512, 512,256,256);
@@ -471,8 +482,8 @@ void testApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void testApp::dragEvent(ofDragInfo dragInfo){
-    if(dragInfo.files[0].find("mov")!=string::npos)
-    {
-        myVideo.loadMovie(dragInfo.files[0]);
-    }
+//    if(dragInfo.files[0].find("mov")!=string::npos)
+//    {
+//        myVideo.loadMovie(dragInfo.files[0]);
+//    }
 }

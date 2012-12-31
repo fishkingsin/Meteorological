@@ -84,7 +84,7 @@ public:
     void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
 #endif
 	//3d model
-	ofVideoPlayer myVideo;
+//	ofVideoPlayer myVideo;
 	ofxAssimpModelLoader model;
 	ofShader texMapShader;
 	ofFbo sampler2dTex;

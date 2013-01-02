@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:LEDController/LEDController.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:ofxDelaunayTest01/ofxDelaunayTest01.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:PeggyTest/PeggyTest.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:ProjectionWarpper/ProjectionWarpper.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:TextPaint/TextPaint.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:VideoCue/VideoCue.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:videoTextureModel/videoTextureModel.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:VolumetricsCamera/VolumetricsCamera.xcodeproj">
+   </FileRef>
+</Workspace>

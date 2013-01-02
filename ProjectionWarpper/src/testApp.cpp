@@ -21,6 +21,9 @@ void testApp::setup(){
 		ofLogError()<<"config.xml not found!";
 		std::exit(0);
 	}
+    string xmlString;
+    settings.copyXmlToString(xmlString);
+    ofLogVerbose("config.xml") <<xmlString;
 	if(settings.pushTag("SETTINGS"))
 	{
 		ofSetWindowTitle(settings.getValue("TITLE","Projection Warpper"));
@@ -32,7 +35,7 @@ void testApp::setup(){
 		tex.allocate(WIDTH,HEIGHT,GL_RGB);
 		rm.loadFromXml(settings.getValue("FBO_SETTING_PATH","fbo_settings.xml"));
 		img.loadImage(settings.getValue("IMAGE_FILE","game_of_thrones.jpg"));
-		
+		mask.loadImage(settings.getValue("MASK_FILE","mask.png"));
 		
 		//	duration.setup(settings.getValue("PORT",12345));
 		//
@@ -117,7 +120,7 @@ void testApp::setup(){
 	tspsReceiver.connect(12000);
 	
 	ofxAddTSPSListeners(this);
-	
+	maskHeight = HEIGHT;
 }
 
 //--------------------------------------------------------------
@@ -306,7 +309,14 @@ void testApp::update(){
 		ofPopMatrix();
 	}
 	else if(bSyphonClient) syphonClient.draw(0,0,WIDTH,HEIGHT);
-	
+    ofPushStyle();
+    ofEnableAlphaBlending();
+    ofSetColor(0);
+    ofRect(0, 0, WIDTH, maskHeight);
+    ofSetColor(255);
+//	mask.draw(maskHeight,0,WIDTH,HEIGHT-maskHeight);
+    mask.draw(0,maskHeight,WIDTH,HEIGHT-maskHeight);
+    ofPopStyle();
 	if(showDemoPic)img.draw(0,0,WIDTH,HEIGHT);
 	if(showGrid)
 	{
@@ -399,7 +409,12 @@ void testApp::keyPressed(int key){
 				break;
 			case 'd':rm.resetCoordinates();
 				break;
-				
+            case OF_KEY_UP:
+                maskHeight--;
+                break;
+            case OF_KEY_DOWN:
+                maskHeight++;
+                break;
 		}
 	}
 	

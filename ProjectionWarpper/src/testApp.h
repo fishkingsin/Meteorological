@@ -82,7 +82,8 @@ public:
 	void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
 	void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
 	void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
-
+    ofImage mask;
+int maskHeight;
 };
 
 #endif

@@ -5,12 +5,57 @@
         <value>0.777777791</value>
     </key>
     <key>
+        <max>00:00:16:170</max>
+        <time>00:00:16:170</time>
+        <value>0.500000000</value>
+    </key>
+    <key>
+        <max>00:00:17:548</max>
+        <time>00:00:17:450</time>
+        <value>0.681818187</value>
+    </key>
+    <key>
+        <max>00:00:19:895</max>
+        <time>00:00:19:837</time>
+        <value>0.318181813</value>
+    </key>
+    <key>
+        <max>00:00:20:166</max>
+        <time>00:00:20:092</time>
+        <value>0.818181813</value>
+    </key>
+    <key>
+        <max>00:00:20:461</max>
+        <time>00:00:20:374</time>
+        <value>0.454545438</value>
+    </key>
+    <key>
+        <max>00:00:23:524</max>
+        <time>00:00:23:423</time>
+        <value>0.545454502</value>
+    </key>
+    <key>
+        <max>00:00:23:829</max>
+        <time>00:00:23:713</time>
+        <value>0.590909123</value>
+    </key>
+    <key>
+        <max>00:00:27:095</max>
+        <time>00:00:27:042</time>
+        <value>0.454545438</value>
+    </key>
+    <key>
+        <max>00:00:27:185</max>
+        <time>00:00:27:185</time>
+        <value>0.636363626</value>
+    </key>
+    <key>
         <max>00:00:28:242</max>
         <time>00:00:28:242</time>
         <value>0.681818187</value>
     </key>
     <key>
-        <max>00:01:36:024</max>
+        <max>00:03:42:729</max>
         <time>00:00:32:518</time>
         <value>0.318181813</value>
     </key>

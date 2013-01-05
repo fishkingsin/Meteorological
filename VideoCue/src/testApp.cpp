@@ -19,21 +19,29 @@ void testApp::setup(){
 	dir.allowExt("avi");
 	int num = dir.listDir("./");
 	currentIndex  =0;
-	player.setPixelFormat(OF_PIXELS_RGB);
+	a.setPixelFormat(OF_PIXELS_RGB);
 	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_PIXELS_AND_TEXTURE;
-	if(num>0)player.loadMovie(dir.getPath(currentIndex), decodeMode);
-	
-    player.setSynchronousSeeking(false);
-	
-	player.play();
+	if(num>0)a.loadMovie(dir.getPath(currentIndex), decodeMode);
+    a.setSynchronousSeeking(false);
+	a.play();
+        a.setVolume(0);
+    b.setPixelFormat(OF_PIXELS_RGB);
+//	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_PIXELS_AND_TEXTURE;
+	if(num>0)b.loadMovie(dir.getPath(currentIndex+1), decodeMode);
+    b.setSynchronousSeeking(false);
+	b.play();
+    b.setVolume(0);
+    
+    currentPlayer = &a;
+    prev = &b;
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-	if(player.isLoaded())
+	if(currentPlayer->isLoaded())
 	{
-		player.update();
-		player.draw(0, 0, ofGetWidth(), ofGetHeight());
+		currentPlayer->update();
+		currentPlayer->draw(0, 0, ofGetWidth(), ofGetHeight());
 		mainOutputSyphonServer.publishScreen();
 	}
 }
@@ -45,8 +53,9 @@ void testApp::draw(){
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	ofEnableAlphaBlending();
-	if(player.isLoaded())player.draw(0, 0, ofGetWidth(), ofGetHeight());
-	
+	if(currentPlayer->isLoaded())currentPlayer->draw(0, 0, ofGetWidth(), ofGetHeight());
+    a.draw(0, 0, 160, 120);
+    b.draw(ofGetWidth()-160, 0, 160, 120);
     
   
 }
@@ -59,6 +68,22 @@ void testApp::keyPressed  (int key){
 		currentIndex++;
 		currentIndex%=dir.getFiles().size();
 		ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_PIXELS_AND_TEXTURE;
-		player.loadMovie(dir.getPath(currentIndex), decodeMode);
+		prev->loadMovie(dir.getPath(currentIndex), decodeMode);
+        prev->setVolume(0);
+        ofQTKitPlayer *temp  = currentPlayer;
+        currentPlayer = prev;
+        prev = temp;
 	}
+    if (key=='1')
+    {
+        currentPlayer = &a;
+        prev = &b;
+    }
+    if (key=='2')
+    {
+        currentPlayer = &b;
+        prev = &a;
+    }
+    
+    
 }

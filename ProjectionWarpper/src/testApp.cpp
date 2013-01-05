@@ -54,7 +54,7 @@ void testApp::setup(){
 		gui.addToggle("Grid", showGrid) ;
 		gui.addToggle("showDemoPic", showDemoPic) ;
 		gui.addToggle("bEnableTriangleMesh", bEnableTriangleMesh) ;
-		
+		gui.addSlider("MaskSpeed", "MASK_SPEED", 5,1,50);
 		//	vector <string> list;
 		//	list.push_back("ExtendScreen");
 		//	list.push_back("Grid");
@@ -288,8 +288,8 @@ void testApp::update(){
 	ofPushMatrix();
 	ofTranslate(0,0);
     
-	ofBackgroundGradient(ofColor(150), ofColor(0));
-    
+//	ofBackgroundGradient(ofColor(150), ofColor(0));
+    ofBackground(0);
 	ofPopMatrix();
 	if(bEnableTriangleMesh)
 	{
@@ -409,11 +409,12 @@ void testApp::keyPressed(int key){
 				break;
 			case 'd':rm.resetCoordinates();
 				break;
+
             case OF_KEY_UP:
-                maskHeight--;
+                maskHeight-=gui.getValueF("MASK_SPEED");
                 break;
             case OF_KEY_DOWN:
-                maskHeight++;
+                maskHeight+=gui.getValueF("MASK_SPEED");
                 break;
 		}
 	}

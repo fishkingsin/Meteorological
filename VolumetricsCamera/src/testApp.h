@@ -47,7 +47,7 @@ public:
     
     //timeline
     ofxTimeline timeline;
-//    ofxTLAudioTrack waveform;
+    ofxTLAudioTrack waveform;
     void bangFired(ofxTLBangEventArgs& bang);
 	
     //camera
@@ -61,8 +61,10 @@ public:
     ofxTLSwitches* volumeEnabled,
     *modelEnabled,
     *videoEnabled;
+    
 	
 	//gui
+    bool toggleDraw;
 	void resetCameraPosition();
     void alignCameraToTrack();
 	ofxPanel gui;

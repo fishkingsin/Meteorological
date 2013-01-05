@@ -13,7 +13,10 @@ public:
 	void update();
 	void draw();
 	void keyPressed(int key);
-	ofQTKitPlayer player;
+	ofQTKitPlayer a;
+    ofQTKitPlayer b;
+    ofQTKitPlayer *currentPlayer,*prev;
+    
 	ofDirectory dir;
 	int currentIndex;
 	ofxSyphonServer mainOutputSyphonServer;

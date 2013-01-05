@@ -1,10 +1,11 @@
 #pragma once
 
 #include "ofMain.h"
-
+#define NUM_TAIL 5
 class Ball {
     
 public:
+
     Ball(int _x, int _y, float _mWidth, float _mHeight , float vx, float vy) {
         x = _x;
         y = _y;
@@ -13,8 +14,9 @@ public:
         d = 1;
         mWidth  = _mWidth;
         mHeight = _mHeight;
-        len = 10;
+        len = NUM_TAIL;
         bBounce = false;
+
     }
     
     //--------------------------------------
@@ -35,8 +37,9 @@ public:
         
         for (int i = 1; i < len; i++)
         {
-            tail[i-1] = tail[i];
+           tail[i-1] = tail[i];
         }
+        
         tail[len-1].set(x, y);
     }
     
@@ -47,10 +50,15 @@ public:
         
         for(int i = 0 ; i <  len; i++)
         {
-            float div = (len-i)/len*1.;
-            ofSetColor(255,255*(div));
+            float div = i/(len*1.0f);
+            float r = d;
+            ofPushStyle();
+            ofEnableAlphaBlending();
+            ofSetColor(255,255*div);
             ofFill();
-            ofRect(tail[i],d,d);
+            ofRect(tail[i],r,r);
+            ofPopStyle();
+
         }
         ofPopStyle();
     }
@@ -65,6 +73,6 @@ private:
     float mHeight;
     bool bBounce;
     int len;
-    ofPoint tail[10];
+    ofPoint tail[NUM_TAIL];
     
 };

@@ -129,6 +129,8 @@ class testApp : public ofBaseApp{
 	ofRectangle input;
 	bool enabled,debug;
     void fadeOut();
+    void fadeOut2();
+    
 };
 
 #endif

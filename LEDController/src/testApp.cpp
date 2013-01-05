@@ -23,6 +23,7 @@ void testApp::setup(){
     }
     scaledFbo.allocate(NUM_LED, NUM_LED*NUM_PEGGY);
     scaledPixels.allocate(NUM_LED, NUM_LED*NUM_PEGGY,OF_IMAGE_COLOR );
+#ifdef USE_CV
     vidGrabber.setVerbose(true);
     vidGrabber.initGrabber(CAMW,CAMH);
     colorImg.allocate(CAMW,CAMH);
@@ -32,7 +33,7 @@ void testApp::setup(){
     
 	bLearnBakground = true;
 	threshold = 80;
-    
+#endif
     
     ofxXmlSettings settings;
     settings.loadFile("settings/config.xml");
@@ -55,18 +56,23 @@ void testApp::setup(){
     gui.addSlider("LED_SIZE", 1, 1, 100,true);
 	gui.addSlider("PADDING", 1, 1, 100,true );
     gui.addToggle("EnableSerial",bSerial);
+    gui.addToggle("bRipple",bRipple);
+    gui.addToggle("bImage",bImage);
+#ifdef USE_CV
+    
     gui.addToggle("bFlip",bFlip);
     gui.addToggle("bMirror",bMirror);
-	gui.addToggle("bRipple",bRipple);
 	gui.addToggle("bCV",bCV);
-	gui.addToggle("bImage",bImage);
 	gui.addToggle("bContour",bContour);
 	gui.addToggle("bGrayscale",bGrayscale);
-//	gui.addSlider("rippleBrightness",rippleBrightness,0,255,true );
+#endif
+    gui.addToggle("bVideo",bVideo);
+    gui.addDrawableRect("Moon", &player, 25, 50);
+    //	gui.addSlider("rippleBrightness",rippleBrightness,0,255,true );
 	gui.addSlider("imageBrightness",imageBrightness,0,255,true );
 	gui.addToggle("resetBuilding",false);
 	
-    
+#ifdef USE_CV
     gui.ofxControlPanel::addPanel("cv", 3);
 	gui.setWhichPanel("cv");
     gui.setWhichColumn(0);
@@ -79,10 +85,12 @@ void testApp::setup(){
     
     gui.addDrawableRect("GrayDiff", &grayDiff  , CAMW*0.5, CAMH*0.5);
     gui.addDrawableRect("GrayBG", &grayBg, CAMW*0.5, CAMH*0.5);
+    
     gui.setWhichColumn(2);
-    gui.addDrawableRect("scaledFbo", &scaledFbo, CAMW*0.5, CAMH);
+    
     gui.addDrawableRect("contourFinder", &contourFinder, CAMW*0.5, CAMH*0.5);
-	
+#endif
+    gui.addDrawableRect("scaledFbo", &scaledFbo, CAMW*0.5, CAMH);
 	gui.ofxControlPanel::addPanel("duration", 1);
 	gui.setWhichPanel("duration");
 	duration.setup(settings.getValue("DURATION_PORT",12345));
@@ -101,18 +109,28 @@ void testApp::setup(){
 	gui.loadSettings("./settings/control_settings.xml");
     
 	//    ripples.assign(10,Ripple());
-	for(int i= 0 ; i < 10 ; i++)
-	{
-		ripples.push_back(new Ripple());
-	}
-	
-	
+    //	for(int i= 0 ; i < 10 ; i++)
+    //	{
+    //		ripples.push_back(new Ripple());
+    //	}
+	player.loadMovie("moon_phase.mov");
+    player.setLoopState(OF_LOOP_NONE);
+	player.play();
+    player.setPaused(true);
+    bVideo = false;
 }
 //--------------------------------------------------------------
 //Or wait to receive messages, sent only when the track changed
 void testApp::trackUpdated(ofxDurationEventArgs& args){
 	ofLogVerbose("Duration Event") << "track type " << args.track->type << " updated with name " << args.track->name << " and value " << args.track->value << endl;
-	
+    if( args.track->name == "/EnableSerial"  && args.track->type == "Switches")
+	{
+        bSerial = args.track->on;
+		gui.setValueB("EnableSerial", bSerial);
+        
+    }
+    
+#ifdef USE_CV
 	if( args.track->name == "/LEARN_BACKGROUND"  && args.track->type == "Bangs")
 	{
         grayBg = grayImage;
@@ -121,12 +139,6 @@ void testApp::trackUpdated(ofxDurationEventArgs& args){
 	{
         threshold = args.track->value*255;
 		gui.setValueI("THRESHOLD", args.track->value*255);
-        
-    }
-    else if( args.track->name == "/EnableSerial"  && args.track->type == "Switches")
-	{
-        bSerial = args.track->on;
-		gui.setValueB("EnableSerial", bSerial);
         
     }
     else if( args.track->name == "/bFlip" && args.track->type == "Switches")
@@ -141,22 +153,24 @@ void testApp::trackUpdated(ofxDurationEventArgs& args){
 		gui.setValueB("bMirror", bMirror);
 		
     }
-	else if( args.track->name == "/bRipple" && args.track->type == "Switches" )
-	{
-		bRipple = args.track->on;
-		gui.setValueB("bRipple", bRipple);
-		
-    }
 	else if( args.track->name == "/bCV" && args.track->type == "Switches" )
 	{
 		bCV = args.track->on;
 		gui.setValueB("bCV", bCV);
 		
     }
-	else if( args.track->name == "/imageBrightness" && args.track->type == "Curves" )
+	
+#endif
+    else if( args.track->name == "/imageBrightness" && args.track->type == "Curves" )
 	{
 		imageBrightness = args.track->value*255;
 		gui.setValueB("imageBrightness", imageBrightness);
+		
+    }
+    else if( args.track->name == "/bRipple" && args.track->type == "Switches" )
+	{
+		bRipple = args.track->on;
+		gui.setValueB("bRipple", bRipple);
 		
     }
 	else if( args.track->name == "/resetBuilding" && args.track->type == "Bangs" )
@@ -164,12 +178,12 @@ void testApp::trackUpdated(ofxDurationEventArgs& args){
 		buildings.reset();
 		
     }
-//	else if( args.track->name == "/rippleBrightness" && args.track->type == "Curves" )
-//	{
-//		rippleBrightness = args.track->value*255;
-//		gui.setValueB("rippleBrightness", rippleBrightness);
-//		
-//    }
+    //	else if( args.track->name == "/rippleBrightness" && args.track->type == "Curves" )
+    //	{
+    //		rippleBrightness = args.track->value*255;
+    //		gui.setValueB("rippleBrightness", rippleBrightness);
+    //
+    //    }
 }
 void testApp::eventsIn(guiCallbackData & data){
 	if( data.isElement( "LED_SIZE" ) )
@@ -180,20 +194,17 @@ void testApp::eventsIn(guiCallbackData & data){
 	{
         padding = data.getInt(0);
     }
+#ifdef USE_CV
     else if( data.isElement( "LEARN_BACKGROUND" ) )
 	{
         
         gui.setValueB("LEARN_BACKGROUND", false);
         grayBg = grayImage;
     }
+    
     else if( data.isElement( "THRESHOLD" ) )
 	{
         threshold = data.getInt(0);
-        
-    }
-    else if( data.isElement( "EnableSerial" ) )
-	{
-        bSerial = data.getInt(0);
         
     }
     else if( data.isElement( "bFlip" ) )
@@ -206,21 +217,12 @@ void testApp::eventsIn(guiCallbackData & data){
         bMirror = data.getInt(0);
         
     }
-	else if( data.isElement( "bRipple" ) )
-	{
-        bRipple = data.getInt(0);
-        
-    }
-	else if( data.isElement( "bCV" ) )
+    else if( data.isElement( "bCV" ) )
 	{
         bCV = data.getInt(0);
         
     }
-	else if( data.isElement( "bImage" ) )
-	{
-        bImage = data.getInt(0);
-        
-    }
+	
 	else if( data.isElement( "bContour" ) )
 	{
         bContour = data.getInt(0);
@@ -231,7 +233,24 @@ void testApp::eventsIn(guiCallbackData & data){
         bGrayscale = data.getInt(0);
         
     }
-	
+#endif
+    else if( data.isElement( "bRipple" ) )
+	{
+        bRipple = data.getInt(0);
+        
+    }
+    
+    else if( data.isElement( "EnableSerial" ) )
+	{
+        bSerial = data.getInt(0);
+        
+    }
+    
+	else if( data.isElement( "bImage" ) )
+	{
+        bImage = data.getInt(0);
+        
+    }
 	else if( data.isElement( "imageBrightness" ) )
 	{
         imageBrightness = data.getInt(0);
@@ -242,13 +261,14 @@ void testApp::eventsIn(guiCallbackData & data){
         gui.setValueB("resetBuilding",false);
 		buildings.reset();
     }
-
+    
     
 }
 //--------------------------------------------------------------
 void testApp::update(){
     bool bNewFrame = false;
-    
+    player.update();
+#ifdef USE_CV
     vidGrabber.update();
     bNewFrame = vidGrabber.isFrameNew();
     
@@ -264,100 +284,112 @@ void testApp::update(){
         
 	}
     contourFinder.findContours(grayDiff, 20, (340*240)/3, 10, true);	// find holes
+#endif
     scaledFbo.begin();
     ofClear(0);
-	if(bImage)
-	{
-		float scalex = NUM_LED*1.0f/CAMW*1.0f;
-		float scaley = NUM_LED*1.0f/CAMH*1.0f;
-		int x = 0;
-		glPushMatrix();
-		glScalef( scalex, scaley, 0.0 );
-		buildings.update(0,0,CAMW,CAMH*2);
-		buildings.draw(0,0,CAMW,CAMH*2);
-		glPopMatrix();
-	}
-	if(bRipple)
-	{
-		ofPushStyle();
-//		ofSetColor(rippleBrightness);
-		float scalex = NUM_LED*1.0f/CAMW*1.0f;
-		float scaley = scalex;//(NUM_LED*NUM_PEGGY)*1.0f/CAMH*2.0f;
-		glPushMatrix();
-		glScalef( scalex, scaley, 0.0 );
-		vector <Ripple*>::iterator r;
-		for(r = ripples.begin() ; r!=ripples.end() ;r++)
-		{
-			Ripple * ripple = *r;
-			ripple->render();
-		}
-		glPopMatrix();
-		ofPopStyle();
-	}
-	float scalex = NUM_LED*1.0f/CAMW*1.0f;
-    float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
-	if(bCV)
-	{
-		
-		float tx = 0;
-		float ty = 0;
-		ofPushStyle();
-
-		
-		glPushMatrix();
-		
-		if(bMirror)
-		{
-			scalex = -scalex;
-			tx = NUM_LED;
-		}
-		if(bFlip)
-		{
-			scaley = -scaley;
-			ty = NUM_LED*NUM_PEGGY;
-		}
-		glTranslatef(tx, ty, 0);
-		glScalef( scalex, scaley, 0.0 );
-		
-//		if(bImage)
-//		{
-//			ofSetColor(imageBrightness);
-//			colorImg.draw(0,0,CAMW,CAMH);
-//		}
-		if(bContour)
-		{
-			// ---------------------------- draw the blobs
-			ofSetColor(imageBrightness);
-			ofFill();
-			for( int i=0; i<(int)contourFinder.blobs.size(); i++ ) {
-				
-				ofBeginShape();
-				for( int j=0; j<contourFinder.blobs[i].nPts; j++ ) {
-					ofVertex( contourFinder.blobs[i].pts[j].x, contourFinder.blobs[i].pts[j].y );
-				}
-				ofEndShape();
-				
-			}
-		}
-		else if (bGrayscale)
-		{
-			grayImage.draw(0, 0,CAMW,CAMH);
-		}
-		
-		glPopMatrix();
-		
-        ofPopStyle();
-	}
+    if (bVideo) {
+        ofSetColor(255);
+        player.draw(0,0,scaledFbo.getWidth() ,scaledFbo.getHeight());
+    }
+    else
     {
-        glPushMatrix();
-//        float scalex = NUM_LED*1.0f/CAMW*1.0f;
-//        float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
-//        glScalef( scalex, scalex, 0.0 );
-        for (int i = 0; i < balls.size(); i++) {
-            balls[i]->calc();
-            balls[i]->draw();
+        if(bImage)
+        {
+            float scalex = NUM_LED*1.0f/CAMW*1.0f;
+            float scaley = NUM_LED*1.0f/CAMH*1.0f;
+            int x = 0;
+            glPushMatrix();
+            glScalef( scalex, scaley, 0.0 );
+            buildings.update(0,0,CAMW,CAMH*2);
+            buildings.draw(0,0,CAMW,CAMH*2);
+            glPopMatrix();
         }
-        glPopMatrix();
+        if(bRipple)
+        {
+            ofPushStyle();
+            //		ofSetColor(rippleBrightness);
+            float scalex = NUM_LED*2.0f/((50)*1.0f);
+            float scaley = scalex;//(NUM_LED*NUM_PEGGY)*1.0f/CAMH*2.0f;
+            glPushMatrix();
+            glScalef( scalex, scaley, 0.0 );
+            //		vector <Ripple*>::iterator r;
+            ripples.render();
+            ripples.draw();
+            //		for(r = ripples.begin() ; r!=ripples.end() ;r++)
+            //		{
+            //			Ripple * ripple = *r;
+            //			ripple->render();
+            //		}
+            glPopMatrix();
+            ofPopStyle();
+        }
+#ifdef USE_CV
+        float scalex = NUM_LED*1.0f/CAMW*1.0f;
+        float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
+        if(bCV)
+        {
+            
+            float tx = 0;
+            float ty = 0;
+            ofPushStyle();
+            
+            
+            glPushMatrix();
+            
+            if(bMirror)
+            {
+                scalex = -scalex;
+                tx = NUM_LED;
+            }
+            if(bFlip)
+            {
+                scaley = -scaley;
+                ty = NUM_LED*NUM_PEGGY;
+            }
+            glTranslatef(tx, ty, 0);
+            glScalef( scalex, scaley, 0.0 );
+            
+            //		if(bImage)
+            //		{
+            //			ofSetColor(imageBrightness);
+            //			colorImg.draw(0,0,CAMW,CAMH);
+            //		}
+            if(bContour)
+            {
+                // ---------------------------- draw the blobs
+                ofSetColor(imageBrightness);
+                ofFill();
+                for( int i=0; i<(int)contourFinder.blobs.size(); i++ ) {
+                    
+                    ofBeginShape();
+                    for( int j=0; j<contourFinder.blobs[i].nPts; j++ ) {
+                        ofVertex( contourFinder.blobs[i].pts[j].x, contourFinder.blobs[i].pts[j].y );
+                    }
+                    ofEndShape();
+                    
+                }
+            }
+            else if (bGrayscale)
+            {
+                grayImage.draw(0, 0,CAMW,CAMH);
+            }
+            
+            glPopMatrix();
+            
+            ofPopStyle();
+        }
+#endif
+        {
+            glPushMatrix();
+            //        float scalex = NUM_LED*1.0f/CAMW*1.0f;
+            //        float scaley = (NUM_LED*NUM_PEGGY)*1.0f/CAMH*1.0f;
+            //        glScalef( scalex, scalex, 0.0 );
+            for (int i = 0; i < balls.size(); i++) {
+                balls[i]->calc();
+                balls[i]->draw();
+            }
+            glPopMatrix();
+        }
     }
 	scaledFbo.readToPixels(scaledPixels);
     scaledFbo.end();
@@ -392,19 +424,21 @@ void testApp::draw(){
         }
     }
 	buildings.draw(ofGetWidth()*0.5,0,CAMW,CAMH);
+    
     ofPushMatrix();
     ofTranslate(ofGetWidth()*0.5,0);
+    ripples.draw();
     for (int i = 0; i < balls.size(); i++) {
-
+        
         balls[i]->draw();
     }
     ofPopMatrix();
-//	int x = 0;
-//	for(int i = 0 ; i < images.size() ; i++)
-//	{
-//		images[i].draw(ofGetWidth()*0.5 -(ofGetFrameNum()) %(totalWidth)+x, CAMH-images[i].height);
-//		x+=images[i].width;
-//	}
+    //	int x = 0;
+    //	for(int i = 0 ; i < images.size() ; i++)
+    //	{
+    //		images[i].draw(ofGetWidth()*0.5 -(ofGetFrameNum()) %(totalWidth)+x, CAMH-images[i].height);
+    //		x+=images[i].width;
+    //	}
     
 }
 //potfrom morganhk https://github.com/morganhk/Dual-Peggy-display-controller
@@ -454,22 +488,33 @@ void testApp::keyPressed(int key){
     {
         case '1':
         {
-            balls.push_back(new Ball(0,ofRandom(NUM_LED*2),NUM_LED,NUM_LED*2,ofRandom(0.5,1),0));
+            balls.push_back(new Ball(0,ofRandom(NUM_LED*2),NUM_LED,NUM_LED*2,ofRandom(1,2),0));
         }
             break;
         case '2':
         {
-            balls.push_back(new Ball(ofRandom(NUM_LED),0,NUM_LED,NUM_LED*2,0,ofRandom(0.5,1)));
+            balls.push_back(new Ball(ofRandom(NUM_LED),0,NUM_LED,NUM_LED*2,0,ofRandom(1,2)));
         }
-        break;
+            break;
         case '3':
             while(!balls.empty())
             {
-               Ball*ball =  balls.back();
+                Ball*ball =  balls.back();
                 ball->~Ball();
                 balls.pop_back();
             }
             balls.clear();
+            break;
+        case '4':
+            player.setPaused(false);
+            player.setPosition(0);
+            bVideo = true;
+            break;
+        case '5':
+            bVideo = false;
+            player.setPaused(true);
+            player.setPosition(0);
+            
             break;
     }
 }

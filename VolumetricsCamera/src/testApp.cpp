@@ -48,11 +48,12 @@ void testApp::initVolumetrics(ofxImageSequencePlayer &_imageSequence)
     bVolumeSetup = true;
     //    myVolume.setRenderSettings(0.5, 0.75, 0.75, 0.1);
     
-//    linearFilter = false;
+    //    linearFilter = false;
     
 }
 //--------------------------------------------------------------
 void testApp::setup(){
+    toggleDraw = false;
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetFrameRate(60);
     ofEnableAlphaBlending();
@@ -79,15 +80,15 @@ void testApp::setup(){
 	}
 	currentModel = 0;
 	model = &models[currentModel];
-//	model->setRotation(1, 180,0, 0, 1);
-//	myVideo.loadMovie("movies/cloud.mov");
-//	myVideo.play();
-//	myVideo.setLoopState(OF_LOOP_NORMAL);
+    //	model->setRotation(1, 180,0, 0, 1);
+    //	myVideo.loadMovie("movies/cloud.mov");
+    //	myVideo.play();
+    //	myVideo.setLoopState(OF_LOOP_NORMAL);
 	texMapShader.load("shaders/displace");
 	sampler2dTex.allocate(512,512);
-	    
+    
 	ofEnableArbTex();
-    #ifdef USE_TSPS
+#ifdef USE_TSPS
     tspsReceiver.connect(12000);
     
     ofxAddTSPSListeners(this);
@@ -99,7 +100,7 @@ void testApp::setup(){
     gui.add(cameraRollSpeed.setup("Cam Roll Speed", ofxParameter<float>(), .0, 4));
     gui.add(shouldSaveCameraPoint.setup("Set Camera Point", ofxParameter<bool>()));
     gui.add(currentLockCamera.setup("Lock to Track", ofxParameter<bool>()));
-    gui.add(mode.setup("DisplayMode", ofxParameter<int>(), 0,3));
+    gui.add(mode.setup("DisplayMode", ofxParameter<int>(), -1,3));
     gui.add(vebose.setup("LogLevel", ofxParameter<int>(), 0,5));
     
     
@@ -148,13 +149,13 @@ void testApp::setup(){
 }
 void testApp::populateTimelineElements(){
     
-//    waveform.loadSoundfile("sounds/Yuh Solo.aif");
-
-//	timeline.setDurationInSeconds(waveform.getDuration());
-
+    waveform.loadSoundfile("sounds/Yuh Solo.aif");
+    
+	timeline.setDurationInSeconds(waveform.getDuration());
+    
 	timeline.setPageName("Camera");
 	timeline.addTrack("Camera", &cameraTrack);
-//    timeline.addTrack("Track", &waveform);
+    timeline.addTrack("Track", &waveform);
 	timeline.addFlags("SyphonServer");
     timeline.addPage("Cue");
 	
@@ -167,8 +168,8 @@ void testApp::populateTimelineElements(){
     timeline.addPage("Files");
     timeline.addFlags("VolumeFiles");
     timeline.addFlags("3DModelFile");
-//    timeline.addFlags("VideoFile");
-
+    //    timeline.addFlags("VideoFile");
+    
     timeline.addPage("Volume");
 	timeline.addCurves("Volume Threshold", currentCompositionDirectory + "VolumeThreshold.xml", ofRange(0, 1), myVolume.getThreshold() );
 	timeline.addCurves("Volume Density", currentCompositionDirectory + "VolumeDensity.xml", ofRange(0, 0.2), myVolume.getDensity() );
@@ -190,22 +191,22 @@ void testApp::bangFired(ofxTLBangEventArgs& bang){
 		//ofFile newFile(bang.flag);
 		
 		//if (newFile.canRead() && newFile.getExtension()=="mov") {
-//			myVideo.loadMovie(bang.flag);
+        //			myVideo.loadMovie(bang.flag);
 		//}
-
+        
 	}
 	else if(bang.track->getDisplayName()=="3DModelFile")
 	{
-//		ofFile newFile(bang.flag);
-//		if (newFile.canRead() && newFile.getExtension()=="obj") {
-//			model->loadModel(bang.flag);
-//		}
+        //		ofFile newFile(bang.flag);
+        //		if (newFile.canRead() && newFile.getExtension()=="obj") {
+        //			model->loadModel(bang.flag);
+        //		}
 		currentModel = ofToInt(bang.flag);
 		if(currentModel<models.size() && currentModel >=-0)
 		{
 			model = &models[currentModel];
 		}
-
+        
 	}
 	else if(bang.track->getDisplayName()=="VolumeFile")
 	{
@@ -217,9 +218,9 @@ void testApp::bangFired(ofxTLBangEventArgs& bang){
 void testApp::update(){
     int logl = vebose;
     ofSetLogLevel((ofLogLevel)logl);
-//    volumeEnabled = timeline.getValue("VolumeEnabled");
-//    modelEnabled = timeline.getValue("3DModelFile");
-//    videoEnabled = timeline.getValue("VideoEnabled");
+    //    volumeEnabled = timeline.getValue("VolumeEnabled");
+    //    modelEnabled = timeline.getValue("3DModelFile");
+    //    videoEnabled = timeline.getValue("VideoEnabled");
 	if(volumeEnabled->isOn())
 	{
         myVolume.setThreshold(timeline.getValue("Volume Threshold"));
@@ -233,14 +234,14 @@ void testApp::update(){
 	}
 	else if (modelEnabled->isOn() || videoEnabled->isOn())
 	{
-//		myVideo.update();
+        //		myVideo.update();
 		
 		sampler2dTex.begin();
 		ofClear(0);
 		ofDisableNormalizedTexCoords();
 		client.draw(0,0,sampler2dTex.getWidth(),sampler2dTex.getHeight());
 		ofEnableNormalizedTexCoords();
-//		myVideo.draw(0, 0,sampler2dTex.getWidth(),sampler2dTex.getHeight());
+        //		myVideo.draw(0, 0,sampler2dTex.getWidth(),sampler2dTex.getHeight());
 		sampler2dTex.end();
 	}
     //	myVolume.setVolumeTextureFilterMode(GL_LINEAR);
@@ -299,6 +300,11 @@ void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofSetBackgroundColor(ofColor::black);
+    glDisable(GL_DEPTH_TEST);
+    ofPushStyle();
+    ofSetColor(0);
+    ofRect(0, 0, ofGetWidth(), ofGetHeight());
+    ofPopStyle();
 	glEnable(GL_DEPTH_TEST);
     ofClear(0);
     //    ofPushView();
@@ -307,18 +313,18 @@ void testApp::draw(){
         //        ofSetupScreen();
         cam.begin();
         ofClear(0);
-		if(volumeEnabled->isOn())
+		if(volumeEnabled->isOn() || mode==0)
 		{
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
             ofPushMatrix();
-//            ofSetColor(255, 255*timeline.getValue("VolumeAlpha"));
+            //            ofSetColor(255, 255*timeline.getValue("VolumeAlpha"));
             ofRotate(90, 1, 0, 0);
             myVolume.drawVolume(0,0,0, ofGetHeight(), 0);
             ofPopMatrix();
 			ofPopStyle();
 		}
-        if(modelEnabled->isOn())
+        if(modelEnabled->isOn() || mode==1)
 		{
 			
             
@@ -359,24 +365,25 @@ void testApp::draw(){
 #ifdef USE_SYPHON
     server.publishScreen();
 #endif
-    if(videoEnabled->isOn())
+    if(videoEnabled->isOn() || mode==2)
 	{
 		
         ofPushStyle();
 		ofDisableNormalizedTexCoords();
         ofSetColor(255, 255*timeline.getValue("VideoAlpha"));
-//        myVideo.draw(0,0,ofGetWidth(),ofGetHeight());
+        //        myVideo.draw(0,0,ofGetWidth(),ofGetHeight());
 		client.draw(0,0,ofGetWidth(),ofGetHeight());
 		ofEnableNormalizedTexCoords();
         ofPopStyle();
         //		myVideo.draw(512, 256, 256 , 256);
         //		sampler2dTex.draw(512, 512,256,256);
 	}
-	gui.draw();
+	if(toggleDraw)gui.draw();
     timeline.draw();
 }
 void testApp::alignCameraToTrack()
 {
+    
     cam.targetNode.setPosition(cam.getPosition());
     cam.targetNode.setOrientation(cam.getOrientationQuat());
     cam.rotationX = cam.targetXRot = -cam.getHeading();
@@ -396,6 +403,9 @@ void testApp::resetCameraPosition(){
 void testApp::keyPressed(int key){
     switch(key)
     {
+        case '\t':
+            toggleDraw = !toggleDraw;
+            break;
         case '1':
         case '2':
         case '3':
@@ -409,6 +419,11 @@ void testApp::keyPressed(int key){
             if(index<imageSequence.size())initVolumetrics(imageSequence[index]);
         }
             break;
+    }
+    
+    if (key == '`')
+    {
+        mode = -1;
     }
     if (key == OF_KEY_F1)
     {
@@ -503,8 +518,8 @@ void testApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void testApp::dragEvent(ofDragInfo dragInfo){
-//    if(dragInfo.files[0].find("mov")!=string::npos)
-//    {
-//        myVideo.loadMovie(dragInfo.files[0]);
-//    }
+    //    if(dragInfo.files[0].find("mov")!=string::npos)
+    //    {
+    //        myVideo.loadMovie(dragInfo.files[0]);
+    //    }
 }

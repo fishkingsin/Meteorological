@@ -86,11 +86,11 @@ void testApp::initSettings()
 		
 		//guiType2DSlider * ofxControlPanel::addSlider2D(string sliderName, string xmlName, float valueX, float valueY, float minX, float maxX, float minY, float maxY, bool isInt)
 		gui.setWhichColumn(1);
-		gui.addSlider2D("inputPosition", "INPUT_POSITION",input.x,input.y,0,ofGetWidth(),0,ofGetHeight(),true);
-		gui.addSlider2D("inputSize", "INPUT_SIZE", input.width,input.height,0,ofGetWidth(),0,ofGetHeight(),true);
+		gui.addSlider2D("inputPosition", "INPUT_POSITION",input.x,input.y,0,ofGetWidth()*3,0,ofGetHeight()*3,true);
+		gui.addSlider2D("inputSize", "INPUT_SIZE", input.width,input.height,0,ofGetWidth()*3,0,ofGetHeight()*3,true);
 		gui.setWhichColumn(2);
-		gui.addSlider2D("outputPosition", "OUTPUT_POSITION",output.x,output.y,0,ofGetWidth(),0,ofGetHeight(),true);
-		gui.addSlider2D("outputSize", "OUTPUT_SIZE", output.width,output.height,0,ofGetWidth(),0,ofGetHeight(),true);
+		gui.addSlider2D("outputPosition", "OUTPUT_POSITION",output.x,output.y,0,ofGetWidth()*3,0,ofGetHeight()*3,true);
+		gui.addSlider2D("outputSize", "OUTPUT_SIZE", output.width,output.height,0,ofGetWidth()*3,0,ofGetHeight()*3,true);
 		//  -- this gives you back an ofEvent for all events in this control panel object
 		ofAddListener(gui.guiEvent, this, &testApp::eventsIn);
 		gui.setupEvents();
@@ -276,11 +276,30 @@ void testApp::fadeOut()
         character[i].speed = ofRandom(5000,10000);
     }
 }
+void testApp::fadeOut2()
+{
+    count = 0;
+    for (int i = 0 ; i<character.size(); i++) {
+        character[i].offset.set(character[i].offset.x,ofRandom(100,ofGetHeight()));
+        
+        character[i].setNewPosition(character[i].pos);
+        character[i].speed = ofRandom(5000,10000);
+    }
+}
+
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	if(key==OF_KEY_BACKSPACE)
+	if(key=='1')
     {
         fadeOut();
+    }
+    if(key=='2')
+    {
+        fadeOut2();
+    }
+    if(key==OF_KEY_RETURN)
+    {
+        setupFromTextFile("data.txt");
     }
 }
 

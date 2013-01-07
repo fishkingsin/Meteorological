@@ -18,6 +18,7 @@
 #define VOLUMETRICS 1
 #define MODEL 2
 #define VIDEO 3
+#include "ofxOsc.h"
 class testApp : public ofBaseApp{
     
 public:
@@ -96,4 +97,7 @@ public:
 	ofxSyphonServer server;
     ofxSyphonClient client;
 #endif
+    //pilling drive
+    ofVideoPlayer player;
+    ofxOscSender sender;
 };

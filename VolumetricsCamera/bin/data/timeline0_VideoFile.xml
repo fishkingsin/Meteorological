@@ -1,32 +1,52 @@
 <keyframes>
     <key>
-        <flag>movies/Ritchie_Silassinus.mov</flag>
-        <time>00:04:23:675</time>
-        <value>0.475000024</value>
+        <flag>02.mov</flag>
+        <time>00:03:41:822</time>
+        <value>0.406506658</value>
     </key>
     <key>
-        <flag>movies/road1.mov</flag>
-        <time>00:04:35:552</time>
-        <value>0.425000012</value>
+        <flag>2</flag>
+        <time>00:05:12:949</time>
+        <value>0.363356054</value>
     </key>
     <key>
-        <flag>movies/eyeopen1.mov</flag>
-        <time>00:05:24:012</time>
-        <value>0.475000024</value>
+        <flag>3</flag>
+        <time>00:05:38:628</time>
+        <value>0.338013530</value>
     </key>
     <key>
-        <flag>movies/xray.mov</flag>
-        <time>00:06:11:046</time>
-        <value>0.774999976</value>
+        <flag>1</flag>
+        <time>00:06:13:921</time>
+        <value>0.226027369</value>
     </key>
     <key>
-        <flag>movies/Ritchie_Silassinus2.mov</flag>
-        <time>00:06:38:601</time>
-        <value>0.250000000</value>
+        <flag>2</flag>
+        <time>00:06:21:815</time>
+        <value>0.404109597</value>
     </key>
     <key>
-        <flag>movies/inside_the_jaymis.mov</flag>
-        <time>00:07:02:356</time>
-        <value>0.191780806</value>
+        <flag>3</flag>
+        <time>00:06:34:313</time>
+        <value>0.280821919</value>
+    </key>
+    <key>
+        <flag>1</flag>
+        <time>00:06:41:877</time>
+        <value>0.417808235</value>
+    </key>
+    <key>
+        <flag>1</flag>
+        <time>00:06:53:471</time>
+        <value>0.458904088</value>
+    </key>
+    <key>
+        <flag>2</flag>
+        <time>00:06:58:404</time>
+        <value>0.493150711</value>
+    </key>
+    <key>
+        <flag>1</flag>
+        <time>00:07:03:420</time>
+        <value>0.500000000</value>
     </key>
 </keyframes>

@@ -120,6 +120,10 @@ void testApp::setup(){
     bVolumeSetup = false;
     if(imageSequence.size()>0)initVolumetrics(imageSequence[0]);
     
+    player.loadMovie("movies/pilling_drive.mov");
+    player.play();
+    player.setLoopState(OF_LOOP_NORMAL);
+    player.setPaused(true);
     cam.setup();
 	cam.speed = 10;
 	cam.autosavePosition = true;
@@ -136,7 +140,7 @@ void testApp::setup(){
     
     cameraTrack.lockCameraToTrack = false;
     viewportGameCam.set(0,0,ofGetWidth()*0.5,ofGetHeight()*0.5);
-    
+    sender.setup("localhost", 7170);
     timeline.setup();
 	timeline.getColors().load();
 	timeline.setOffset(ofVec2f(0, ofGetHeight()-500));
@@ -146,6 +150,8 @@ void testApp::setup(){
     
     
     populateTimelineElements();
+    
+    
 }
 void testApp::populateTimelineElements(){
     
@@ -168,14 +174,23 @@ void testApp::populateTimelineElements(){
     timeline.addPage("Files");
     timeline.addFlags("VolumeFiles");
     timeline.addFlags("3DModelFile");
-    //    timeline.addFlags("VideoFile");
+    timeline.addFlags("VideoFile");
     
     timeline.addPage("Volume");
 	timeline.addCurves("Volume Threshold", currentCompositionDirectory + "VolumeThreshold.xml", ofRange(0, 1), myVolume.getThreshold() );
 	timeline.addCurves("Volume Density", currentCompositionDirectory + "VolumeDensity.xml", ofRange(0, 0.2), myVolume.getDensity() );
 	timeline.addCurves("Volume XyQuality", currentCompositionDirectory + "VolumeXyQuality.xml", ofRange(0, 1), myVolume.getXyQuality() );
 	timeline.addCurves("Volume ZQuality", currentCompositionDirectory + "VolumeZQuality.xml", ofRange(0, 1), myVolume.getZQuality() );
-    
+    timeline.addPage("PillingDrive1");
+    timeline.addFlags("PD_STATE");
+    timeline.addSwitches("PD_ON");
+    timeline.addCurves("PD_ALPHA");
+    timeline.addCurves("PD_VOLUME");
+    timeline.addPage("PillingDrive2");
+    timeline.addCurves("PD_X");
+    timeline.addCurves("PD_Y");
+    timeline.addCurves("PD_WIDTH");
+    timeline.addCurves("PD_HEIGHT");
 	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
 	
 	cameraTrack.setup();
@@ -208,20 +223,44 @@ void testApp::bangFired(ofxTLBangEventArgs& bang){
 		}
         
 	}
-	else if(bang.track->getDisplayName()=="VolumeFile")
+	else if(bang.track->getDisplayName()=="VideoFile")
 	{
-		
+        ofxOscBundle bundle;
+        ofxOscMessage m;
+        m.setAddress("/FILE");
+        m.addIntArg(ofToInt(bang.flag));
+        bundle.addMessage(m);
+		sender.sendBundle(bundle);
+        bundle.clear();
+        m.clear();
 	}
-	
+	else if(bang.track->getDisplayName()=="PD_STATE")
+	{
+        if(bang.flag=="START")
+        {
+            player.setPaused(false);
+            player.setPosition(0);
+        }
+        else if(bang.flag=="STOP")
+        {
+            player.setPaused(true);
+        }
+        
+	}
 }
 //--------------------------------------------------------------
 void testApp::update(){
     int logl = vebose;
     ofSetLogLevel((ofLogLevel)logl);
+    if(logl==OF_LOG_VERBOSE)
+    {
+        ofDrawGrid();
+//        ofDrawAxis(500);
+    }
     //    volumeEnabled = timeline.getValue("VolumeEnabled");
     //    modelEnabled = timeline.getValue("3DModelFile");
     //    videoEnabled = timeline.getValue("VideoEnabled");
-	if(volumeEnabled->isOn())
+	if(volumeEnabled->isOn() || mode==0)
 	{
         myVolume.setThreshold(timeline.getValue("Volume Threshold"));
         
@@ -232,7 +271,7 @@ void testApp::update(){
         myVolume.setZQuality(timeline.getValue("Volume ZQuality"));
         
 	}
-	else if (modelEnabled->isOn() || videoEnabled->isOn())
+	else if (modelEnabled->isOn() || videoEnabled->isOn() || mode==1 || mode==2)
 	{
         //		myVideo.update();
 		
@@ -362,9 +401,25 @@ void testApp::draw(){
         ofPopStyle();
     }
 #endif
-#ifdef USE_SYPHON
-    server.publishScreen();
-#endif
+    
+    
+    if(timeline.getValue("PD_ON"))
+    {
+//        timeline.getValue("PD_START");
+        float x = timeline.getValue("PD_X")*ofGetWidth();
+        float y = timeline.getValue("PD_Y")*ofGetHeight();
+        float w = timeline.getValue("PD_WIDTH")*ofGetWidth();
+        float h = timeline.getValue("PD_HEIGHT")*ofGetHeight();
+        float a = timeline.getValue("PD_ALPHA")*255;
+        player.setVolume(timeline.getValue("PD_VOLUME"));
+        player.update();
+        ofPushStyle();
+        ofEnableAlphaBlending();
+        ofSetColor(255,a);
+        player.draw(x,y,w,h);
+        ofPopStyle();
+        
+    }
     if(videoEnabled->isOn() || mode==2)
 	{
 		
@@ -378,6 +433,10 @@ void testApp::draw(){
         //		myVideo.draw(512, 256, 256 , 256);
         //		sampler2dTex.draw(512, 512,256,256);
 	}
+
+#ifdef USE_SYPHON
+    server.publishScreen();
+#endif
 	if(toggleDraw)gui.draw();
     timeline.draw();
 }
@@ -414,9 +473,12 @@ void testApp::keyPressed(int key){
         case '6':
         case '7':
         {
+            if(!timeline.isModal())
+            {
             int index = key-'1';
             
             if(index<imageSequence.size())initVolumetrics(imageSequence[index]);
+            }
         }
             break;
     }
@@ -482,7 +544,7 @@ void testApp::saveSettings()
 
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
-    
+    mode = -1;
 }
 
 //--------------------------------------------------------------

@@ -1,17 +1,47 @@
 <keyframes>
     <key>
         <flag>0</flag>
-        <time>00:03:47:523</time>
-        <value>0.324999988</value>
+        <time>00:03:41:822</time>
+        <value>0.300000012</value>
     </key>
     <key>
         <flag>1</flag>
-        <time>00:04:26:562</time>
-        <value>0.375000000</value>
+        <time>00:05:03:893</time>
+        <value>0.324999988</value>
     </key>
     <key>
         <flag>2</flag>
-        <time>00:05:01:927</time>
-        <value>0.600000024</value>
+        <time>00:05:35:691</time>
+        <value>0.449999988</value>
+    </key>
+    <key>
+        <flag>0</flag>
+        <time>00:06:20:006</time>
+        <value>0.425000012</value>
+    </key>
+    <key>
+        <flag>2</flag>
+        <time>00:06:25:679</time>
+        <value>0.250000000</value>
+    </key>
+    <key>
+        <flag>2</flag>
+        <time>00:06:30:613</time>
+        <value>0.199999988</value>
+    </key>
+    <key>
+        <flag>0</flag>
+        <time>00:06:40:644</time>
+        <value>0.274999976</value>
+    </key>
+    <key>
+        <flag>1</flag>
+        <time>00:06:51:251</time>
+        <value>0.449999988</value>
+    </key>
+    <key>
+        <flag>2</flag>
+        <time>00:07:00:213</time>
+        <value>0.375000000</value>
     </key>
 </keyframes>

@@ -4,7 +4,7 @@
 
 #include "ofMain.h"
 #include "ofxSyphon.h"
-
+#include "ofxOsc.h"
 class testApp : public ofBaseApp{
 	
 public:
@@ -13,14 +13,14 @@ public:
 	void update();
 	void draw();
 	void keyPressed(int key);
-	ofQTKitPlayer a;
-    ofQTKitPlayer b;
-    ofQTKitPlayer *currentPlayer,*prev;
+	vector<ofQTKitPlayer>players;
+//    ofQTKitPlayer b;
+    ofQTKitPlayer *currentPlayer;//,*prev;
     
 	ofDirectory dir;
 	int currentIndex;
 	ofxSyphonServer mainOutputSyphonServer;
-	
+	ofxOscReceiver receiver;
 };
 #endif
 

@@ -24,46 +24,34 @@ public:
 class Ripple : public ofVec2f
 {
 public:
-    //	int size;
-    //	int thickness;
-    //	float   step;
-    //	int prevMillis;
-    //	int maxSize ;
 	Ripple()
 	{
         xSize = ofGetWidth();
         ySize = ofGetHeight();
         block  = 16;
-        yRes = 50;
-        xRes = 50;//block;
-        r0                 = new float*[yRes];
-        r1                 = new float*[yRes];
-        r2                 = new float*[yRes];
-        for(int i = 0 ; i < yRes ; i++)
+        yRes = ySize/block;
+        xRes = xSize/block;
+        r0                 = new float*[xRes];
+        r1                 = new float*[xRes];
+        r2                 = new float*[xRes];
+        for(int i = 0 ; i < xRes ; i++)
         {
-            r0[i]=	 new float[xRes];
-            r1[i]=	 new float[xRes];
-            r2[i]=	 new float[xRes];
+            r0[i]=	 new float[yRes];
+            r1[i]=	 new float[yRes];
+            r2[i]=	 new float[yRes];
             
         }
         _decay              = .9;  // the speed at which the waves decay (1.0 is no decay) (0.0 is instant decay to nothing)
         heightMulti        = .02;
-        for(int i = 0 ; i < yRes ; i++)
+        for(int i = 0 ; i < xRes ; i++)
         {
-            for(int j = 0 ; j < xRes ; j++)
+            for(int j = 0 ; j < yRes ; j++)
             {
                 r0[i][j] = 0;
                 r1[i][j] = 0;
                 r2[i][j] = 0;
             }
         }
-        //		size = 0;
-        //		step = ofRandom(0.01,0.05);
-        //		prevMillis = 0;
-        //		maxSize = (int)ofRandom(CAMW*0.5,CAMW);
-        //		x = ofRandom(0,CAMW);
-        //		y = ofRandom(0,CAMH*2);
-        //		thickness = ofRandom(1,3);
 	}
     void findRipples(){
         for (int y=1; y<yRes-1; y++){
@@ -86,12 +74,9 @@ public:
     void makeRipples(int x,  int y){
         xm = ofMap(x,0,ofGetWidth(),0,xRes-1);
         ym = ofMap(y,0,ofGetHeight(),0,yRes-1);
-//        printf("xm %f\n",xm);
-//        printf("ym %f\n",ymd);
         for (int y=1; y<yRes-1; y++){
             for (int x=1; x<xRes-1; x++){
                 float d = ofDist(xm,ym,x,y);
-                //printf("d %f\n",d);
                 if (d < 3){
                     
                     r1[x][y] -= pow(((3 - d)/3.0),2) * 2000.0;
@@ -105,9 +90,8 @@ public:
         {
             makeRipples(ofRandom(0,xSize*0.5),ofRandom(0,ySize));
         }
-            findRipples();
-            swapBuffers();
-//        }
+		findRipples();
+		swapBuffers();
     }
     void draw()
     {
@@ -115,27 +99,9 @@ public:
             for (int x=1; x<xRes-1; x++){
                 int c = ofMap(r0[x][y],0,100,0,255);
                 ofSetColor(c,c,c,c);
-                ofRect(x,y,1,1);
+                ofRect(x*block,y*block,1*block,1*block);
             }
         }
-        
-        //		float diffMillis = ofGetElapsedTimeMillis() - prevMillis;
-        //		prevMillis = ofGetElapsedTimeMillis();
-        //		size+=step*diffMillis;
-        //		if(size>maxSize)
-        //		{
-        //			x = ofRandom(0,CAMW);
-        //			y = ofRandom(0,CAMH*2);
-        //			size=0;
-        //		}
-        //		ofPushStyle();
-        //		ofNoFill();
-        //		ofSetColor(ofMap(maxSize-size,0,maxSize,0,255));
-        //		ofSetLineWidth(thickness);
-        //        ofCircle(x, y, size*0.2);
-        //        ofCircle(x, y, size*0.5);
-        //		ofCircle(x, y, size);
-        //		ofPopStyle();
     }
     float **r0;
     float **r1;

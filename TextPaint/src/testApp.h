@@ -51,6 +51,7 @@
 #include "ofTextConverter.h"
 #define PORT 12000
 #include "ofxAutoControlPanel.h"
+#include "ofxSyphon.h"
 class myCharactor
 {
 	public :
@@ -74,10 +75,10 @@ class myCharactor
 		tweenX.setParameters(0,easing,ofxTween::easeOut,v2.x,v2.x,0,0.);
 		tweenY.setParameters(0,easing,ofxTween::easeOut,v2.y,v2.y,0,0.);
 	}
-	void setNewPosition(ofVec2f v2)
+	void setNewPosition(ofVec2f v2,int delay = 0)
 	{
-		tweenX.setParameters(1,easing,ofxTween::easeOut,v2.x,offset.x,speed,0.);
-		tweenY.setParameters(1,easing,ofxTween::easeOut,v2.y,offset.y,speed,0.);
+		tweenX.setParameters(1,easing,ofxTween::easeOut,v2.x,offset.x,speed,delay);
+		tweenY.setParameters(1,easing,ofxTween::easeOut,v2.y,offset.y,speed,delay);
 	}
     ofPoint pos;
 	ofxTween tweenX;
@@ -130,7 +131,9 @@ class testApp : public ofBaseApp{
 	bool enabled,debug;
     void fadeOut();
     void fadeOut2();
-    
+    void fadeOut3();
+ofxSyphonServer server;
+    ofTexture screenTex;
 };
 
 #endif

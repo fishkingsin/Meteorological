@@ -45,7 +45,7 @@
         <value>0.475000024</value>
     </key>
     <key>
-        <max>00:05:12:519</max>
+        <max>00:05:15:282</max>
         <time>00:04:54:614</time>
         <value>0.550000012</value>
     </key>
@@ -148,5 +148,10 @@
         <max>00:07:19:947</max>
         <time>00:07:19:947</time>
         <value>0.475000024</value>
+    </key>
+    <key>
+        <max>00:07:24:651</max>
+        <time>00:07:22:130</time>
+        <value>0.774999976</value>
     </key>
 </keyframes>

@@ -1,7 +1,7 @@
 #include "testApp.h"
 
 string peggy1Serial = "/dev/tty.usbserial-AH0183W2";
-string peggy2Serial = "/dev/tty.usbserial-A7004E4F";
+string peggy2Serial = "/dev/tty.usbserial-A700eyrb";
 
 unsigned char peggyHeader[6] = {0xde,0xad,0xbe,0xef,1,0};
 unsigned char *peggyFrame;
@@ -455,12 +455,25 @@ void testApp::renderToPeggy( int display)
     // build an array to serialize to the peggy
     int start_y = (display==0)?0:NUM_LED;
     int end_y = (display==0)?NUM_LED:NUM_LED*NUM_PEGGY;
-    for (int y =start_y; y < end_y; y++)
+    for (int y =24; y >=0 ; y--)
     {
         unsigned val = 0;
-        for (int x=0; x < NUM_LED; x++)
+        for (int x=24; x >=0; x--)
         {
-            ofColor c = scaledPixels.getColor(y, x);
+
+//    for (int y =start_y; y < end_y; y++)
+//    {
+//        unsigned val = 0;
+//        for (int x=0; x < NUM_LED; x++)
+//        {
+            ofColor c;
+            if(display==0)
+            {
+                c = scaledPixels.getColor((y-24)*-1, (x-24)*-1);
+            }
+            else{
+                c = scaledPixels.getColor(y, x+25   );
+            }
             int br = ((int)c.getBrightness())>>4;
             if (x % 2 ==0)
                 val = (unsigned char)br;

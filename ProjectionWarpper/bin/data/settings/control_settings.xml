@@ -31,3 +31,9 @@
 <bEnableTriangleMesh>
     <val_0>0.000000000</val_0>
 </bEnableTriangleMesh>
+<MASK_SPEED>
+    <val_0>5.000000000</val_0>
+</MASK_SPEED>
+<ENABLE_MASK>
+    <val_0>1.000000000</val_0>
+</ENABLE_MASK>

@@ -20,3 +20,9 @@ Duration.app
 
 #ignore tif
 *.tif
+*.psd
+*._obj
+
+*.aif
+
+VolumetricsCamera/bin/data/volumes/TheVisibleMan_small/50%

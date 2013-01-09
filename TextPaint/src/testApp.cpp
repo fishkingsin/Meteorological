@@ -62,6 +62,9 @@ void testApp::setup(){
     
 	setupFromTextFile("data.txt");
 	count = 0;
+    ofSetWindowTitle("TextPaint");
+    server.setName("TextPaint");
+    screenTex.allocate(ofGetWidth(),ofGetHeight());
 }
 void testApp::initSettings()
 {
@@ -225,6 +228,8 @@ void testApp::draw(){
 			character[i].draw ( );
 		}
 	}
+    server.publishScreen();
+    screenTex.getS
 	if(debug)
 	{
 		tspsReceiver.draw(ofGetWidth(), ofGetHeight());
@@ -235,6 +240,7 @@ void testApp::draw(){
 		ofSetColor(255,0,0);
 		ofRect(input);
 	}
+    server.publishScreen();
 	ofPopStyle();
 	
 }
@@ -272,7 +278,7 @@ void testApp::fadeOut()
     for (int i = 0 ; i<character.size(); i++) {
         character[i].offset.set(character[i].offset.x,-ofRandom(100,ofGetHeight()));
         
-        character[i].setNewPosition(character[i].pos);
+        character[i].setNewPosition(character[i].pos,ofRandom(0,2000));
         character[i].speed = ofRandom(5000,10000);
     }
 }
@@ -280,9 +286,19 @@ void testApp::fadeOut2()
 {
     count = 0;
     for (int i = 0 ; i<character.size(); i++) {
-        character[i].offset.set(character[i].offset.x,ofRandom(100,ofGetHeight()));
+        character[i].offset.set(ofRandom(0,ofGetWidth()),ofGetHeight()+ofRandom(100,ofGetHeight()));
         
-        character[i].setNewPosition(character[i].pos);
+        character[i].setNewPosition(character[i].pos,ofRandom(0,2000));
+        character[i].speed = ofRandom(5000,10000);
+    }
+}
+void testApp::fadeOut3()
+{
+    count = 0;
+    for (int i = 0 ; i<character.size(); i++) {
+        character[i].offset.set(character[i].offset.x,ofGetHeight()+ofRandom(100,ofGetHeight()));
+        
+        character[i].setNewPosition(character[i].pos,ofRandom(0,2000));
         character[i].speed = ofRandom(5000,10000);
     }
 }
@@ -296,6 +312,10 @@ void testApp::keyPressed(int key){
     if(key=='2')
     {
         fadeOut2();
+    }
+    if(key=='3')
+    {
+        fadeOut3();
     }
     if(key==OF_KEY_RETURN)
     {

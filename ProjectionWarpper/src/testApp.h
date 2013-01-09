@@ -19,7 +19,7 @@
 #include "ofxAutoControlPanel.h"
 #include "InputPanel.h"
 #include "OutputPanel.h"
-#include "ofxTSPSReceiver.h"
+//#include "ofxTSPSReceiver.h"
 #include "ofxTriangleMesh.h"
 class testApp : public ofBaseApp {
     
@@ -48,9 +48,9 @@ public:
     ofxXmlSettings settings;
 
 	//syphon
-	ofxSyphonServer syphonServer;
+//	ofxSyphonServer syphonServer;
 	ofxSyphonClient syphonClient;
-	ofTexture tex;
+//	ofTexture tex;
 	//gui
 	ofxAutoControlPanel gui;
 	simpleLogger logger;
@@ -64,7 +64,8 @@ public:
 	guiTypeTextInput *outServName;
 	
 	
-	bool showGrid,bExtendScreen,showDemoPic,bSyphonServer,bSyphonClient;
+	bool showGrid,bExtendScreen,showDemoPic;//,bSyphonServer;
+    bool bSyphonClient,bMask;
 	
 	//Duration-----------------------------------------------------
 //	ofxDuration duration;
@@ -73,15 +74,15 @@ public:
 //	string ip;
 //	int port;
 	int WIDTH,HEIGHT,N_SCREEN;
-	
+
 	
 	//tri mesh
-	bool bEnableTriangleMesh;
-	ofxTSPS::Receiver tspsReceiver;
-	ofxTriangleMesh mesh;
-	void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
-	void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
-	void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
+//	bool bEnableTriangleMesh;
+//	ofxTSPS::Receiver tspsReceiver;
+//	ofxTriangleMesh mesh;
+//	void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
+//	void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
+//	void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
     ofImage mask;
 int maskHeight;
 };

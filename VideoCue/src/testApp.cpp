@@ -83,7 +83,7 @@ void testApp::update(){
                 currentPlayer = &players[currentIndex];
                 currentPlayer->play();
                 currentPlayer->setPosition(0);
-                temp->stop();
+                if(temp!=currentPlayer)temp->stop();
 
             }
 //            players.pop_front();

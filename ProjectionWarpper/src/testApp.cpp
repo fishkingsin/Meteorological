@@ -31,8 +31,9 @@ void testApp::setup(){
 		N_SCREEN = settings.getValue("N_SCREEN",2);
 		WIDTH = settings.getValue("WIDTH",1024);
 		HEIGHT = settings.getValue("HEIGHT",768);
+        
 		rm.allocateForNScreens(N_SCREEN,WIDTH,HEIGHT);
-		tex.allocate(WIDTH,HEIGHT,GL_RGB);
+//		tex.allocate(WIDTH,HEIGHT,GL_RGB);
 		rm.loadFromXml(settings.getValue("FBO_SETTING_PATH","fbo_settings.xml"));
 		img.loadImage(settings.getValue("IMAGE_FILE","game_of_thrones.jpg"));
 		mask.loadImage(settings.getValue("MASK_FILE","mask.png"));
@@ -51,9 +52,16 @@ void testApp::setup(){
 		gui.ofxControlPanel::addPanel("General", 1);
 		gui.setWhichPanel("General");
 		gui.addToggle("ExtendScreen", bExtendScreen) ;
+
+        for(int i = 0 ; i < N_SCREEN ; i++)
+        {
+            gui.addToggle("ENABLE_SCREEN_"+ofToString(i),true);
+        }
 		gui.addToggle("Grid", showGrid) ;
 		gui.addToggle("showDemoPic", showDemoPic) ;
-		gui.addToggle("bEnableTriangleMesh", bEnableTriangleMesh) ;
+//		gui.addToggle("bEnableTriangleMesh", bEnableTriangleMesh) ;
+        gui.addToggle("ENABLE_MASK", bMask) ;
+        
 		gui.addSlider("MaskSpeed", "MASK_SPEED", 5,1,50);
 		//	vector <string> list;
 		//	list.push_back("ExtendScreen");
@@ -69,17 +77,17 @@ void testApp::setup(){
 		gui.setWhichPanel("SyphonPanel");
 		outServName = gui.addTextInput("OutgoingServerName", "Syphon Server", 128);
 		gui.addToggle("SetOutServName", false) ;
-		inServName = gui.addTextInput("IncomingServerName", "VideoCue", 128);
-		inServAppName = gui.addTextInput("IncomingServerApplicationName", "VideoCue", 128);
+		inServName = gui.addTextInput("IncomingServerName", settings.getValue("INCOMING_SYPHON_SERVER","QLab"), 128);
+		inServAppName = gui.addTextInput("IncomingServerApplicationName", settings.getValue("INCOMING_SYPHON_SERVER_APPLICATION","QLab"), 128);
 		gui.addToggle("SetInServName", false) ;
 		
 		gui.addToggle("Enable_Incoming", false) ;
-		gui.addToggle("Enable_Outgoing", false) ;
+//		gui.addToggle("Enable_Outgoing", false) ;
 		vector <string> list;
 		list.push_back("SetOutServName");
 		list.push_back("SetInServName");
 		list.push_back("Enable_Incoming");
-		list.push_back("Enable_Outgoing");
+//		list.push_back("Enable_Outgoing");
 		gui.createEventGroup("SyphonEvent_GROUP", list);
 		ofAddListener(gui.getEventGroup("SyphonEvent_GROUP"), this, &testApp::SyphonEvent);
 		
@@ -106,7 +114,7 @@ void testApp::setup(){
 		gui.enableEvents();
 		gui.loadSettings(settings.getValue("GUI_SETTING_PATH","./settings/control_settings.xml"));
 		
-		syphonServer.setName(settings.getValue("OUTGOING_SYPHON_SERVER","Syphon Server"));
+//		syphonServer.setName(settings.getValue("OUTGOING_SYPHON_SERVER","Syphon Server"));
 		syphonClient.setup();
 		
 		syphonClient.setApplicationName(settings.getValue("INCOMING_SYPHON_SERVER_APPLICATION","QLab"));
@@ -117,9 +125,9 @@ void testApp::setup(){
 		ofLogError()<<" <SETTINGS> not found in config.xml!";
 	}
 	
-	tspsReceiver.connect(12000);
-	
-	ofxAddTSPSListeners(this);
+//	tspsReceiver.connect(12000);
+//	
+//	ofxAddTSPSListeners(this);
 	maskHeight = HEIGHT;
 }
 
@@ -127,7 +135,7 @@ void testApp::setup(){
 void testApp::SyphonEvent(guiCallbackData & data){
 	//	printf("testApp::SyphonEvent - name is %s - \n", data.getXmlName().c_str());
 	if( data.isElement( "SetOutServName" ) && data.getInt(0) == 1 ){
-		syphonServer.setName( outServName->getValueText() );
+//		syphonServer.setName( outServName->getValueText() );
 		gui.setValueB("SetOutServName", false);
 		logger.log(OF_LOG_NOTICE, "syphonServer.setName %s",outServName->getValueText().c_str() );
 		ofLogVerbose("syphonServer.setName ")<<outServName->getValueText();;
@@ -144,10 +152,10 @@ void testApp::SyphonEvent(guiCallbackData & data){
 	{
 		bSyphonClient = data.getInt(0);
 	}
-	else if( data.isElement( "Enable_Outgoing" ))
-	{
-		bSyphonServer = data.getInt(0);
-	}
+//	else if( data.isElement( "Enable_Outgoing" ))
+//	{
+////		bSyphonServer = data.getInt(0);
+//	}
 	
 }
 void testApp::eventsIn(guiCallbackData & data){
@@ -165,9 +173,9 @@ void testApp::eventsIn(guiCallbackData & data){
 	{
 		showDemoPic = data.getInt(0);
 	}
-	if(data.isElement("bEnableTriangleMesh"))
+	if(data.isElement("ENABLE_MASK"))
 	{
-		bEnableTriangleMesh = data.getInt(0);
+		bMask = data.getInt(0);
 	}
 	
 	//lets send all events to our logger
@@ -203,77 +211,77 @@ void testApp::eventsIn(guiCallbackData & data){
 }
 
 //called when the person enters the system
-//--------------------------------------------------------------
-void testApp::onPersonEntered( ofxTSPS::EventArgs & tspsEvent ){
-    ofLog(OF_LOG_NOTICE, "New person!");
-    // you can access the person like this:
-    // tspsEvent.person
-}
-
-//--------------------------------------------------------------
-void testApp::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
-    ofLog(OF_LOG_NOTICE, "Person updated!");
-	if(bEnableTriangleMesh)
-	{
-		ofxTSPS::Person* person = tspsEvent.person;
-		
-		ofPolyline lineRespaced;
-		for(int j = 0 ; j < person->contour.size() ; j++)
-		{
-			lineRespaced.addVertex(person->contour[j].x*WIDTH,person->contour[j].y*HEIGHT);
-		}
-		lineRespaced.addVertex(lineRespaced[0]);
-		
-		lineRespaced = lineRespaced.getResampledBySpacing(20);
-		// I want to make sure the first point and the last point are not the same, since triangle is unhappy:
-		lineRespaced.getVertices().erase(lineRespaced.getVertices().begin());
-		
-		// if we have a proper set of points, mesh them:
-		if (lineRespaced.size() > 5){
-			
-			mesh.triangulate(lineRespaced, -1, 200);
-			int num = mesh.triangulatedMesh.getNumVertices();
-			//apply texcoord
-			if(bSyphonClient){
-				for (int j = 0 ;  j < num ; j++)
-				{
-					ofVec2f v2= mesh.triangulatedMesh.getVertex(j);
+////--------------------------------------------------------------
+//void testApp::onPersonEntered( ofxTSPS::EventArgs & tspsEvent ){
+//    ofLog(OF_LOG_NOTICE, "New person!");
+//    // you can access the person like this:
+//    // tspsEvent.person
+//}
+//
+////--------------------------------------------------------------
+//void testApp::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
+//    ofLog(OF_LOG_NOTICE, "Person updated!");
+//	if(bEnableTriangleMesh)
+//	{
+//		ofxTSPS::Person* person = tspsEvent.person;
+//		
+//		ofPolyline lineRespaced;
+//		for(int j = 0 ; j < person->contour.size() ; j++)
+//		{
+//			lineRespaced.addVertex(person->contour[j].x*WIDTH,person->contour[j].y*HEIGHT);
+//		}
+//		lineRespaced.addVertex(lineRespaced[0]);
+//		
+//		lineRespaced = lineRespaced.getResampledBySpacing(20);
+//		// I want to make sure the first point and the last point are not the same, since triangle is unhappy:
+//		lineRespaced.getVertices().erase(lineRespaced.getVertices().begin());
+//		
+//		// if we have a proper set of points, mesh them:
+//		if (lineRespaced.size() > 5){
+//			
+//			mesh.triangulate(lineRespaced, -1, 200);
+//			int num = mesh.triangulatedMesh.getNumVertices();
+//			//apply texcoord
+//			if(bSyphonClient){
+//				for (int j = 0 ;  j < num ; j++)
+//				{
+//					ofVec2f v2= mesh.triangulatedMesh.getVertex(j);
+////					mesh.triangulatedMesh.addTexCoord(v2);
+//					ofVec2f n = v2;
+//                    n.x =(n.x/WIDTH)*syphonClient.getWidth();
+//                    n.y =syphonClient.getHeight()-((n.y/HEIGHT)*syphonClient.getHeight());
+//					mesh.triangulatedMesh.addTexCoord(n);
+//				}
+//			}
+//			else
+//			{
+//				for (int j = 0 ;  j < num ; j++)
+//				{
+//					ofVec2f v2= mesh.triangulatedMesh.getVertex(j);
 //					mesh.triangulatedMesh.addTexCoord(v2);
-					ofVec2f n = v2;
-                    n.x =(n.x/WIDTH)*syphonClient.getWidth();
-                    n.y =syphonClient.getHeight()-((n.y/HEIGHT)*syphonClient.getHeight());
-					mesh.triangulatedMesh.addTexCoord(n);
-				}
-			}
-			else
-			{
-				for (int j = 0 ;  j < num ; j++)
-				{
-					ofVec2f v2= mesh.triangulatedMesh.getVertex(j);
-					mesh.triangulatedMesh.addTexCoord(v2);
-					
-				}
-			}
-			//apply color
-			//			for(int i = 0 ; i <mesh.triangles.size() ; i++)
-			//			{
-			//				ofVec2f v2 = mesh.triangles[i].pts[0];
-			//				mesh.triangles[i].randomColor = vidGrabber.getPixelsRef().getColor(v2.x, v2.y);
-			//
-			//			}
-		}
-	}
-	
-	
-}
-
-//--------------------------------------------------------------
-void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
-    ofLog(OF_LOG_NOTICE, "Person left!");
-	
-	
-    
-}
+//					
+//				}
+//			}
+//			//apply color
+//			//			for(int i = 0 ; i <mesh.triangles.size() ; i++)
+//			//			{
+//			//				ofVec2f v2 = mesh.triangles[i].pts[0];
+//			//				mesh.triangles[i].randomColor = vidGrabber.getPixelsRef().getColor(v2.x, v2.y);
+//			//
+//			//			}
+//		}
+//	}
+//	
+//	
+//}
+//
+////--------------------------------------------------------------
+//void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
+//    ofLog(OF_LOG_NOTICE, "Person left!");
+//	
+//	
+//    
+//}
 #define NUM_BYTE 512
 //--------------------------------------------------------------
 void testApp::update(){
@@ -291,32 +299,36 @@ void testApp::update(){
 //	ofBackgroundGradient(ofColor(150), ofColor(0));
     ofBackground(0);
 	ofPopMatrix();
-	if(bEnableTriangleMesh)
-	{
-		
-		
-		ofPushMatrix();
-		if(bSyphonClient){
-			syphonClient.bind();
-			mesh.triangulatedMesh.drawFaces();
-			syphonClient.unbind();
-		}
-		else{
-            img.getTextureReference().bind();
-			mesh.draw();
-            img.getTextureReference().unbind();
-		}
-		ofPopMatrix();
-	}
-	else if(bSyphonClient) syphonClient.draw(0,0,WIDTH,HEIGHT);
-    ofPushStyle();
-    ofEnableAlphaBlending();
-    ofSetColor(0);
-    ofRect(0, 0, WIDTH, maskHeight);
-    ofSetColor(255);
-//	mask.draw(maskHeight,0,WIDTH,HEIGHT-maskHeight);
-    mask.draw(0,maskHeight,WIDTH,HEIGHT-maskHeight);
-    ofPopStyle();
+//	if(bEnableTriangleMesh)
+//	{
+//		
+//		
+//		ofPushMatrix();
+//		if(bSyphonClient){
+//			syphonClient.bind();
+////			mesh.triangulatedMesh.drawFaces();
+//			syphonClient.unbind();
+//		}
+//		else{
+//            img.getTextureReference().bind();
+////			mesh.draw();
+//            img.getTextureReference().unbind();
+//		}
+//		ofPopMatrix();
+//	}
+//	else
+    if(bSyphonClient) syphonClient.draw(0,0,WIDTH,HEIGHT);
+    if(bMask)
+    {
+        ofPushStyle();
+        ofEnableAlphaBlending();
+        ofSetColor(0);
+        ofRect(0, 0, WIDTH, maskHeight);
+        ofSetColor(255);
+    //	mask.draw(maskHeight,0,WIDTH,HEIGHT-maskHeight);
+        mask.draw(0,maskHeight,WIDTH,HEIGHT-maskHeight);
+        ofPopStyle();
+    }
 	if(showDemoPic)img.draw(0,0,WIDTH,HEIGHT);
 	if(showGrid)
 	{
@@ -328,12 +340,14 @@ void testApp::update(){
 		//vertical line
 		for(int i = 0; i <= WIDTH ;i+=40){
 			if(i%2==0)ofSetColor(255,255,255);
+            else ofSetColor(255,0,255);
 			ofLine(i, 0, i, HEIGHT);
 		}
 		
 		//horizontal lines
 		for(int j = 0; j <=HEIGHT; j+=40){
 			if(j%2==0)ofSetColor(255,255,255);
+            else ofSetColor(255,0,255);
 			ofLine(0, j, WIDTH, j);
 		}
 		ofPopStyle();
@@ -353,7 +367,15 @@ void testApp::draw(){
     ofSetColor(255);
 	ofPushMatrix();
 	ofTranslate(gui.getValueI("SCREEN_POSTION",0), gui.getValueI("SCREEN_POSTION",1));
-	rm.drawScreens();
+    for(int i = 0 ; i < N_SCREEN ; i++)
+    {
+        if(gui.getValueB("ENABLE_SCREEN_"+ofToString(i)))
+       {
+           rm.drawScreen(i);
+       }
+    }
+
+//	rm.drawScreens();
 	ofPopMatrix();
 	if(bExtendScreen)
 	{
@@ -383,8 +405,8 @@ void testApp::draw(){
 	}
 	if(bSyphonClient)
 	{
-		tex.loadScreenData(0,0,WIDTH,HEIGHT);
-		syphonServer.publishTexture(&tex);
+//		tex.loadScreenData(0,0,WIDTH,HEIGHT);
+//		syphonServer.publishTexture(&tex);
 	}
 	
     

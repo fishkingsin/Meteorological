@@ -1,13 +1,13 @@
 <keyframes>
     <key>
-        <flag>02.mov</flag>
-        <time>00:03:41:822</time>
-        <value>0.406506658</value>
+        <flag>1</flag>
+        <time>00:04:20:764</time>
+        <value>0.399657369</value>
     </key>
     <key>
         <flag>2</flag>
-        <time>00:05:12:949</time>
-        <value>0.363356054</value>
+        <time>00:05:10:763</time>
+        <value>0.349657476</value>
     </key>
     <key>
         <flag>3</flag>
@@ -48,5 +48,10 @@
         <flag>1</flag>
         <time>00:07:03:420</time>
         <value>0.500000000</value>
+    </key>
+    <key>
+        <flag>4</flag>
+        <time>00:07:22:557</time>
+        <value>0.267123282</value>
     </key>
 </keyframes>

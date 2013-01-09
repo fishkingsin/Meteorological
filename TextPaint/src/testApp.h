@@ -1,7 +1,7 @@
 /**
  *  testApp.h
  *  ofxTSPSReceiver example
- *  
+ *
  * Created by James George, http://www.jamesgeorge.org
  * in collaboration with FlightPhase http://www.flightphase.com
  * and the Lab at the Rockwell Group http://lab.rockwellgroup.com
@@ -57,7 +57,7 @@ class myCharactor
 	public :
 	myCharactor()
 	{
-		speed = 1000;
+		speed = ofRandom(500,2000);
 	}
 	void update()
 	{
@@ -90,12 +90,12 @@ class myCharactor
 	int speed;
 };
 class testApp : public ofBaseApp{
-
-  public:
+    
+public:
 	void setup();
 	void update();
 	void draw();
-
+    
 	void keyPressed  (int key);
 	void keyReleased(int key);
 	void mouseMoved(int x, int y );
@@ -123,6 +123,8 @@ class testApp : public ofBaseApp{
 	//control panel
 	ofxAutoControlPanel gui;
 	ofxXmlSettings settings;
+    simpleFileLister lister;
+    int currentSelectedText;
 	void eventsIn(guiCallbackData & data);
 	void initSettings();
 	void resetOutputDimension();
@@ -132,8 +134,10 @@ class testApp : public ofBaseApp{
     void fadeOut();
     void fadeOut2();
     void fadeOut3();
-ofxSyphonServer server;
+    void fadeOut4();
+    ofxSyphonServer server;
     ofTexture screenTex;
+    vector<string>files;;
 };
 
 #endif

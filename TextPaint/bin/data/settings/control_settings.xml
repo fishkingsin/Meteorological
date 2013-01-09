@@ -6,8 +6,8 @@
     <val_1>460.800018311</val_1>
 </INPUT_POSITION>
 <INPUT_SIZE>
-    <val_0>1090.559936523</val_0>
-    <val_1>218.880004883</val_1>
+    <val_0>829.440063477</val_0>
+    <val_1>264.959991455</val_1>
 </INPUT_SIZE>
 <ENABLE>
     <val_0>1.000000000</val_0>
@@ -20,6 +20,6 @@
     <val_1>57.600002289</val_1>
 </OUTPUT_POSITION>
 <OUTPUT_SIZE>
-    <val_0>1075.199951172</val_0>
-    <val_1>760.320007324</val_1>
+    <val_0>614.400024414</val_0>
+    <val_1>714.239990234</val_1>
 </OUTPUT_SIZE>

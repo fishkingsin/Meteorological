@@ -60,11 +60,11 @@ void testApp::setup(){
 	ofxAddTSPSListeners(this);
     initSettings();
     
-	setupFromTextFile("data.txt");
+	setupFromTextFile(lister.getPath(0));
 	count = 0;
     ofSetWindowTitle("TextPaint");
     server.setName("TextPaint");
-    screenTex.allocate(ofGetWidth(),ofGetHeight());
+//    screenTex.allocate(ofGetWidth(),ofGetHeight());
 }
 void testApp::initSettings()
 {
@@ -83,6 +83,18 @@ void testApp::initSettings()
 		gui.ofxControlPanel::addPanel("General", 3);
 		gui.addToggle("Enable", "ENABLE", false);
 		gui.addToggle("Debug", "DEBUG", false);
+        
+//        ofDirectory dir;
+//        dir.allowExt("txt");
+//        int num = dir.listDir("./text");
+//		for (int  i  = 0 ; i < num; i++) {
+//            files.push_back(dir.getPath(i));
+//            
+//        }
+        lister.listDir("text/");
+        currentSelectedText = 0;
+        gui.addFileLister("TEXT_LISTER", &lister, 200, 300);
+        
 		gui.setWhichPanel("General");
 		gui.setWhichColumn(0);
 		gui.addSlider("FadeIntSpeed", "FADE_IN_SPEED", 7000, 1.0, 10000, true);
@@ -99,7 +111,7 @@ void testApp::initSettings()
 		gui.setupEvents();
 		gui.enableEvents();
 		gui.loadSettings(settings.getValue("GUI_SETTING_PATH","./settings/control_settings.xml"));
-		
+        
 	}
 	else
 	{
@@ -139,6 +151,11 @@ void testApp::eventsIn(guiCallbackData & data){
 	else if( data.isElement( "DEBUG" ) ){
 		debug = data.getInt(0);
 	}
+    else if( data.isElement( "TEXT_LISTER" ) ){
+        ofLogVerbose("TEXT_LISTER") << data.getString(0);
+        currentSelectedText = data.getInt(0);
+//        setupFromTextFile(lister.getPath(currentSelectedText));
+	}
 	
 }
 void testApp::resetOutputDimension()
@@ -148,8 +165,22 @@ void testApp::resetOutputDimension()
 	if(maxChar>0)
 	{
 		int step = 0;
+//        cout << "setup charactor position "<<endl;
 		for (int i = 0 ; i<character.size(); i++) {
-			character[i].offset.set(output.x+(step%maxChar)*fontSize,output.y+(step/maxChar*1.0f)*fontSize*1.1);
+//            cout << character[i].charUC << "|";
+            
+             if(character[i].charUC=="\n" || character[i].charUC=="\r")
+            {
+                int temp = step%maxChar;
+                step+=maxChar;
+                step -= temp;
+                character[i].offset.set(output.x+(step%maxChar)*fontSize,output.y+(step/maxChar*1.0f)*fontSize*1.1);
+            }
+			else
+            {
+                
+                character[i].offset.set(output.x+(step%maxChar)*fontSize,output.y+(step/maxChar*1.0f)*fontSize*1.1);
+            }
 			//		character[i].offset.set(output.x,output.y);
 			step++;
 		}
@@ -182,11 +213,11 @@ void testApp::setupFromTextFile(string file_path)
 void testApp::updateCharactorPosition(float x ,float y)
 {
 	
-	character[count].setNewPosition(ofVec2f(x,y));
-	count++;
+
 	if(count == character.size())
 	{
-        fadeOut();
+//        count = 0;
+        //fadeOut();
 //		count = 0;
 		//do something
 		
@@ -198,6 +229,10 @@ void testApp::updateCharactorPosition(float x ,float y)
 //		}
 		//or load other file
 	}
+    else{
+        character[count].setNewPosition(ofVec2f(x,y));
+        count++;
+    }
 }
 //--------------------------------------------------------------
 void testApp::update(){
@@ -228,8 +263,8 @@ void testApp::draw(){
 			character[i].draw ( );
 		}
 	}
-    server.publishScreen();
-    screenTex.getS
+//    server.publishScreen();
+//    screenTex.getS
 	if(debug)
 	{
 		tspsReceiver.draw(ofGetWidth(), ofGetHeight());
@@ -274,7 +309,7 @@ void testApp::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
 
 void testApp::fadeOut()
 {
-    count = 0;
+    
     for (int i = 0 ; i<character.size(); i++) {
         character[i].offset.set(character[i].offset.x,-ofRandom(100,ofGetHeight()));
         
@@ -284,7 +319,7 @@ void testApp::fadeOut()
 }
 void testApp::fadeOut2()
 {
-    count = 0;
+//    count = 0;
     for (int i = 0 ; i<character.size(); i++) {
         character[i].offset.set(ofRandom(0,ofGetWidth()),ofGetHeight()+ofRandom(100,ofGetHeight()));
         
@@ -294,13 +329,16 @@ void testApp::fadeOut2()
 }
 void testApp::fadeOut3()
 {
-    count = 0;
+//    count = 0;
     for (int i = 0 ; i<character.size(); i++) {
         character[i].offset.set(character[i].offset.x,ofGetHeight()+ofRandom(100,ofGetHeight()));
         
         character[i].setNewPosition(character[i].pos,ofRandom(0,2000));
         character[i].speed = ofRandom(5000,10000);
     }
+}
+void testApp::fadeOut4()
+{
 }
 
 //--------------------------------------------------------------
@@ -317,9 +355,24 @@ void testApp::keyPressed(int key){
     {
         fadeOut3();
     }
+    if(key=='4')
+    {
+        fadeOut3();
+    }
+    if (key == OF_KEY_RIGHT)
+    {
+        currentSelectedText++;
+        currentSelectedText%=lister.getNumEntries();
+    }
+    if (key == OF_KEY_LEFT)
+    {
+        currentSelectedText--;
+        if(currentSelectedText<0)currentSelectedText=lister.getNumEntries()-1;
+    }
     if(key==OF_KEY_RETURN)
     {
-        setupFromTextFile("data.txt");
+        setupFromTextFile(lister.getPath(currentSelectedText));
+//        setupFromTextFile("text/data.txt");
     }
 }
 

@@ -100,4 +100,11 @@ public:
     //pilling drive
     ofVideoPlayer player;
     ofxOscSender sender;
+    
+    //mask
+    ofImage mask;
+    int maskHeight;
+    
+    //color control shader
+    ofShader colorControl;
 };

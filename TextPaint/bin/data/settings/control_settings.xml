@@ -1,25 +1,25 @@
 <FADE_IN_SPEED>
-    <val_0>4167.250000000</val_0>
+    <val_0>8055.750488281</val_0>
 </FADE_IN_SPEED>
 <INPUT_POSITION>
     <val_0>0.000000000</val_0>
-    <val_1>460.800018311</val_1>
+    <val_1>552.960021973</val_1>
 </INPUT_POSITION>
 <INPUT_SIZE>
-    <val_0>829.440063477</val_0>
-    <val_1>264.959991455</val_1>
+    <val_0>403.199981689</val_0>
+    <val_1>122.879997253</val_1>
 </INPUT_SIZE>
 <ENABLE>
     <val_0>1.000000000</val_0>
 </ENABLE>
 <DEBUG>
-    <val_0>1.000000000</val_0>
+    <val_0>0.000000000</val_0>
 </DEBUG>
 <OUTPUT_POSITION>
     <val_0>0.000000000</val_0>
-    <val_1>57.600002289</val_1>
+    <val_1>0.000000000</val_1>
 </OUTPUT_POSITION>
 <OUTPUT_SIZE>
-    <val_0>614.400024414</val_0>
-    <val_1>714.239990234</val_1>
+    <val_0>380.160003662</val_0>
+    <val_1>552.960021973</val_1>
 </OUTPUT_SIZE>

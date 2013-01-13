@@ -5,7 +5,7 @@
 class Ball {
     
 public:
-
+    
     Ball(int _x, int _y, float _mWidth, float _mHeight , float vx, float vy) {
         x = _x;
         y = _y;
@@ -16,7 +16,7 @@ public:
         mHeight = _mHeight;
         len = NUM_TAIL;
         bBounce = false;
-
+        
     }
     
     //--------------------------------------
@@ -24,20 +24,39 @@ public:
     void calc() {
         if(bBounce)
         {
-        if (x < 0 || x > mWidth)  xDir *= -1;
-        if (y < 0 || y > mHeight) yDir *= -1;
+            if (x < 0 || x > mWidth)  xDir *= -1;
+            if (y < 0 || y > mHeight) yDir *= -1;
         }
         else
         {
-            (x < -1 )? x = mWidth: (x > mWidth+1)?x=0:x;
-            (y < -1 )? x = mHeight: (y > mHeight+1)?y=0:y;
+            if(x < -1 )
+            {
+                x = mWidth;
+                y = ofRandom(mHeight);
+            }
+            else if (x > mWidth+1)
+            {
+                x=0;
+                y = ofRandom(mHeight);
+            }
+            
+            if(y < -1 )
+            {
+                y = mHeight;
+                x = ofRandom(mWidth);
+            }
+            else if(y > mHeight+1)
+            {
+                y=0;
+                x = ofRandom(mWidth);
+            }
         }
         x += xDir;
         y += yDir;
         
         for (int i = 1; i < len; i++)
         {
-           tail[i-1] = tail[i];
+            tail[i-1] = tail[i];
         }
         
         tail[len-1].set(x, y);
@@ -58,7 +77,7 @@ public:
             ofFill();
             ofRect(tail[i],r,r);
             ofPopStyle();
-
+            
         }
         ofPopStyle();
     }

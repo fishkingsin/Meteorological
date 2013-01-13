@@ -36,14 +36,14 @@ void testApp::setup(){
 //		tex.allocate(WIDTH,HEIGHT,GL_RGB);
 		rm.loadFromXml(settings.getValue("FBO_SETTING_PATH","fbo_settings.xml"));
 		img.loadImage(settings.getValue("IMAGE_FILE","game_of_thrones.jpg"));
-		mask.loadImage(settings.getValue("MASK_FILE","mask.png"));
+//		mask.loadImage(settings.getValue("MASK_FILE","mask.png"));
 		
-		//	duration.setup(settings.getValue("PORT",12345));
-		//
-		//	duration.setupFont(settings.getValue("FONT","GUI/NewMedia Fett.ttf"), 12);
-		//ofxDuration is an OSC receiver, with special functions to listen for Duration specific messages
-		//optionally set up a font for debugging
-		//	ofAddListener(duration.events.trackUpdated, this, &testApp::trackUpdated);
+	duration.setup(settings.getValue("PORT",12345));
+
+	duration.setupFont(settings.getValue("FONT","GUI/NewMedia Fett.ttf"), 12);
+//ofxDuration is an OSC receiver, with special functions to listen for Duration specific messages
+//optionally set up a font for debugging
+	ofAddListener(duration.events.trackUpdated, this, &testApp::trackUpdated);
 		
 		
 		
@@ -52,15 +52,17 @@ void testApp::setup(){
 		gui.ofxControlPanel::addPanel("General", 1);
 		gui.setWhichPanel("General");
 		gui.addToggle("ExtendScreen", bExtendScreen) ;
-
+        
         for(int i = 0 ; i < N_SCREEN ; i++)
         {
             gui.addToggle("ENABLE_SCREEN_"+ofToString(i),true);
+            screen_alpha.push_back(255);
         }
 		gui.addToggle("Grid", showGrid) ;
+        gui.addToggle("showAlign", false) ;
 		gui.addToggle("showDemoPic", showDemoPic) ;
 //		gui.addToggle("bEnableTriangleMesh", bEnableTriangleMesh) ;
-        gui.addToggle("ENABLE_MASK", bMask) ;
+//        gui.addToggle("ENABLE_MASK", bMask) ;
         
 		gui.addSlider("MaskSpeed", "MASK_SPEED", 5,1,50);
 		//	vector <string> list;
@@ -94,8 +96,8 @@ void testApp::setup(){
 		gui.ofxControlPanel::addPanel("RenderManager", 1);
 		gui.setWhichPanel("RenderManager");
 		gui.addSlider2D("Screen Position", "SCREEN_POSTION", 0,0,
-						0, ofGetScreenWidth(),
-						0, ofGetScreenHeight(),true);
+						-100, ofGetScreenWidth(),
+						-100, ofGetScreenHeight(),true);
 		gui.ofxControlPanel::addPanel("InputPanel", 1);
 		gui.setWhichPanel("InputPanel");
 		inputPanel = new InputPanel(&rm);
@@ -128,9 +130,25 @@ void testApp::setup(){
 //	tspsReceiver.connect(12000);
 //	
 //	ofxAddTSPSListeners(this);
-	maskHeight = HEIGHT;
+//	maskHeight = HEIGHT;
 }
+void testApp::trackUpdated(ofxDurationEventArgs& args){
+	ofLogVerbose("Duration Event") << "track type " << args.track->type << " updated with name " << args.track->name << " and value " << args.track->value << endl;
+    if(args.track->type == "Curves")
+    {
+        if(args.track->name.find("screen_")!=string::npos)
+        {
+            string n = args.track->name.substr(strlen("screen_")+1,string::npos).c_str();
 
+            int nscreen = atoi(n.c_str());
+            
+            if(nscreen >= 0 && nscreen < screen_alpha.size())
+            {
+                screen_alpha[nscreen] = ofMap(args.track->value, args.track->range.min, args.track->range.max,0,255);
+            }
+        }
+    }
+}
 //--------------------------------------------------------------
 void testApp::SyphonEvent(guiCallbackData & data){
 	//	printf("testApp::SyphonEvent - name is %s - \n", data.getXmlName().c_str());
@@ -168,15 +186,22 @@ void testApp::eventsIn(guiCallbackData & data){
 	{
 		showGrid = data.getInt(0);
 		//		gui.setValueB("Grid", false);
+        rm.myOffscreenTexture.bDebug = data.getInt(0);
+
+	}
+    if( data.isElement( "showAlign" ) )
+	{
+        rm.myOffscreenTexture.bDebug = data.getInt(0);
+        
 	}
 	if(data.isElement("showDemoPic"))
 	{
 		showDemoPic = data.getInt(0);
 	}
-	if(data.isElement("ENABLE_MASK"))
-	{
-		bMask = data.getInt(0);
-	}
+//	if(data.isElement("ENABLE_MASK"))
+//	{
+//		bMask = data.getInt(0);
+//	}
 	
 	//lets send all events to our logger
 	if( !data.isElement( "events logger" ) ){
@@ -318,17 +343,17 @@ void testApp::update(){
 //	}
 //	else
     if(bSyphonClient) syphonClient.draw(0,0,WIDTH,HEIGHT);
-    if(bMask)
-    {
-        ofPushStyle();
-        ofEnableAlphaBlending();
-        ofSetColor(0);
-        ofRect(0, 0, WIDTH, maskHeight);
-        ofSetColor(255);
-    //	mask.draw(maskHeight,0,WIDTH,HEIGHT-maskHeight);
-        mask.draw(0,maskHeight,WIDTH,HEIGHT-maskHeight);
-        ofPopStyle();
-    }
+//    if(bMask)
+//    {
+//        ofPushStyle();
+//        ofEnableAlphaBlending();
+//        ofSetColor(0);
+//        ofRect(0, 0, WIDTH, maskHeight);
+//        ofSetColor(255);
+//    //	mask.draw(maskHeight,0,WIDTH,HEIGHT-maskHeight);
+//        mask.draw(0,maskHeight,WIDTH,HEIGHT-maskHeight);
+//        ofPopStyle();
+//    }
 	if(showDemoPic)img.draw(0,0,WIDTH,HEIGHT);
 	if(showGrid)
 	{
@@ -371,7 +396,11 @@ void testApp::draw(){
     {
         if(gui.getValueB("ENABLE_SCREEN_"+ofToString(i)))
        {
+           ofPushStyle();
+           ofEnableAlphaBlending();
+           ofSetColor(255,screen_alpha[i]);
            rm.drawScreen(i);
+           ofPopStyle();
        }
     }
 
@@ -432,12 +461,12 @@ void testApp::keyPressed(int key){
 			case 'd':rm.resetCoordinates();
 				break;
 
-            case OF_KEY_UP:
-                maskHeight-=gui.getValueF("MASK_SPEED");
-                break;
-            case OF_KEY_DOWN:
-                maskHeight+=gui.getValueF("MASK_SPEED");
-                break;
+//            case OF_KEY_UP:
+//                maskHeight-=gui.getValueF("MASK_SPEED");
+//                break;
+//            case OF_KEY_DOWN:
+//                maskHeight+=gui.getValueF("MASK_SPEED");
+//                break;
 		}
 	}
 	

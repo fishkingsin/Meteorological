@@ -53,6 +53,7 @@ void testApp::initVolumetrics(ofxImageSequencePlayer &_imageSequence)
 }
 //--------------------------------------------------------------
 void testApp::setup(){
+    ofSetEscapeQuitsApp(false);`
     toggleDraw = false;
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetFrameRate(60);
@@ -120,10 +121,20 @@ void testApp::setup(){
     bVolumeSetup = false;
     if(imageSequence.size()>0)initVolumetrics(imageSequence[0]);
     
+    mask.loadImage("mask.png");
+    maskHeight = ofGetHeight();
+    
+    
     player.loadMovie("movies/pilling_drive.mov");
     player.play();
     player.setLoopState(OF_LOOP_NORMAL);
     player.setPaused(true);
+    
+    colorControl.load("shaders/colorcontrol");
+    colorControl.begin();
+    colorControl.setUniform1i("tex", 0);
+    colorControl.end();
+    
     cam.setup();
 	cam.speed = 10;
 	cam.autosavePosition = true;
@@ -163,6 +174,8 @@ void testApp::populateTimelineElements(){
 	timeline.addTrack("Camera", &cameraTrack);
     timeline.addTrack("Track", &waveform);
 	timeline.addFlags("SyphonServer");
+    timeline.addCurves("MASK",ofRange(0,ofGetHeight()),ofGetHeight());
+    
     timeline.addPage("Cue");
 	
     volumeEnabled = timeline.addSwitches("VolumeEnabled");
@@ -191,6 +204,13 @@ void testApp::populateTimelineElements(){
     timeline.addCurves("PD_Y");
     timeline.addCurves("PD_WIDTH");
     timeline.addCurves("PD_HEIGHT");
+    
+    timeline.addPage("ColorContrl");
+    timeline.addCurves("brightness", ofRange(0.0, 2.0), 1.0);
+    timeline.addCurves("contrast", ofRange(.5, 2.0), 1.0);
+    timeline.addCurves("saturation", ofRange(0.0, 1.5), 1.0);
+    timeline.addSwitches("invert");
+    
 	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
 	
 	cameraTrack.setup();
@@ -255,7 +275,7 @@ void testApp::update(){
     if(logl==OF_LOG_VERBOSE)
     {
         ofDrawGrid();
-//        ofDrawAxis(500);
+        //        ofDrawAxis(500);
     }
     //    volumeEnabled = timeline.getValue("VolumeEnabled");
     //    modelEnabled = timeline.getValue("3DModelFile");
@@ -348,6 +368,8 @@ void testApp::draw(){
     ofClear(0);
     //    ofPushView();
     {
+        
+        
         //        ofViewport(viewportGameCam);
         //        ofSetupScreen();
         cam.begin();
@@ -405,7 +427,7 @@ void testApp::draw(){
     
     if(timeline.getValue("PD_ON"))
     {
-//        timeline.getValue("PD_START");
+        //        timeline.getValue("PD_START");
         float x = timeline.getValue("PD_X")*ofGetWidth();
         float y = timeline.getValue("PD_Y")*ofGetHeight();
         float w = timeline.getValue("PD_WIDTH")*ofGetWidth();
@@ -422,17 +444,31 @@ void testApp::draw(){
     }
     if(videoEnabled->isOn() || mode==2)
 	{
-		
+		colorControl.begin();
+        colorControl.setUniform1f("brightness", timeline.getValue("brightness"));
+        colorControl.setUniform1f("contrast", timeline.getValue("contrast"));
+        colorControl.setUniform1f("saturation", timeline.getValue("saturation"));
+        colorControl.setUniform1i("invert", (timeline.isSwitchOn("invert") ? 1 : 0) );
+        colorControl.setUniform1f("alpha", timeline.getValue("VideoAlpha") );
         ofPushStyle();
 		ofDisableNormalizedTexCoords();
-        ofSetColor(255, 255*timeline.getValue("VideoAlpha"));
+//        ofSetColor(255, 255*timeline.getValue("VideoAlpha"));
         //        myVideo.draw(0,0,ofGetWidth(),ofGetHeight());
 		client.draw(0,0,ofGetWidth(),ofGetHeight());
 		ofEnableNormalizedTexCoords();
         ofPopStyle();
         //		myVideo.draw(512, 256, 256 , 256);
         //		sampler2dTex.draw(512, 512,256,256);
+            colorControl.end();
 	}
+    ofPushStyle();
+    ofEnableAlphaBlending();
+    ofSetColor(0);
+    maskHeight = timeline.getValue("MASK");
+    ofRect(0, 0, ofGetWidth(), maskHeight);
+    ofSetColor(255);
+    mask.draw(0,maskHeight,ofGetWidth(),ofGetHeight()-maskHeight);
+    ofPopStyle();
 
 #ifdef USE_SYPHON
     server.publishScreen();
@@ -475,9 +511,9 @@ void testApp::keyPressed(int key){
         {
             if(!timeline.isModal())
             {
-            int index = key-'1';
-            
-            if(index<imageSequence.size())initVolumetrics(imageSequence[index]);
+                int index = key-'1';
+                
+                if(index<imageSequence.size())initVolumetrics(imageSequence[index]);
             }
         }
             break;

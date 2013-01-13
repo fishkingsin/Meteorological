@@ -138,6 +138,8 @@ public:
     ofxSyphonServer server;
     ofTexture screenTex;
     vector<string>files;;
+    ofVideoPlayer player;
+    string screen_output;
 };
 
 #endif

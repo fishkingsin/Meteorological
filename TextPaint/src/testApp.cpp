@@ -65,6 +65,10 @@ void testApp::setup(){
     ofSetWindowTitle("TextPaint");
     server.setName("TextPaint");
 //    screenTex.allocate(ofGetWidth(),ofGetHeight());
+    player.loadMovie("movies/on_stage.mov");
+    player.play();
+    player.setPaused(true);
+    player.setLoopState(OF_LOOP_NONE);
 }
 void testApp::initSettings()
 {
@@ -164,25 +168,51 @@ void testApp::resetOutputDimension()
 	int maxChar = (output.width)/fontSize*1.0;
 	if(maxChar>0)
 	{
-		int step = 0;
+//		int step = 0;
+        ofPoint pos;
+        pos.y+=fontSize;
 //        cout << "setup charactor position "<<endl;
 		for (int i = 0 ; i<character.size(); i++) {
 //            cout << character[i].charUC << "|";
+            //http://stackoverflow.com/questions/5012803/test-if-char-string-contains-multibyte-characters
+            ofRectangle cSize = font.getStringBoundingBox(character[i].charUC, 0, 0);
+            float isAlpha = ((character[i].charUC[0] >> 8))?1.3:1;//check if data is UTF-8, then you just have to check the high bit:
             
-             if(character[i].charUC=="\n" || character[i].charUC=="\r")
-            {
-                int temp = step%maxChar;
-                step+=maxChar;
-                step -= temp;
-                character[i].offset.set(output.x+(step%maxChar)*fontSize,output.y+(step/maxChar*1.0f)*fontSize*1.1);
-            }
-			else
+            
+//            if()
+//            {
+//                pos.x = output.x;
+//                pos.y += fontSize;
+//            }
+            
+
+            if(character[i].charUC=="\n" || character[i].charUC=="\r" ||  output.width+output.x<pos.x )
             {
                 
-                character[i].offset.set(output.x+(step%maxChar)*fontSize,output.y+(step/maxChar*1.0f)*fontSize*1.1);
+//                int temp = step%maxChar;
+//                step+=maxChar;
+//                step -= temp;
+                pos.x = output.x;
+//                pos.y += fontSize;
+//                character[i].offset.set(pos,output.y+(step/maxChar*1.0f)*fontSize*1.1);
+                pos.y+=(fontSize*1.3 );
+//            }
+//             else if( output.width+output.x<pos.x )//|| step%maxChar==0)
+//            {
+//                pos.y+=(fontSize*1.2);
+//                pos.x = output.x;
             }
+            //pos.y = fontSize+output.y+(step/maxChar*1.0f)*fontSize;
+              character[i].offset.set(pos.x,pos.y);
 			//		character[i].offset.set(output.x,output.y);
-			step++;
+//			step++;
+            if(character[i].charUC==" " || ispunct(character[i].charUC[0]))
+            {
+                pos.x += output.x+fontSize;
+            }
+            else{
+                pos.x += output.x+cSize.width*1.2;//((cSize.width<10)?fontSize:cSize.width);
+            }
 		}
 	}
 }
@@ -196,7 +226,7 @@ void testApp::setupFromTextFile(string file_path)
 	ofUniString uni = ofTextConverter::toUTF32(buf.getText());
 	count = 0;
 	string utf8_1_out;
-	
+	screen_output = ofTextConverter::toUTF8(uni);
 	character.clear();
 	character.assign(uni.size(), myCharactor());
 	for (int i = 0 ; i<uni.size(); i++) {
@@ -212,7 +242,7 @@ void testApp::setupFromTextFile(string file_path)
 }
 void testApp::updateCharactorPosition(float x ,float y)
 {
-	
+
 
 	if(count == character.size())
 	{
@@ -238,6 +268,7 @@ void testApp::updateCharactorPosition(float x ,float y)
 void testApp::update(){
 	if(enabled)
 	{
+            player.update();
 		for(int i = 0 ; i < character.size() ; i++)
 		{
 			
@@ -255,6 +286,7 @@ void testApp::draw(){
 	ofPushStyle();
 	//
     ofSetColor(255);
+    player.draw(output.x,output.y);
 	if(enabled)
 	{
 		for(int i = 0 ; i < character.size() ; i++)
@@ -269,13 +301,18 @@ void testApp::draw(){
 	{
 		tspsReceiver.draw(ofGetWidth(), ofGetHeight());
 		
+        ofPushStyle();
+        ofSetLineWidth(5);
 		ofNoFill();
 		ofSetColor(0,255,0);
 		ofRect(output);
 		ofSetColor(255,0,0);
 		ofRect(input);
+        ofPopStyle();
 	}
     server.publishScreen();
+//    ofRectangle rect = font.getStringBoundingBox(screen_output, 0, 0);
+    font.drawString(screen_output,fontSize+output.x+output.width,output.y+fontSize);
 	ofPopStyle();
 	
 }
@@ -359,6 +396,16 @@ void testApp::keyPressed(int key){
     {
         fadeOut3();
     }
+    if(key=='5')
+    {
+        player.setPosition(0);
+        player.setPaused(false);
+    }
+    if(key==  '6')
+    {
+        player.setPosition(0);
+        player.setPaused(true);
+    }
     if (key == OF_KEY_RIGHT)
     {
         currentSelectedText++;
@@ -374,6 +421,18 @@ void testApp::keyPressed(int key){
         setupFromTextFile(lister.getPath(currentSelectedText));
 //        setupFromTextFile("text/data.txt");
     }
+    if(key=='\\')
+       {
+            setupFromTextFile(lister.getPath(currentSelectedText));
+           for (int i = 0 ; i<character.size(); i++) {
+               character[i].offset.set(character[i].offset.x,character[i].offset.y);
+               
+               character[i].setNewPosition(character[i].offset);
+//               character[i].speed = ofRandom(5000,10000);
+           }
+
+       }
+
 }
 
 //--------------------------------------------------------------

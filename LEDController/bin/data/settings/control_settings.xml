@@ -2,7 +2,7 @@
     <val_0>7.050000191</val_0>
 </LED_SIZE>
 <PADDING>
-    <val_0>8.700000763</val_0>
+    <val_0>6.500000000</val_0>
 </PADDING>
 <LEARN_BACKGROUND>
     <val_0>0.000000000</val_0>
@@ -35,7 +35,7 @@
     <val_0>255.000000000</val_0>
 </rippleBrightness>
 <imageBrightness>
-    <val_0>255.000000000</val_0>
+    <val_0>116.166664124</val_0>
 </imageBrightness>
 <resetBuilding>
     <val_0>0.000000000</val_0>

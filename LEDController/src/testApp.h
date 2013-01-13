@@ -28,9 +28,9 @@ public:
 	{
         xSize = ofGetWidth();
         ySize = ofGetHeight();
-        block  = 16;
-        yRes = ySize/block;
-        xRes = xSize/block;
+        block  = 1;
+        yRes = 50;//ySize/block;
+        xRes = 25;//xSize/block;
         r0                 = new float*[xRes];
         r1                 = new float*[xRes];
         r2                 = new float*[xRes];
@@ -86,10 +86,7 @@ public:
     }
 	void render()
 	{
-        if(ofGetFrameNum()%10==0)
-        {
-            makeRipples(ofRandom(0,xSize*0.5),ofRandom(0,ySize));
-        }
+       
 		findRipples();
 		swapBuffers();
     }
@@ -201,6 +198,9 @@ public:
             
             _buildings[i]->update(x,y,w,h);
         }
+    }
+    void addBuilding()
+    {
         if(maxBuilding>_buildings.size() && ofGetFrameNum()%50==0)
         {
             int r = (int)ofRandom(0,images.size());
@@ -208,6 +208,7 @@ public:
             
             _buildings.push_back(newBuilding);
         }
+
     }
     void draw(float x , float y , float w , float h)
     {
@@ -240,7 +241,7 @@ public:
     void setup();
     void update();
     void draw();
-    
+    void exit();
     void keyPressed  (int key);
     void keyReleased(int key);
     void mouseMoved(int x, int y );

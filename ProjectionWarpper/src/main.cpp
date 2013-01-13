@@ -7,7 +7,7 @@ int main( ){
 
     ofAppGlutWindow window;
 #ifdef TARGET_OSX
-    window.setGlutDisplayString( "rgb double depth alpha samples>=4");
+    window.setGlutDisplayString( "rgb double depth alpha samples>=8");
 #endif
 	ofSetupOpenGL(&window, 1280,768, OF_WINDOW);			// <-------- setup the GL context
 

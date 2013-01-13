@@ -1,7 +1,7 @@
 <positions>
     <element name="Volume Density">
         <x>0.000000000</x>
-        <y>499.000000000</y>
+        <y>413.000000000</y>
         <width>1024.000000000</width>
         <height>69.000000000</height>
     </element>
@@ -13,21 +13,21 @@
     </element>
     <element name="Volume Threshold">
         <x>0.000000000</x>
-        <y>454.000000000</y>
+        <y>338.000000000</y>
         <width>1024.000000000</width>
-        <height>21.000000000</height>
+        <height>51.000000000</height>
     </element>
     <element name="Volume XyQuality">
         <x>0.000000000</x>
-        <y>592.000000000</y>
+        <y>506.000000000</y>
         <width>1024.000000000</width>
-        <height>32.000000000</height>
+        <height>52.000000000</height>
     </element>
     <element name="Volume ZQuality">
         <x>0.000000000</x>
-        <y>648.000000000</y>
+        <y>582.000000000</y>
         <width>1024.000000000</width>
-        <height>84.000000000</height>
+        <height>54.000000000</height>
     </element>
     <element name="VolumeEnabled">
         <x>0.000000000</x>

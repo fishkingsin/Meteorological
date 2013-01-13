@@ -58,6 +58,8 @@ void testApp::setup(){
     gui.addToggle("EnableSerial",bSerial);
     gui.addToggle("bRipple",bRipple);
     gui.addToggle("bImage",bImage);
+    gui.addToggle("+RAIN",false);
+    gui.addToggle("-RAIN",false);
 #ifdef USE_CV
     
     gui.addToggle("bFlip",bFlip);
@@ -118,6 +120,12 @@ void testApp::setup(){
 	player.play();
     player.setPaused(true);
     bVideo = false;
+}
+void testApp::exit()
+{
+    ofLogVerbose("Serial") << "close";
+    port1.close();
+    port2.close();
 }
 //--------------------------------------------------------------
 //Or wait to receive messages, sent only when the track changed
@@ -193,6 +201,22 @@ void testApp::eventsIn(guiCallbackData & data){
     else if( data.isElement( "PADDING" ) )
 	{
         padding = data.getInt(0);
+    }
+    else if( data.isElement( "-RAIN" ) )
+	{
+        if(!balls.empty())
+        {
+        Ball*ball =  balls.back();
+        ball->~Ball();
+        balls.pop_back();
+        }
+         gui.setValueB("-RAIN",false);
+        
+    }
+    else if( data.isElement( "+RAIN" ) )
+	{
+        balls.push_back(new Ball(ofRandom(NUM_LED),0,NUM_LED,NUM_LED*2,0,ofRandom(1,2)));
+         gui.setValueB("+RAIN",false);
     }
 #ifdef USE_CV
     else if( data.isElement( "LEARN_BACKGROUND" ) )
@@ -293,27 +317,39 @@ void testApp::update(){
     }
     else
     {
-        if(bImage)
-        {
+
             float scalex = NUM_LED*1.0f/CAMW*1.0f;
             float scaley = NUM_LED*1.0f/CAMH*1.0f;
             int x = 0;
             glPushMatrix();
             glScalef( scalex, scaley, 0.0 );
-            buildings.update(0,0,CAMW,CAMH*2);
-            buildings.draw(0,0,CAMW,CAMH*2);
-            glPopMatrix();
+        if(bImage)
+        {
+            buildings.addBuilding();
         }
+            buildings.update(0,0,CAMW,CAMH*2);
+        
+            buildings.draw(0,0,CAMW,CAMH*2);
+            
+            glPopMatrix();
+        
         if(bRipple)
         {
+            if(ofGetFrameNum()%10==0)
+            {
+                ripples.makeRipples(ofRandom(0,ripples.xSize*0.5),ofRandom(0,ripples.ySize));
+            }
+        }
+        {
+            ripples.render();
             ofPushStyle();
-            //		ofSetColor(rippleBrightness);
+            		ofSetColor(255);
             float scalex = NUM_LED*2.0f/((50)*1.0f);
             float scaley = scalex;//(NUM_LED*NUM_PEGGY)*1.0f/CAMH*2.0f;
             glPushMatrix();
             glScalef( scalex, scaley, 0.0 );
             //		vector <Ripple*>::iterator r;
-            ripples.render();
+            
             ripples.draw();
             //		for(r = ripples.begin() ; r!=ripples.end() ;r++)
             //		{
@@ -391,6 +427,11 @@ void testApp::update(){
             glPopMatrix();
         }
     }
+    ofPushStyle();
+    ofSetColor(0);
+    float h = scaledFbo.getHeight();
+    ofRect(0,h-h*0.02,scaledFbo.getWidth() ,h*0.02);
+    ofPopStyle();
 	scaledFbo.readToPixels(scaledPixels);
     scaledFbo.end();
     
@@ -419,6 +460,9 @@ void testApp::draw(){
 			ofFill();
             ofColor c = scaledPixels.getColor(x, y);
             ofSetColor(c.getBrightness());
+            ofCircle(20+LEDs[i].x*(size+padding), 20+LEDs[i].y*(size+padding), size*0.5);
+            ofNoFill();
+            ofSetColor(100);
             ofCircle(20+LEDs[i].x*(size+padding), 20+LEDs[i].y*(size+padding), size*0.5);
             ofPopStyle();
         }
@@ -528,6 +572,14 @@ void testApp::keyPressed(int key){
             player.setPaused(true);
             player.setPosition(0);
             
+            break;
+        case OF_KEY_BACKSPACE:
+            if(!balls.empty())
+            {
+                Ball*ball =  balls.back();
+                ball->~Ball();
+                balls.pop_back();
+            }
             break;
     }
 }

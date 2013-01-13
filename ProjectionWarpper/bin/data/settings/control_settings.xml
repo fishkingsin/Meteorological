@@ -5,7 +5,7 @@
     <val_0>0.000000000</val_0>
 </Grid>
 <SCREEN_POSTION>
-    <val_0>0.000000000</val_0>
+    <val_0>0.099998474</val_0>
     <val_1>0.000000000</val_1>
 </SCREEN_POSTION>
 <showDemoPic>
@@ -37,3 +37,12 @@
 <ENABLE_MASK>
     <val_0>1.000000000</val_0>
 </ENABLE_MASK>
+<ENABLE_SCREEN_0>
+    <val_0>1.000000000</val_0>
+</ENABLE_SCREEN_0>
+<ENABLE_SCREEN_1>
+    <val_0>1.000000000</val_0>
+</ENABLE_SCREEN_1>
+<showAlign>
+    <val_0>0.000000000</val_0>
+</showAlign>

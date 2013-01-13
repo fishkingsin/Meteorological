@@ -1,25 +1,25 @@
 <positions>
     <element name="PD_ALPHA">
         <x>0.000000000</x>
-        <y>466.000000000</y>
+        <y>582.000000000</y>
         <width>1024.000000000</width>
         <height>40.000000000</height>
     </element>
     <element name="PD_ON">
         <x>0.000000000</x>
-        <y>402.000000000</y>
+        <y>518.000000000</y>
         <width>1024.000000000</width>
         <height>40.000000000</height>
     </element>
     <element name="PD_STATE">
         <x>0.000000000</x>
-        <y>338.000000000</y>
+        <y>454.000000000</y>
         <width>1024.000000000</width>
         <height>40.000000000</height>
     </element>
     <element name="PD_VOLUME">
         <x>0.000000000</x>
-        <y>530.000000000</y>
+        <y>646.000000000</y>
         <width>1024.000000000</width>
         <height>40.000000000</height>
     </element>

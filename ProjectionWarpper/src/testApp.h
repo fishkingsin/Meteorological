@@ -14,7 +14,7 @@
 
 #include "ofxRenderManager.h"
 #include "ofxSyphon.h"
-//#include "ofxDuration.h"
+#include "ofxDuration.h"
 #include "ofxTextInputField.h"
 #include "ofxAutoControlPanel.h"
 #include "InputPanel.h"
@@ -65,16 +65,16 @@ public:
 	
 	
 	bool showGrid,bExtendScreen,showDemoPic;//,bSyphonServer;
-    bool bSyphonClient,bMask;
+    bool bSyphonClient;//,bMask;
 	
 	//Duration-----------------------------------------------------
-//	ofxDuration duration;
+	ofxDuration duration;
 	
-//	void trackUpdated(ofxDurationEventArgs& args);
-//	string ip;
-//	int port;
+	void trackUpdated(ofxDurationEventArgs& args);
+	string ip;
+	int port;
 	int WIDTH,HEIGHT,N_SCREEN;
-
+    vector<int>screen_alpha;
 	
 	//tri mesh
 //	bool bEnableTriangleMesh;
@@ -83,8 +83,8 @@ public:
 //	void onPersonEntered( ofxTSPS::EventArgs & tspsEvent );
 //	void onPersonUpdated( ofxTSPS::EventArgs & tspsEvent );
 //	void onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent );
-    ofImage mask;
-int maskHeight;
+//    ofImage mask;
+//int maskHeight;
 };
 
 #endif
